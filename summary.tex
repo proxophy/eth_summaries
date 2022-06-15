@@ -1,0 +1,190 @@
+%!TEX option = --shell-escape
+
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc} 
+\usepackage{enumitem}
+\usepackage[left=3cm, right=3cm, top=3cm, bottom=3cm]{geometry}
+\usepackage{minted}
+\usepackage{bussproofs}
+
+\setitemize{align=left, topsep = 5pt, parsep = 2pt}
+
+% Math shortcuts
+\def\li{\rightarrow}
+\def\fax{\forall x.}
+\def\fay{\forall y.}
+\def\faz{\forall z.}
+\def\exx{\exists x.}
+\def\exy{\exists y.}
+\def\exz{\exists z.}
+
+\title{FMFP Theory}
+\author{isabel.haas@inf.ethz.ch}
+
+\begin{document}
+\maketitle
+
+
+% TODO (maybe):
+% Credits: Lectures, Exercises, Max's exercise materials
+% Content table
+\section{Evaluation strategies}
+Haskell: Lazy Evaluation 
+\begin{itemize}
+    \item argument only evaluaed when no other steps possible
+    \item left term is evaluated first
+    \item argument made to fit pattern
+\end{itemize}
+\subsection{Lazy evalutation}
+\subsubsection{Sheet 1, Ex. 1}
+\begin{minted}{Haskell}
+fibLouis :: Int -> Int
+fibLouis 0 = 1
+fibLouis 1 = 1
+fibLouis n = fibLouis (n - 1) + fibLouis (n - 2)
+fibEva :: Int -> Int
+fibEva n = fst (aux n) where 
+    aux 0 = (0, 1)B
+    aux n = next (aux (n - 1))
+    next (a, b) = (b, a + b)
+\end{minted}
+\textbf{Lazy Evaluation of fibLouis 4}
+\begin{verbatim}
+fibLouis 4 =
+fibLouis (4-1) + fibLouis (4-2) =
+-- most left term is evaluated first
+fibLouis 3 + fibLouis (4-2) =
+(fibLouis (3-1) + fibLouis (3-2)) + fibLouis (4-2) 
+...
+((fibLouis 1 + fibLouis (2-2)) + fibLouis (3-2)) + fibLouis (4-2) =
+((1 + fibLouis (2-2)) + fibLouis (3-2)) + fibLouis (4-2) =
+...
+2 + fibLouis 2 =
+2 + (fibLouis (2-1) + fibLouis (2-2))
+... = 3
+\end{verbatim}
+\textbf{Lazy Evaluation of fibEva 4}
+\begin{verbatim}
+fibEva 4 =
+fst (aux 4) =
+fst (next (aux (4-1))) =
+fst (next (aux 3)) =
+fst (next (next (aux (3-1)))) =
+fst (next (next (aux 2))) =
+...
+fst (next (next (next (next (0, 1))))) =
+fst (next (next (next (1, 0+1)))) =
+fst (next (next (0+1, 1+(0+1)))) =
+fst (next (1+(0+1), (0+1)+(1+(0+1)))) 
+...
+fst ((0+1)+(1+(0+1)), (1+(0+1))+((0+1)+(1+(0+1)))) =
+(0+1)+(1+(0+1)) =
+-- pattern (0+1) is repeated
+1 + (1 + 1) =
+3
+\end{verbatim}
+
+\section{Natural Deduction}
+\subsection{Paranthesizing formulas} 
+\begin{itemize}
+    \item $\land$ binds stronger than $\lor$ stronger than $\li$
+    \item $\li$ associates to right; $\land$ and $\lor$ to the left
+    \item Negation extend to the right as far as possible: end of line or )
+    \item Quantifiers extend to the right as far as possible: end of line or )
+\end{itemize}
+\begin{tabular}{l l}
+    $p \lor q \land \lnot r \li p \lor q$ & $(p \lor (q \land (\lnot r))) \li (p \lor q)$ \\
+    $p \li q \lor p \li r$ & $p \li ((q \lor p) \li r$) \\
+    $p \land \fax q(x) \lor r$ & $p \land (\fax (q(x) \lor r))$ \\
+    $\lnot \fax p(x) \land \fax q(x) \land r(x) \land s$ &  $\lnot( \fax (p(x) \land (\fax ((q(x) \land r(x)) \land s))))$
+\end{tabular} 
+\subsection{Natural Deduction without quantifiers}
+% Max
+If you cannot continue, try to add assumptions by using $\lor E$
+\subsubsection{Example}
+\textbf{Exercise}: $P \ (\lnot A) \land (A \lor B) \li B$ is a tautology \\
+First step: Paranthesizing $\Rightarrow$ $P \equiv ((\lnot A) \land (A \lor B)) \li B$ \\
+Let $\Gamma \equiv (\lnot A) \land (A \lor B)$
+
+\begin{prooftree}
+    \def\ScoreOverhang{1pt}\def\ScoreOverhang{1pt}
+
+    \AxiomC{}
+    \RightLabel{$ax$}
+    \UnaryInfC{$\Gamma, A \vdash (\lnot A) \land (A \lor B)$}
+    \RightLabel{$\land ER$}
+    \UnaryInfC{$\Gamma \vdash A \lor B$}
+        \AxiomC{}
+        \RightLabel{$ax$}
+        \UnaryInfC{$\Gamma, A \vdash A$}
+
+        \AxiomC{}
+        \RightLabel{$ax$}
+        \UnaryInfC{$\Gamma, A \vdash (\lnot A) \land (A \lor B)$}
+        \RightLabel{$\land EL$}
+        \UnaryInfC{$\Gamma, A \vdash \lnot A$}
+
+        \RightLabel{$\lnot E$}
+        \BinaryInfC{$\Gamma, A \vdash B$}
+            \AxiomC{}
+            \RightLabel{$ax$}
+            \UnaryInfC{$\Gamma, B \vdash B$}
+        \RightLabel{$\lor E$}
+        \TrinaryInfC{$\Gamma \vdash B$}
+        \RightLabel{$\li I$}
+        \UnaryInfC{ $\vdash (\lnot A) \land (A \lor B)$}
+\end{prooftree}
+
+\subsection{Natural Deduction with quantifiers}
+If you cannot continue, try to add assumptions by using $\exists E$ \\
+Always check side conditions and write it down
+\subsubsection{Sheet 2, Ex. 3b}
+\textbf{Exercise}: Proof $(\exx P \land Q) \li ((\exx P) \lor (\exx Q)) $ \\
+Let $\Gamma \equiv \exx P \land Q, P \land Q$
+\begin{prooftree}
+    \def\ScoreOverhang{1pt}\def\ScoreOverhang{1pt}
+
+    \AxiomC{}
+    \RightLabel{ax}
+    \UnaryInfC{$(\exx P \land Q) \vdash (\exx P \land Q)$}
+        \AxiomC{}
+        \RightLabel{$ax$}
+        \UnaryInfC{$\Gamma \vdash P \land Q$}
+        \RightLabel{$\land EL$}
+        \UnaryInfC{$\Gamma \vdash P$}
+        \RightLabel{$\exists I$}
+        \UnaryInfC{$\Gamma \vdash \exx P$}
+
+        \AxiomC{}
+        \RightLabel{$ax$}
+        \UnaryInfC{$\Gamma \vdash P \land Q$}
+        \RightLabel{$\land ER$}
+        \UnaryInfC{$\Gamma \vdash Q$}
+        \RightLabel{$\exists I$}
+        \UnaryInfC{$\Gamma \vdash \exx Q$}
+
+        \RightLabel{$\land I$}
+        \BinaryInfC{$\Gamma \vdash (\exx P) \lor (\exx Q)$}
+    \RightLabel{$\exists E ^{**}$}
+    \BinaryInfC{$(\exx P \land Q) \vdash (\exx P) \lor (\exx Q)$}
+    \RightLabel{$\li I$}
+    \UnaryInfC{$\vdash (\exx P \land Q) \li ((\exx P) \lor (\exx Q))$}
+\end{prooftree}
+
+** side condition OK: x not free in $\exx P \land Q$ nor $(\exx P) \lor (\exx Q)$
+
+\section{Binding and $\alpha$-conversion}
+\textbf{Bound}: Each occurrence of a variable is bound or free:
+A variable occurence x in a formula A is \textbf{bound} if x occurs within a subformula B of A of the form $\exx B$ or $\fax B$.
+\textbf{Alpha-conversion}: bound variables can be renamed \\
+\textbf{Examples} \\
+\begin{tabular}{l l c}
+     & & $\alpha$-convertible \\
+    $\fax \exy p(x,y)$ & $\fay \exx p(y,x)$ & yes \\
+    $\exz \fay p(z, f(y))$ &  $\exy \fay p(y, f(y))$ & no \\
+    $(\fax p(x)) \lor (\exx q(x))$ & $(\faz p(z)) \lor (\exy q(y))$ & yes \\
+    $p(x) \li \fax p(x)$ & $p(y) \li \fay p(y)$ & no \\
+\end{tabular}
+
+\end{document}
