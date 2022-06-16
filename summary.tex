@@ -5,21 +5,27 @@
 \usepackage[utf8]{inputenc} 
 \usepackage{enumitem}
 \usepackage[left=3cm, right=3cm, top=3cm, bottom=3cm]{geometry}
-\usepackage{minted}
-\usepackage{bussproofs}
+\usepackage{minted} % colors for code
+\usepackage{bussproofs} % proof trees
+\usepackage{soul} % highlight text
+\usepackage[x11names, dvipsnames]{xcolor} % choose color
+\usepackage{amsthm} % for proof environment
 
 \setitemize{align=left, topsep = 5pt, parsep = 2pt}
+\setenumerate{align=left}
+\sethlcolor{SkyBlue1}
 
 % Math shortcuts
 \def\li{\rightarrow}
 \def\fax{\forall x.}
 \def\fay{\forall y.}
 \def\faz{\forall z.}
+\def\fan{\forall n. : Nat}
 \def\exx{\exists x.}
 \def\exy{\exists y.}
 \def\exz{\exists z.}
 
-\title{FMFP Theory a}
+\title{FMFP}
 \author{isabel.haas@inf.ethz.ch}
 
 \begin{document}
@@ -29,6 +35,111 @@
 % TODO (maybe):
 % Credits: Lectures, Exercises, Max's exercise materials
 % Content table
+
+\section{Haskell}
+\subsection{Basics}
+\begin{minted}{Haskell}
+-- Basic function
+-- Declaration, comparable to int add(int a, int b){} in Java
+add :: Int -> Int -> Int 
+add a b = a + b -- Definition
+-- function composition
+f (g x) = f.g x
+-- functions can also be arguments
+filter :: (a->Bool) -> [a] -> [a] -- first arg: function taking a returning Bool
+-- Pattern matching
+fib :: Int -> Int
+fib 0 = 0
+fib 1 = 1
+fib n = fib (n-1) + fib (n-2)
+-- Guards
+myAbs :: Int -> Int 
+myAbs x
+    | x < 0 = -x
+    | otherwise = x
+-- where 
+f :: Int -> Int
+f x = 1 + magic 
+    where magic = sqrt x
+-- let in
+-- let <def> in <expr> equal to <expr> where <def>
+f :: Int -> Int
+f x = (let magic = sqrt x in 1 + magic)
+-- case expression (pattern matching)
+case expression of pattern1 -> result1
+                   pattern2 -> result2
+div1byx :: Double -> Double
+div1byx = case x of 0 -> 0.0
+                    n -> 1/n
+-- if else
+if b then x else y -- returns either x or y
+f x = if (prime x) then "PRIME" else "NOT" 
+\end{minted}
+
+\subsection{Lists}
+\begin{minted}{Haskell}
+[] -- empty list
+x:xs -- first element is x, xs is rest of list
+[a,b,c] -- syntactic sugar for a:b:c:[]
+-- Basic pattern matching
+-- [1..x]
+[1..4] -- [1,2,3,4]
+[1,3..10] -- [1,3,5,7,9]
+[5, 4..1] -- [5,4,3,2,1] 
+[5..1] -- []
+[1,2...] -- [1,2,...], used with lazy evaluation
+-- List comprehensions
+[f x | x <- list , guard_1, ..., guard_n]
+[2*x | x <- [1..20], x `mod` 2 == 1] -- [2,6,10,..38]
+[(l,r)| l <- "abc", r <- "xyz"] -- all combinations of characters in "abc" and "xyz"
+-- Quick sort, very pretty
+q (p:xs) = q [x | x <- xs, x <= p] ++ [p] ++ q [x | x <- xs, x > p]
+\end{minted}
+
+\subsection{Prelude functions}
+\begin{minted}{Haskell}
+-- Basics
+head [1,2,3] -- 1 :: Int
+tail [1,2,3] -- [2,3] :: [Int]
+last [1,2,3] -- 3 :: Int
+init [1,2,3] -- [1,2] :: [Int]
+length [1,2,3] -- 3 :: Int
+take 3 [1,2,3,4,5] -- [1,2,3] :: [Int]
+drop 3 [1,2,3,4,5] -- [4,5] :: [Int]
+reverse [1,2,3] -- [3,2,1] :: [Int]
+maximum [1,2,3] -- 1 :: Int
+minimum [1,2,3] -- 3 :: Int
+sum [1,2,3,4] -- 10 :: Int
+product [1,2,3,4] -- 24 :: Int
+4 `elem` [1,2,3] -- False
+-- More interesting
+zip :: [a] -> [b] -> [(a,b)]
+zip [1, 2] ['a', 'b'] -- [(1,'a'),(2,'b')]
+filter :: (a->Bool) -> [a] -> [a]
+filter odd [1, 2, 3] -- [1,3]
+map :: (a -> b) -> [a] -> [b]
+map f [x1, x2, ..., xn] == [f x1, f x2, ..., f xn]
+zipWith :: (a->b->c) -> [a] -> [b] -> [c]
+zipWith f [x1,x2,x3..] [y1,y2,y3..] == [f x1 y1, f x2 y2, f x3 y3..]
+\end{minted}
+
+\subsection{Fold}
+\begin{minted}{Haskell}
+-- right associative
+foldr :: (a -> b -> b) -> b -> [a] -> b
+foldr f z [] = z
+foldr f z (x:xs) = f x (foldr f z xs)
+foldr f z (a:b:c:[]) = f a (f b (f c (f z [])))
+foldr (+) 0 [1..4] = 
+-- left associative
+foldl :: (a -> b -> b) -> b -> [a] -> b
+foldr f z [] = z
+foldl f z xs = foldl f z . zoList
+foldl f z (a:b:c:[]) = f (f a (f b)) c
+\end{minted}  
+
+
+
 \section{Evaluation strategies}
 Haskell: Lazy Evaluation 
 \begin{itemize}
@@ -100,7 +211,6 @@ fst ((0+1)+(1+(0+1)), (1+(0+1))+((0+1)+(1+(0+1)))) =
     $\lnot \fax p(x) \land \fax q(x) \land r(x) \land s$ &  $\lnot( \fax (p(x) \land (\fax ((q(x) \land r(x)) \land s))))$
 \end{tabular} 
 \subsection{Natural Deduction without quantifiers}
-% Max
 If you cannot continue, try to add assumptions by using $\lor E$
 \subsubsection{Example}
 \textbf{Exercise}: $P \ (\lnot A) \land (A \lor B) \li B$ is a tautology \\
@@ -146,7 +256,7 @@ Let $\Gamma \equiv \exx P \land Q, P \land Q$
     \def\ScoreOverhang{1pt}\def\ScoreOverhang{1pt}
 
     \AxiomC{}
-    \RightLabel{ax}
+    \RightLabel{$ax$}
     \UnaryInfC{$(\exx P \land Q) \vdash (\exx P \land Q)$}
         \AxiomC{}
         \RightLabel{$ax$}
@@ -187,4 +297,135 @@ A variable occurence x in a formula A is \textbf{bound} if x occurs within a sub
     $p(x) \li \fax p(x)$ & $p(y) \li \fay p(y)$ & no \\
 \end{tabular}
 
+\section{Induction}
+\subsection{Induction for natural numbers}
+Induction scheme:
+\begin{prooftree}
+    \AxiomC{$\Gamma \vdash P[n \mapsto 0]$}
+    \AxiomC{$\Gamma \vdash \forall m : Nat. P[n \mapsto m] \li P[n \mapsto m+1]$}
+    \RightLabel{m not free in P}
+    \BinaryInfC{$\Gamma \vdash \forall n : Nat. P$}
+\end{prooftree}
+
+\subsubsection{Sheet 3, Ex. 1b}
+(Important parts/"framework" of proof) \\
+\textbf{Lemma}: $\fan$ \texttt{aux n = (fibLouis n, fibLouis (n+1))}
+\begin{proof}
+    \hl{Let \texttt{P:=}(aux n = (fibLouis n, fibLouis (n+1)))}\\
+    \textbf{Base case}. \hl{Show \texttt{P[n $\mapsto$ 0]} }
+    \begin{minted}{Haskell}
+    aux 0 = ...
+        = (fibLouis 0, fibLouis (0+1)) -- arithmetic
+    \end{minted}
+    \textbf{Step case}. \hl{Let \texttt{m:Nat} be arbitrary. \\
+    Show that \texttt{P[n$\mapsto$ m]} implies \texttt{P[n$\mapsto$ m+1]}. \\
+    Assume \texttt{aux m = (fibLouis m, fibLouis (m+1))}}
+    \begin{minted}{Haskell}
+    aux (m+1) = ...
+            = (fibLouis (m+1), fibLouis ((m+1)+1)) -- arithmetic
+    \end{minted}
+\end{proof}
+\subsection{Induction over lists}
+For proofs with \texttt{[]} or \texttt{0}, you may first have to proof a generalised statement with induction and then simply plug in your values.
+\subsubsection{Sheet 3, Ex. 2b}
+\textbf{Lemma}: \texttt{foldr (:) [] xs = xs}
+\begin{proof}
+    \hl{Let\texttt{P:= (foldr (:) [] xs = xs)}}. \\
+    \hl{We prove by induction over lists that $\forall xs::[a].$ \texttt{P} holds.} \\
+    \textbf{Base case}. \hl{Show \texttt{P[xs $\mapsto$ []]} }
+    \begin{minted}{Haskell}
+    foldr (:) [] [] = [] -- foldr.1
+    \end{minted}
+    \textbf{Step case}. \hl{Let \texttt{y::a} \texttt{ys::[a]} be arbitrary. \\
+    Show that \texttt{P[xs$\mapsto$ ys]} implies \texttt{P[xs$\mapsto$ (y:ys)]} \\
+    Assume \texttt{foldr (:) [] ys = ys} and we show that \texttt{foldr (:) [] (y:ys) = y:ys}}
+    \begin{minted}{Haskell}
+    foldr (:) [] (y:ys) = 
+        = ...
+        = (y:ys)
+    \end{minted}
+\end{proof}
+\subsubsection{Sheet 4, Ex. 1}
+\textbf{Lemma}: \texttt{rev (xs ++ rev ys) = ys ++ rev xs}
+\begin{proof}
+    \hl{Let \texttt{P' := rev (xs ++ rev ys') = ys' ++ rev xs}. 
+    We show that $\forall$ \texttt{ys'.}$\forall$ \texttt{xs.}. \\
+    Fix an arbitrary \texttt{ys} and let \texttt{P := [ys' $\mapsto$ ys]}.
+    We show that $\forall$\texttt{xs P.} }\\
+    (This implies $\forall$\texttt{ys'.}$\forall$\texttt{xs. P}) \\
+    \textbf{Base case}: \hl{We show \texttt{P[xs $\mapsto$ []]} }
+    \begin{minted}{Haskell}
+    rev ([] ++ rev ys) = ...
+        = ys ++ rev []
+    \end{minted}
+    \textbf{Step case}: We need to show 
+    $\forall$\texttt{z, zs P[xs $\mapsto$ zs]} $\li$ \texttt{ P[xs $\mapsto$ (z:zs)]}.\\
+    \hl{Fix arbitrary \texttt{y::a}, \texttt{ys::[a]}. \\
+    We assume \texttt{IH: rev (zs ++ rev ys) = ys ++ rev zs} \\
+    and show that \texttt{rev ((z:zs) ++ rev ys) = ys ++ rev (z:zs)}
+    }
+    \begin{minted}{Haskell}
+    rev ((z:zs) ++ rev ys)
+        = ...
+        = ys ++ rev (z:zs)
+    \end{minted}
+\end{proof}
+
+\section{Types and typing inference}
+\texttt{f :: a -> b -> c -> d}:
+\begin{itemize}
+    \item same as \texttt{f :: a -> (b -> (c -> d))} (parentheses are right associative) 
+    \item \texttt{f x y z} implies \texttt{x :: a, y :: b, z :: c} 
+    \item f.e. \texttt{f x :: b -> c -> d}
+\end{itemize}
+\subsection{Types}
+\begin{itemize}
+    \item Detect function applications, f.e. \texttt{f x} $\Rightarrow$ \texttt{f :: a ->  b, f :: x}
+    \item Detect prelude functions such as map, filter, foldr etc.
+    \item "Match" types of different function, f.e. \texttt{f :: (a->b) -> [a] -> b} for  \texttt{f x} $\Rightarrow$ \texttt{x :: (a->b)}
+    \item Don't forget things like \texttt{Num a, Eq b => ...}
+\end{itemize}
+% \textbf{Example} \\
+% \mintinline{Haskell}{\x y -> (fst x) + y}
+% \mintinline{Haskell}{(+) :: (Num a => a -> a -> a)} and \mintinline{Haskell}{fst :: (a,b) -> a} \\
+% $\Rightarrow$ \mintinline{Haskell}{y :: (Num a) => a}, \mintinline{Haskell}{(fst x) ::  (Num a) => a} and
+% \mintinline{Haskell}{x :: (c,b)} \\
+% $\Rightarrow$ \mintinline{Haskell}{\x y -> (fst x) + y :: Num a => (a,b) -> a -> a}
+\subsubsection{Sheet 5}
+\textbf{1a} \verb|\x y z -> (x y) z|
+\begin{enumerate}
+    \item Three arguments, one return value
+    \item \verb|(x y) :: a -> b| and \verb|z :: a|
+    \item \verb|x :: c -> (a->b)| and \verb|y :: c|
+    \item \verb|\x y z -> (x y) z :: (c -> a -> b) -> c -> a -> b|
+\end{enumerate}
+\textbf{2a.4} \texttt{(.).(.)} (the endboss)
+\begin{enumerate}
+    \item \texttt{(.) :: (b->c) -> (a->b) -> a -> c}
+    \item Rewrite: \texttt{\textcolor{Red}{(.)}\textcolor{Cyan}{.}\textcolor{Green}{(.)} 
+    = \textcolor{Cyan}{.}\textcolor{Red}{(.)}\textcolor{Green}{(.)} 
+    = \textcolor{Cyan}{f} \textcolor{Red}{g} \textcolor{Green}{h}}
+    \item Definition of \texttt{(.)}: \\
+    \texttt{f :: (b->c) -> ((a->b) -> a -> c)} \\
+    \texttt{g :: (n->o) -> ((m->n) -> m -> o)} \\
+    \texttt{h :: (q->r) -> ((p->q) -> p -> r)} 
+    \item \texttt{g} is first argument of \texttt{f}: \\
+    \texttt{g :: b -> c} \\
+    $\Rightarrow$ \texttt{b = n -> o} (I) and
+    \texttt{c = (m->n) -> m -> o} (II)
+    \item \texttt{h} is first argument of \texttt{f g}:\\
+    \texttt{f g :: (a->b) -> a -> c}   \\
+    $\Rightarrow$ \texttt{h :: a -> b}  \\
+    $\Rightarrow$ \texttt{a = q -> r} (III)\\
+    \texttt{(p->q) -> p -> r} (IV)
+    \item (I) and (IV) $\Rightarrow$ 
+    \texttt{n = p -> q} (V) and \texttt{o = p -> r}
+    \item After"taking" two arguments, we have the following type \\
+    \texttt{f g h :: a -> c} \\
+    \texttt{= (q->r) -> (m->n) -> m -> o} \\
+    \texttt{= (q->r) -> (m->p->q) -> m -> p -> r }
+    
+    
+    
+\end{enumerate}
 \end{document}
