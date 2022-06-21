@@ -1,6 +1,6 @@
 %!TEX option = --shell-escape
 
-\documentclass[12pt]{article}
+\documentclass[12pt]{report}
 
 \usepackage[utf8]{inputenc} 
 \usepackage{enumitem}
@@ -10,10 +10,12 @@
 \usepackage{soul} % highlight text
 \usepackage[x11names, dvipsnames]{xcolor} % choose color
 \usepackage{amsthm} % for proof environment
+\usepackage{hyperref} % Correct Section numbering
 
 \setitemize{align=left, topsep = 5pt, parsep = 2pt}
 \setenumerate{align=left}
 \sethlcolor{SkyBlue1}
+\renewcommand*{\thesection}{\arabic{section}}
 
 % Math shortcuts
 \def\li{\rightarrow}
@@ -26,17 +28,31 @@
 \def\exz{\exists z.}
 
 \title{FMFP}
-\author{isabel.haas@inf.ethz.ch}
+\author{Isabel Haas}
+\date{June 2022}
 
 \begin{document}
 \maketitle
 
+\begin{abstract}
+This document should give an overview over the types of exercises in the FMFP course and how to solve them. 
+It also contains parts of theory and an overview of Haskell. \\
+Main sources are the course material and material provided by the course TA
+Max Schlegel on \\ https://n.ethz.ch/~mschlegel/fmfp22/fmfp.html, 
+\end{abstract}
+
+\tableofcontents
+\thispagestyle{empty}
 
 % TODO (maybe):
 % Credits: Lectures, Exercises, Max's exercise materials
-% Content table
+\chapter*{Functional Programming}
+\addcontentsline{toc}{chapter}{Functional Programming}
+\setcounter{section}{0}
+\renewcommand*{\theHsection}{chX.\the\value{section}}
 
 \section{Haskell}
+\setcounter{page}{1}
 \subsection{Basics}
 \begin{minted}{Haskell}
 -- Basic function
@@ -61,7 +77,6 @@ myAbs x
 f :: Int -> Int
 f x = 1 + magic 
     where magic = sqrt x
--- let in
 -- let <def> in <expr> equal to <expr> where <def>
 f :: Int -> Int
 f x = (let magic = sqrt x in 1 + magic)
@@ -82,6 +97,8 @@ f x = if (prime x) then "PRIME" else "NOT"
 x:xs -- first element is x, xs is rest of list
 [a,b,c] -- syntactic sugar for a:b:c:[]
 -- Basic pattern matching
+f [] = 0
+f (x:xs) = 2 + f xs
 -- [1..x]
 [1..4] -- [1,2,3,4]
 [1,3..10] -- [1,3,5,7,9]
@@ -91,7 +108,7 @@ x:xs -- first element is x, xs is rest of list
 -- List comprehensions
 [f x | x <- list , guard_1, ..., guard_n]
 [2*x | x <- [1..20], x `mod` 2 == 1] -- [2,6,10,..38]
-[(l,r)| l <- "abc", r <- "xyz"] -- all combinations of characters in "abc" and "xyz"
+[(l,r)| l <- "abc", r <- "xyz"] -- all comb. of characters in "abc" & "xyz"
 -- Quick sort, very pretty
 q (p:xs) = q [x | x <- xs, x <= p] ++ [p] ++ q [x | x <- xs, x > p]
 \end{minted}
@@ -114,17 +131,13 @@ product [1,2,3,4] -- 24 :: Int
 4 `elem` [1,2,3] -- False
 -- More interesting
 zip :: [a] -> [b] -> [(a,b)]
-zip [1, 2] ['a', 'b'] -- [(1,'a'),(2,'b')]
+zip [1, 2] ['a', 'b'] == [(1,'a'),(2,'b')]
 filter :: (a->Bool) -> [a] -> [a]
 filter odd [1, 2, 3] -- [1,3]
 map :: (a -> b) -> [a] -> [b]
 map f [x1, x2, ..., xn] == [f x1, f x2, ..., f xn]
 zipWith :: (a->b->c) -> [a] -> [b] -> [c]
 zipWith f [x1,x2,x3..] [y1,y2,y3..] == [f x1 y1, f x2 y2, f x3 y3..]
-\end{minted}
-
-\subsection{Fold}
-\begin{minted}{Haskell}
 -- right associative
 foldr :: (a -> b -> b) -> b -> [a] -> b
 foldr f z [] = z
@@ -136,18 +149,95 @@ foldl :: (a -> b -> b) -> b -> [a] -> b
 foldr f z [] = z
 foldl f z xs = foldl f z . zoList
 foldl f z (a:b:c:[]) = f (f a (f b)) c
+-- returns longest prefix of elements satisfying p and corresponding remainder of list
+span :: (a -> Bool) -> [a] -> ([a], [a]) -- span p xs
+span (< 3) [1,2,3,4,1,2,3,4] -- ([1,2],[3,4,1,2,3,4])
+curry :: ((a,b)->c) -> a -> b -> c
+curry f a b = f (a,b)
+uncurry :: (a->b->c) -> (a,b) -> c
+uncurry f (x,y) == f a b
+\end{minted}
+
+\subsection{Algebraic data types}
+Define new types
+\begin{minted}{Haskell}
+-- Structure: on the right side are value constructors
+-- data type can have one of those different values
+data keyword = constr1 | constr2 | ... | constrn
+-- Option can be simple types
+data Bool = False | True
+-- New value constructors can be defined
+-- Circle takes three floats as fields, rectangle 4
+data Shape = Circle Float Float Float | Rectangle Float Float Float Float   
+-- ghci> :t Circle
+Circle :: Float -> Float -> Float -> Shape  
+-- functions for data types
+surface :: Shape -> Float  
+surface (Circle _ _ r) = pi * r ^ 2  
+surface (Rectangle x1 y1 x2 y2) = (abs $ x2 - x1) * (abs $ y2 - y1) 
+-- has argument of type a or b
+data myType a b = myConstr a | myOtherConstructor b
+-- definitions can  be recursive
+data myList a = Empty | Cons a (MyList a)
+-- tree
+data Tree t = Leaf | Node t (Tree t) (Tree t)
+
+-- deriving keyword
+-- typeclasses like Eq, Ord, Enum, Bounded, Show, Read can function as "interfaces"
+-- Example: == and /= and can now be used to compare values
+data Vector = Vector Int Int Int deriving (Eq, Show)
+
+-- instance keyword
+data TrafficLight = Red | Yellow | Green  
+instance Eq TrafficLight where  
+    Red == Red = True  
+    Green == Green = True  
+    Yellow == Yellow = True  
+    _ == _ = False  
+instance Show TrafficLight where  
+    show Red = "Red light"  
+    show Yellow = "Yellow light"  
+    show Green = "Green light" 
+
+-- fold for data types
+-- data type:
+data DType = C1 ... | C2 ... | ... | CN ...
+-- fold
+foldDType :: foldC1 -> foldC2 -> ... -> foldCN -> DType -> b
+-- example
+data Prop a = Var a | Not (Prop a) | And (Prop a) (Prop a) | Or (Prop a) (Prop a)
+foldProp :: (a->b) -> (b->b) -> (b->b->b) -> (b->b->b) -> (Prop a) -> b
+foldProp fVar fNot fAnd fOr prop  = go prop
+    where 
+        go (Var v) = fVar v
+        go (Not v) = fNot (go v)
+        go (And v w) = fAnd (go v) (go w) 
+        go (Or v w) = fOr (go v) (go w)
 \end{minted}  
 
 
-
 \section{Evaluation strategies}
-Haskell: Lazy Evaluation 
+Lazy evaluation strategy of application \texttt{t1 t2}
+\begin{enumerate}
+    \item Evaluate \texttt{t1}
+    \item The argument \texttt{t2} is substituted in \texttt{t1} without being evaluated
+    \item No evaluation inside lambda abstractions. In other words, in an abstraction 
+    \texttt{$\backslash$... -> f t}, then \texttt{f t} is not evaluated
+\end{enumerate}
+Eager evaluation strategy of application \texttt{t1 t2}
+\begin{enumerate}
+    \item Evaluate \texttt{t1}
+    \item \texttt{t2} is evaluated prior to substitution in \texttt{t1}
+    \item Evaluation is carried out inside lambda abstractions
+\end{enumerate}
+
+\subsection{Lazy evaluation in Haskell}
+Haskell: Lazy Evaluation
 \begin{itemize}
-    \item argument only evaluaed when no other steps possible
+    \item argument only evaluated when no other steps possible
     \item left term is evaluated first
     \item argument made to fit pattern
 \end{itemize}
-\subsection{Lazy evalutation}
 \subsubsection{Sheet 1, Ex. 1}
 \begin{minted}{Haskell}
 fibLouis :: Int -> Int
@@ -197,11 +287,11 @@ fst ((0+1)+(1+(0+1)), (1+(0+1))+((0+1)+(1+(0+1)))) =
 \end{verbatim}
 
 \section{Natural Deduction}
-\subsection{Paranthesizing formulas} 
+\subsection{Parenthesizing formulas} 
 \begin{itemize}
     \item $\land$ binds stronger than $\lor$ stronger than $\li$
     \item $\li$ associates to right; $\land$ and $\lor$ to the left
-    \item Negation extend to the right as far as possible: end of line or )
+    \item Negation binds stronger than binary operators 
     \item Quantifiers extend to the right as far as possible: end of line or )
 \end{itemize}
 \begin{tabular}{l l}
@@ -214,7 +304,7 @@ fst ((0+1)+(1+(0+1)), (1+(0+1))+((0+1)+(1+(0+1)))) =
 If you cannot continue, try to add assumptions by using $\lor E$
 \subsubsection{Example}
 \textbf{Exercise}: $P \ (\lnot A) \land (A \lor B) \li B$ is a tautology \\
-First step: Paranthesizing $\Rightarrow$ $P \equiv ((\lnot A) \land (A \lor B)) \li B$ \\
+First step: Parenthesizing $\Rightarrow$ $P \equiv ((\lnot A) \land (A \lor B)) \li B$ \\
 Let $\Gamma \equiv (\lnot A) \land (A \lor B)$
 
 \begin{prooftree}
@@ -248,7 +338,7 @@ Let $\Gamma \equiv (\lnot A) \land (A \lor B)$
 
 \subsection{Natural Deduction with quantifiers}
 If you cannot continue, try to add assumptions by using $\exists E$ \\
-Always check side conditions and write it down
+Always check side conditions
 \subsubsection{Sheet 2, Ex. 3b}
 \textbf{Exercise}: Proof $(\exx P \land Q) \li ((\exx P) \lor (\exx Q)) $ \\
 Let $\Gamma \equiv \exx P \land Q, P \land Q$
@@ -286,7 +376,7 @@ Let $\Gamma \equiv \exx P \land Q, P \land Q$
 
 \section{Binding and $\alpha$-conversion}
 \textbf{Bound}: Each occurrence of a variable is bound or free:
-A variable occurence x in a formula A is \textbf{bound} if x occurs within a subformula B of A of the form $\exx B$ or $\fax B$.
+A variable occurrence x in a formula A is \textbf{bound} if x occurs within a sub formula B of A of the form $\exx B$ or $\fax B$.
 \textbf{Alpha-conversion}: bound variables can be renamed \\
 \textbf{Examples} \\
 \begin{tabular}{l l c}
@@ -298,7 +388,9 @@ A variable occurence x in a formula A is \textbf{bound} if x occurs within a sub
 \end{tabular}
 
 \section{Induction}
-\subsection{Induction for natural numbers}
+For proofs with \texttt{[]}, \texttt{0}. \texttt{Leaf} or similar, you may first have to proof a generalised statement with 
+induction and then simply plug in your values.
+\subsection{Induction on natural numbers}
 Induction scheme:
 \begin{prooftree}
     \AxiomC{$\Gamma \vdash P[n \mapsto 0]$}
@@ -311,33 +403,34 @@ Induction scheme:
 (Important parts/"framework" of proof) \\
 \textbf{Lemma}: $\fan$ \texttt{aux n = (fibLouis n, fibLouis (n+1))}
 \begin{proof}
-    \hl{Let \texttt{P:=}(aux n = (fibLouis n, fibLouis (n+1)))}\\
-    \textbf{Base case}. \hl{Show \texttt{P[n $\mapsto$ 0]} }
+    Let \texttt{P:=}(aux n = (fibLouis n, fibLouis (n+1)))\\
+    \textbf{Base case}. Show \texttt{P[n $\mapsto$ 0]} 
     \begin{minted}{Haskell}
     aux 0 = ...
-        = (fibLouis 0, fibLouis (0+1)) -- arithmetic
+        = (fibLouis 0, fibLouis (0+1))
     \end{minted}
-    \textbf{Step case}. \hl{Let \texttt{m:Nat} be arbitrary. \\
-    Show that \texttt{P[n$\mapsto$ m]} implies \texttt{P[n$\mapsto$ m+1]}. \\
-    Assume \texttt{aux m = (fibLouis m, fibLouis (m+1))}}
+    \textbf{Step case}. Let \texttt{m:Nat} be arbitrary. \\
+    Show that \texttt{P[n $\mapsto$ m]} implies \texttt{P[n $\mapsto$ m+1]}. \\
+    Assume \texttt{aux m = (fibLouis m, fibLouis (m+1))}
     \begin{minted}{Haskell}
     aux (m+1) = ...
-            = (fibLouis (m+1), fibLouis ((m+1)+1)) -- arithmetic
+            = (fibLouis (m+1), fibLouis ((m+1)+1)) 
     \end{minted}
 \end{proof}
-\subsection{Induction over lists}
-For proofs with \texttt{[]} or \texttt{0}, you may first have to proof a generalised statement with induction and then simply plug in your values.
+\subsection{Induction on lists}
+
 \subsubsection{Sheet 3, Ex. 2b}
+(Important parts/"framework" of proof) \\
 \textbf{Lemma}: \texttt{foldr (:) [] xs = xs}
 \begin{proof}
-    \hl{Let\texttt{P:= (foldr (:) [] xs = xs)}}. \\
-    \hl{We prove by induction over lists that $\forall xs::[a].$ \texttt{P} holds.} \\
-    \textbf{Base case}. \hl{Show \texttt{P[xs $\mapsto$ []]} }
+    Let\texttt{P:= (foldr (:) [] xs = xs)}. \\
+    We prove by induction over lists that $\forall xs::[a].$ \texttt{P} holds. \\
+    \textbf{Base case}. Show \texttt{P[xs $\mapsto$ []]} 
     \begin{minted}{Haskell}
-    foldr (:) [] [] = [] -- foldr.1
+    foldr (:) [] [] = [] 
     \end{minted}
-    \textbf{Step case}. \hl{Let \texttt{y::a} \texttt{ys::[a]} be arbitrary. \\
-    Show that \texttt{P[xs$\mapsto$ ys]} implies \texttt{P[xs$\mapsto$ (y:ys)]} \\
+    \textbf{Step case}. Let \texttt{y::a} \texttt{ys::[a] be arbitrary. \\
+    Show that \texttt{P[xs $\mapsto$ ys]} implies \texttt{P[xs $\mapsto$ (y:ys)]} \\
     Assume \texttt{foldr (:) [] ys = ys} and we show that \texttt{foldr (:) [] (y:ys) = y:ys}}
     \begin{minted}{Haskell}
     foldr (:) [] (y:ys) = 
@@ -346,21 +439,22 @@ For proofs with \texttt{[]} or \texttt{0}, you may first have to proof a general
     \end{minted}
 \end{proof}
 \subsubsection{Sheet 4, Ex. 1}
+(Important parts/"framework" of proof) \\
 \textbf{Lemma}: \texttt{rev (xs ++ rev ys) = ys ++ rev xs}
 \begin{proof}
-    \hl{Let \texttt{P' := rev (xs ++ rev ys') = ys' ++ rev xs}. 
+    {Let \texttt{P' := rev (xs ++ rev ys') = ys' ++ rev xs. 
     We show that $\forall$ \texttt{ys'.}$\forall$ \texttt{xs.}. \\
     Fix an arbitrary \texttt{ys} and let \texttt{P := [ys' $\mapsto$ ys]}.
     We show that $\forall$\texttt{xs P.} }\\
-    (This implies $\forall$\texttt{ys'.}$\forall$\texttt{xs. P}) \\
-    \textbf{Base case}: \hl{We show \texttt{P[xs $\mapsto$ []]} }
+    (This implies $\forall$\texttt{ys'.}$\forall$\texttt{xs.P'}) \\
+    \textbf{Base case}: We show \texttt{P[xs $\mapsto$ []]} 
     \begin{minted}{Haskell}
     rev ([] ++ rev ys) = ...
         = ys ++ rev []
     \end{minted}
     \textbf{Step case}: We need to show 
     $\forall$\texttt{z, zs P[xs $\mapsto$ zs]} $\li$ \texttt{ P[xs $\mapsto$ (z:zs)]}.\\
-    \hl{Fix arbitrary \texttt{y::a}, \texttt{ys::[a]}. \\
+    Fix arbitrary \texttt{y::a}, \texttt{ys::[a]}. \\
     We assume \texttt{IH: rev (zs ++ rev ys) = ys ++ rev zs} \\
     and show that \texttt{rev ((z:zs) ++ rev ys) = ys ++ rev (z:zs)}
     }
@@ -370,17 +464,47 @@ For proofs with \texttt{[]} or \texttt{0}, you may first have to proof a general
         = ys ++ rev (z:zs)
     \end{minted}
 \end{proof}
+\subsection{Induction on Trees}
+\subsubsection{Sheet 6, Ex. 1}
+(Important parts/"framework" of proof) \\
+\begin{minted}{Haskell}
+data Tree t = Leaf | Node t (Tree t) (Tree t)
+mapTree f Leaf = Leaf
+mapTree f (Node x t1 t2) = Node (f x) (mapTree f t1) (mapTree f t2) 
+\end{minted}  
+For arbitrary \mintinline{Haskell}{f :: a -> b} and \mintinline{Haskell}{g :: b -> c} \\
+$\forall$\texttt{t :: Tree a. mapTree g (mapTree f t) = mapTree (g . f) t}
+
+\begin{proof}
+Let \mintinline{Haskell}{f :: a -> b} and \mintinline{Haskell}{g :: b -> c} be arbitrary functions. \\
+Let \texttt{P := mapTree g (mapTree f t) = mapTree (g . f) t}, and we prove by induction that 
+$\forall$\texttt{t :: (Tree a).P} 
+\textbf{Base Case}: Show \texttt{P[t $\mapsto$ Leaf]} 
+\begin{minted}{Haskell}
+    mapTree g (mapTree f Leaf) = ..
+            =  mapTree (g . f) Leaf
+\end{minted}
+\textbf{Step case}: 
+Let \texttt{x::a, l::Tree a, r::Tree a} be arbitrary. \\
+Assume \texttt{P[t $\mapsto$ l]} and \texttt{P[t $\mapsto$ r]}. (IH) \\
+We know show that then \texttt{P[t $\mapsto$ Node x l r]} holds 
+\begin{minted}{Haskell}
+    mapTree g (mapTree f (Node x l r)) = ..
+            =  mapTree (g . f) (Node x l r)
+\end{minted}
+\end{proof}
+
 
 \section{Types and typing inference}
 \texttt{f :: a -> b -> c -> d}:
 \begin{itemize}
     \item same as \texttt{f :: a -> (b -> (c -> d))} (parentheses are right associative) 
-    \item \texttt{f x y z} implies \texttt{x :: a, y :: b, z :: c} 
+    \item \texttt{f x y z} implies \texttt{x::a, y::b, z::c} 
     \item f.e. \texttt{f x :: b -> c -> d}
 \end{itemize}
 \subsection{Types}
 \begin{itemize}
-    \item Detect function applications, f.e. \texttt{f x} $\Rightarrow$ \texttt{f :: a ->  b, f :: x}
+    \item Detect function applications, f.e. \texttt{f x} $\Rightarrow$ \texttt{f::a->b, x::a}
     \item Detect prelude functions such as map, filter, foldr etc.
     \item "Match" types of different function, f.e. \texttt{f :: (a->b) -> [a] -> b} for  \texttt{f x} $\Rightarrow$ \texttt{x :: (a->b)}
     \item Don't forget things like \texttt{Num a, Eq b => ...}
@@ -399,7 +523,7 @@ For proofs with \texttt{[]} or \texttt{0}, you may first have to proof a general
     \item \verb|x :: c -> (a->b)| and \verb|y :: c|
     \item \verb|\x y z -> (x y) z :: (c -> a -> b) -> c -> a -> b|
 \end{enumerate}
-\textbf{2a.4} \texttt{(.).(.)} (the endboss)
+\textbf{2a.4} \texttt{(.).(.)} (the end boss)
 \begin{enumerate}
     \item \texttt{(.) :: (b->c) -> (a->b) -> a -> c}
     \item Rewrite: \texttt{\textcolor{Red}{(.)}\textcolor{Cyan}{.}\textcolor{Green}{(.)} 
@@ -424,8 +548,107 @@ For proofs with \texttt{[]} or \texttt{0}, you may first have to proof a general
     \texttt{f g h :: a -> c} \\
     \texttt{= (q->r) -> (m->n) -> m -> o} \\
     \texttt{= (q->r) -> (m->p->q) -> m -> p -> r }
-    
-    
-    
 \end{enumerate}
+\subsection{Typing proof and Inference}
+Solving type inference constraints
+\begin{enumerate}
+    \item Remove trivial equations like $t = t$
+    % \item Merge equations $\{x=s, x =t\}$ into $\{s=t\}$ (if x doesn't appear in other equations)
+    \item Transform equations of form $\{f(s_0, ..., s_k)=g(t_0, ..., s_m)\}$ into $\{s_0 = t_0, ..., s_k = t_k\}$ if
+    $f=g$ and $k=m$, else there is no solution
+    \item Substitute one equation into the others 
+\end{enumerate}
+\subsubsection{Sheet 5, Ex. 3}
+\textbf{a} Proof $\lambda$\texttt{x.(x 1 True, x 0) :: (Int -> Bool -> a) -> (a, Bool -> a)}:\\
+Try to match left and right side with typing rule and apply it, should be straight forward \\
+\textbf{b} Infer the type of ($\lambda$\texttt{x.}$\lambda$\texttt{y.(y (iszero (y x)))) True}
+\begin{prooftree}
+    \def\ScoreOverhang{1pt}\def\ScoreOverhang{1pt}
+    \AxiomC{}
+    \RightLabel{$Var^1$}
+    \UnaryInfC{$x : \tau_1, y : \tau_2 \vdash y :: \tau_4 \li \tau_3$}
+    \AxiomC{$\mathbf{T_2}$}
+    \RightLabel{$App$}
+    \BinaryInfC{$x : \tau_1, y : \tau_2\vdash y \; (\mathbf{iszero}\; (y \; x)) :: \tau_3$ }
+    \RightLabel{$Abs^1$}
+    \UnaryInfC{$ x : \tau_1 \vdash \lambda y. (y \; (\mathbf{iszero}\; (y \; x))) :: \tau_0$}
+    \RightLabel{$Abs$}
+    \UnaryInfC{$\vdash \lambda x. \lambda y. (y \; (\mathbf{iszero}\; (y \; x))) :: \tau_1 \li \tau_0$}
+        \AxiomC{}
+        \RightLabel{$True^1$}
+        \UnaryInfC{$\vdash True :: \tau_1$}
+    \RightLabel{$App$}
+    
+    \BinaryInfC{ $\vdash (\lambda x. \lambda y. (y \; (\mathbf{iszero} \; (y \; x)))) \; True :: \tau_0$ }
+\end{prooftree}
+T$_2$:
+\begin{prooftree}
+    \AxiomC{}
+    \RightLabel{$Var^2$}
+    \UnaryInfC{$x : \tau_1, y : \tau_2\vdash y :: \tau_5 \li Int$}
+    \AxiomC{}
+    \RightLabel{$Var^3$}
+    \UnaryInfC{$x : \tau_1, y : \tau_2\vdash x :: \tau_5$}
+    \RightLabel{$App$}
+    \BinaryInfC{$x : \tau_1, y : \tau_2 \vdash  y \; x :: Int$}
+    \RightLabel{$iszero^1$}
+    \UnaryInfC{$x : \tau_1, y : \tau_2\vdash \mathbf{iszero}\; (y \; x) :: \tau_4$}
+    
+\end{prooftree}
+
+Finding out $\tau_0$: \\ \\
+\begin{tabular}{l | l | l | l }
+    $\tau_0 = \tau_2 \li \tau_3$ ($Abs^1$) & $\tau_0 = \tau_2 \li \tau_3$ & $\tau_0 = \tau_2 \li \tau_3$
+    &  $\tau_0 = (Bool \li Int) \li \tau_3$\\
+
+    $\tau_2 = \tau_4 \li \tau_3$ ($Var^1$) & $\tau_2 = \tau_4 \li \tau_3$ & $\tau_2 = \tau_4 \li \tau_3$
+    & $Bool \li Int=\tau_4 \li \tau_3$\\
+
+    $\tau_4 = Bool$ ($iszero^1$)& $\tau_4 = Bool$ & $\tau_4 = Bool$
+    & $\tau_4 = Bool$\\
+
+    $\tau_2 = \tau_5 \li Int$ ($Var^2$)& $\tau_2 = \tau_5 \li Int$ & $\tau_2 = Bool \li Int$
+    & $\tau_5 = Bool$\\
+
+    $\tau_1 = \tau_5$ ($Var^3$)& $\tau_5 = Bool$ & $\tau_5 = Bool$
+    & \\
+
+    $\tau_1 = Bool$ ($True^1$)& & & \\ \hline
+\end{tabular}
+\\
+\begin{tabular}{l | l}
+    $\tau_0 = (Bool \li Int) \li \tau_3$ & $\tau_0 = (Bool \li Int) \li Int$\\
+    $\tau_3 = Int$ &  $\tau_3 = Int$\\
+    $\tau_4 = Bool$ & $\tau_4 = Bool$\\
+    $\tau_5 = Bool$ &  $\tau_5 = Bool$\\
+\end{tabular}
+\\ \\
+\textbf{d} Infer type of \texttt{iszero(fst (3+5))}
+\begin{prooftree}
+    \AxiomC{}
+    \RightLabel{$Int$}
+    \UnaryInfC{$\vdash 3 :: Int$}
+    \AxiomC{}
+    \RightLabel{$Int$}
+    \UnaryInfC{$\vdash 5 :: Int$}
+    \RightLabel{$BinOp$}
+    \BinaryInfC{$\vdash(3+5) :: (Int, \tau_1)$}
+    \RightLabel{$fst$}
+    \UnaryInfC{$\vdash \mathbf{fst} (3+5) :: Int$}
+    \RightLabel{$iszero$}
+    \UnaryInfC{$\vdash \mathbf{iszero}(\mathbf{fst} (3+5)) :: \tau_0$}
+\end{prooftree}
+Collected type constraints: $\tau_0 = Bool$ from $iszero$, $(Int = (Int, \tau_1))$ from $BinOp$, 
+second constraint does not unify, meaning this doesn't type
+
+\section{TODO}
+Regular expressions/Parser stuff
+Monads
+
+\chapter*{Formal Methods}
+\addcontentsline{toc}{chapter}{Formal Methods}
+\setcounter{section}{0}
+\renewcommand*{\theHsection}{chY.\the\value{section}}
+\section{section}
+
 \end{document}
