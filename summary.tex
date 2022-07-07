@@ -1,6 +1,6 @@
 %!TEX option = --shell-escape
 
-\documentclass[12pt]{report}
+\documentclass[12pt]{article}
 
 \usepackage[utf8]{inputenc} 
 \usepackage{enumitem}
@@ -11,6 +11,10 @@
 \usepackage[x11names, dvipsnames]{xcolor} % choose color
 \usepackage{amsthm} % for proof environment
 \usepackage{hyperref} % Correct Section numbering
+% math symbols
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{stmaryrd}
 
 \setitemize{align=left, topsep = 5pt, parsep = 2pt}
 \setenumerate{align=left}
@@ -26,28 +30,44 @@
 \def\exx{\exists x.}
 \def\exy{\exists y.}
 \def\exz{\exists z.}
+\def\A{\mathcal{A}}
+\def\B{\mathcal{B}}
+\def\tt{\texttt{tt}}
+\def\ff{\texttt{ff}}
+\def\nott{\texttt{not }}
+\def\andt{\texttt{ and }}
+\def\ort{\texttt{ or }}
+\def\ift{\texttt{if }}
+\def\thent{\texttt{ then }}
+\def\elset{\texttt{ else }}
+\def\endt{\texttt{ end}}
+\def\skipt{\texttt{skip}}
+\def\whilet{\texttt{while }}
+\def\dot{\texttt{ do }}
+\def\llb{\llbracket}
+\def\rrb{\rrbracket}
 
 \title{FMFP}
 \author{Isabel Haas}
 \date{June 2022}
 
 \begin{document}
-\maketitle
+% \maketitle
 
 \begin{abstract}
 This document should give an overview over the types of exercises in the FMFP course and how to solve them. 
 It also contains parts of theory and an overview of Haskell. \\
 Main sources are the course material and material provided by the course TA
-Max Schlegel on \\ https://n.ethz.ch/~mschlegel/fmfp22/fmfp.html, 
+Max Schlegel on https://n.ethz.ch/~mschlegel/fmfp22/fmfp.html.
 \end{abstract}
 
-\tableofcontents
 \thispagestyle{empty}
+\tableofcontents
 
-% TODO (maybe):
-% Credits: Lectures, Exercises, Max's exercise materials
-\chapter*{Functional Programming}
-\addcontentsline{toc}{chapter}{Functional Programming}
+\newpage
+
+\part*{Functional Programming}
+\addcontentsline{toc}{part}{Functional Programming}
 \setcounter{section}{0}
 \renewcommand*{\theHsection}{chX.\the\value{section}}
 
@@ -61,6 +81,9 @@ add :: Int -> Int -> Int
 add a b = a + b -- Definition
 -- function composition
 f (g x) = f.g x
+-- $
+f $ x = f x
+f $ map g xs = f (map g xs) -- to avoid parentheses 
 -- functions can also be arguments
 filter :: (a->Bool) -> [a] -> [a] -- first arg: function taking a returning Bool
 -- Pattern matching
@@ -147,7 +170,7 @@ foldr (+) 0 [1..4] =
 -- left associative
 foldl :: (a -> b -> b) -> b -> [a] -> b
 foldr f z [] = z
-foldl f z xs = foldl f z . zoList
+foldl f z xs = foldl f z . toList
 foldl f z (a:b:c:[]) = f (f a (f b)) c
 -- returns longest prefix of elements satisfying p and corresponding remainder of list
 span :: (a -> Bool) -> [a] -> ([a], [a]) -- span p xs
@@ -279,9 +302,9 @@ fst (next (next (next (1, 0+1)))) =
 fst (next (next (0+1, 1+(0+1)))) =
 fst (next (1+(0+1), (0+1)+(1+(0+1)))) 
 ...
+-- pattern (0+1) is repeated
 fst ((0+1)+(1+(0+1)), (1+(0+1))+((0+1)+(1+(0+1)))) =
 (0+1)+(1+(0+1)) =
--- pattern (0+1) is repeated
 1 + (1 + 1) =
 3
 \end{verbatim}
@@ -303,7 +326,7 @@ fst ((0+1)+(1+(0+1)), (1+(0+1))+((0+1)+(1+(0+1)))) =
 \subsection{Natural Deduction without quantifiers}
 If you cannot continue, try to add assumptions by using $\lor E$
 \subsubsection{Example}
-\textbf{Exercise}: $P \ (\lnot A) \land (A \lor B) \li B$ is a tautology \\
+\textbf{Exercise}: $P = (\lnot A) \land (A \lor B) \li B$ is a tautology \\
 First step: Parenthesizing $\Rightarrow$ $P \equiv ((\lnot A) \land (A \lor B)) \li B$ \\
 Let $\Gamma \equiv (\lnot A) \land (A \lor B)$
 
@@ -394,8 +417,8 @@ induction and then simply plug in your values.
 Induction scheme:
 \begin{prooftree}
     \AxiomC{$\Gamma \vdash P[n \mapsto 0]$}
-    \AxiomC{$\Gamma \vdash \forall m : Nat. P[n \mapsto m] \li P[n \mapsto m+1]$}
-    \RightLabel{m not free in P}
+    \AxiomC{$\Gamma, P[n \mapsto m] \vdash  P[n \mapsto m+1]$}
+    \RightLabel{$m$ not free in P}
     \BinaryInfC{$\Gamma \vdash \forall n : Nat. P$}
 \end{prooftree}
 
@@ -417,21 +440,30 @@ Induction scheme:
             = (fibLouis (m+1), fibLouis ((m+1)+1)) 
     \end{minted}
 \end{proof}
+
 \subsection{Induction on lists}
+
+Induction scheme:
+\begin{prooftree}
+    \AxiomC{$\Gamma \vdash P[xs \mapsto []]$}
+    \AxiomC{$\Gamma, P[xs \mapsto ys] \vdash P[xs \mapsto (y:ys)]$}
+    \RightLabel{$y, ys$ not free in P}
+    \BinaryInfC{$\Gamma \vdash \forall xs :: [a]. P$}
+\end{prooftree}
 
 \subsubsection{Sheet 3, Ex. 2b}
 (Important parts/"framework" of proof) \\
 \textbf{Lemma}: \texttt{foldr (:) [] xs = xs}
 \begin{proof}
-    Let\texttt{P:= (foldr (:) [] xs = xs)}. \\
+    Let \texttt{P:= (foldr (:) [] xs = xs)}. \\
     We prove by induction over lists that $\forall xs::[a].$ \texttt{P} holds. \\
     \textbf{Base case}. Show \texttt{P[xs $\mapsto$ []]} 
     \begin{minted}{Haskell}
     foldr (:) [] [] = [] 
     \end{minted}
-    \textbf{Step case}. Let \texttt{y::a} \texttt{ys::[a] be arbitrary. \\
+    \textbf{Step case}. Let \texttt{y::a, ys::[a]} be arbitrary. \\
     Show that \texttt{P[xs $\mapsto$ ys]} implies \texttt{P[xs $\mapsto$ (y:ys)]} \\
-    Assume \texttt{foldr (:) [] ys = ys} and we show that \texttt{foldr (:) [] (y:ys) = y:ys}}
+    Assume \texttt{foldr (:) [] ys = ys} and we show that \texttt{foldr (:) [] (y:ys) = y:ys}
     \begin{minted}{Haskell}
     foldr (:) [] (y:ys) = 
         = ...
@@ -442,10 +474,10 @@ Induction scheme:
 (Important parts/"framework" of proof) \\
 \textbf{Lemma}: \texttt{rev (xs ++ rev ys) = ys ++ rev xs}
 \begin{proof}
-    {Let \texttt{P' := rev (xs ++ rev ys') = ys' ++ rev xs. 
+    Let \texttt{P' := rev (xs ++ rev ys') = ys' ++ rev xs}. 
     We show that $\forall$ \texttt{ys'.}$\forall$ \texttt{xs.}. \\
     Fix an arbitrary \texttt{ys} and let \texttt{P := [ys' $\mapsto$ ys]}.
-    We show that $\forall$\texttt{xs P.} }\\
+    We show that $\forall$\texttt{xs P.} \\
     (This implies $\forall$\texttt{ys'.}$\forall$\texttt{xs.P'}) \\
     \textbf{Base case}: We show \texttt{P[xs $\mapsto$ []]} 
     \begin{minted}{Haskell}
@@ -457,18 +489,30 @@ Induction scheme:
     Fix arbitrary \texttt{y::a}, \texttt{ys::[a]}. \\
     We assume \texttt{IH: rev (zs ++ rev ys) = ys ++ rev zs} \\
     and show that \texttt{rev ((z:zs) ++ rev ys) = ys ++ rev (z:zs)}
-    }
+    
     \begin{minted}{Haskell}
     rev ((z:zs) ++ rev ys)
         = ...
         = ys ++ rev (z:zs)
     \end{minted}
 \end{proof}
+
 \subsection{Induction on Trees}
-\subsubsection{Sheet 6, Ex. 1}
-(Important parts/"framework" of proof) \\
 \begin{minted}{Haskell}
 data Tree t = Leaf | Node t (Tree t) (Tree t)
+\end{minted}
+
+Induction scheme:
+\begin{prooftree}
+    \AxiomC{$\Gamma \vdash P[x \mapsto \text{Leaf} ]$}
+    \AxiomC{$\Gamma, P[x \mapsto l], P[x \mapsto r] \vdash P[x \mapsto \text{Node } a \, l \, r]$}
+    \RightLabel{$a,l,r$ not free in P}
+    \BinaryInfC{$\Gamma \vdash \forall xs :: \text{Tree } t. P$}
+\end{prooftree}
+
+\subsubsection{Sheet 6, Ex. 1}
+(Important parts/"framework" of proof) 
+\begin{minted}{Haskell}
 mapTree f Leaf = Leaf
 mapTree f (Node x t1 t2) = Node (f x) (mapTree f t1) (mapTree f t2) 
 \end{minted}  
@@ -478,7 +522,7 @@ $\forall$\texttt{t :: Tree a. mapTree g (mapTree f t) = mapTree (g . f) t}
 \begin{proof}
 Let \mintinline{Haskell}{f :: a -> b} and \mintinline{Haskell}{g :: b -> c} be arbitrary functions. \\
 Let \texttt{P := mapTree g (mapTree f t) = mapTree (g . f) t}, and we prove by induction that 
-$\forall$\texttt{t :: (Tree a).P} 
+$\forall$\texttt{t :: (Tree a).P} \\
 \textbf{Base Case}: Show \texttt{P[t $\mapsto$ Leaf]} 
 \begin{minted}{Haskell}
     mapTree g (mapTree f Leaf) = ..
@@ -493,6 +537,7 @@ We know show that then \texttt{P[t $\mapsto$ Node x l r]} holds
             =  mapTree (g . f) (Node x l r)
 \end{minted}
 \end{proof}
+
 
 
 \section{Types and typing inference}
@@ -641,14 +686,135 @@ Finding out $\tau_0$: \\ \\
 Collected type constraints: $\tau_0 = Bool$ from $iszero$, $(Int = (Int, \tau_1))$ from $BinOp$, 
 second constraint does not unify, meaning this doesn't type
 
-\section{TODO}
-Regular expressions/Parser stuff
-Monads
 
-\chapter*{Formal Methods}
-\addcontentsline{toc}{chapter}{Formal Methods}
+\part*{Formal Methods}
+\addcontentsline{toc}{part}{Formal Methods}
 \setcounter{section}{0}
 \renewcommand*{\theHsection}{chY.\the\value{section}}
-\section{section}
+
+\section{States and Expressions}
+\subsection{States}
+\textbf{State as a function}: 
+$$\text{State: Var} \li \text{Val}$$ 
+\textbf{Zero state}: 
+$$\sigma_{zero}(x)=0\text{ for all }x$$
+\textbf{Updating states}: 
+$$ (\sigma[y\mapsto v](x)) = \begin{cases}
+v & \text{if } x \equiv y \\
+\sigma(x) & x \not\equiv y \\
+\end{cases}
+$$
+\textbf{Two states are equal}:
+$$ \sigma_1 = sigma_2 \Leftrightarrow \fax (\sigma_1(x) = \sigma_2(x))$$
+
+\subsection{Semantics of arithmetic expression}
+\textbf{Semantic function}:
+$$ \A: \text{Aexp}\li \text{State} \li \text{Val}$$
+\textbf{Mapping} \\
+\begin{center}
+\begin{tabular}{l l}
+    $\A \llb x\rrb \sigma$ & $= \sigma(x)$ \\
+    $\A \llb n\rrb \sigma$ & $= \mathcal{N}\llb n\rrb$ \\
+    $\A \llb e_1 \, op \, e_2\rrb \sigma$ & $= \A\llb e_1\rrb \, \overline{op} \, \A\llb e_2\rrb$ 
+\end{tabular}
+\end{center}
+with $\overline{op}$ the relation $\text{Val}\times\text{Val}$ corresponding to $op$
+
+\subsection{Semantics of boolean expression}
+\textbf{Semantic function}:
+$$ \B: \text{Bexp}\li \text{State} \li \text{Val}$$
+\textbf{Mapping} \\
+\begin{center}
+\begin{tabular}{l l}
+    $\B \llb e_1 \, op \, e_2 \rrb \sigma$ & $=
+    \begin{cases}
+        \tt & \text{if } \A \llb e_1\rrb \sigma \, \overline{op} \, \A \llb e_2\rrb \sigma \\
+        \ff & \text{otherwise}
+    \end{cases}$ \\
+    $\B \llb b_1 \ort b_2 \rrb \sigma$ & $=
+    \begin{cases}
+        \tt & \text{if } \B \llb b_1\rrb \sigma = \tt \text{ or } \B \llb b_2\rrb \sigma  = \tt\\
+        \ff & \text{otherwise}
+    \end{cases}$ \\
+    $\B \llb b_1 \andt b_2 \rrb \sigma$ & $=
+    \begin{cases}
+        \tt & \text{if } \B \llb b_1\rrb \sigma  = \tt \text{ and } \B \llb b_2\rrb \sigma  = \tt\\
+        \ff & \text{otherwise}
+    \end{cases}$ \\
+    $\B \llb \nott b \rrb \sigma$ & $=
+    \begin{cases}
+        \tt & \text{if } \B \llb b\rrb \sigma = \ff \\
+        \ff & \text{otherwise}
+    \end{cases}$ \\
+\end{tabular}
+\end{center}
+with $\overline{op}$ the relation $\text{Val}\times\text{Val}$ corresponding to $op$
+
+\subsection{Free variables}
+\begin{center}
+    \begin{tabular}{l l}
+        $FV(e_1 \, op \, e_2)$ & $=FV(e_1) \cup FV(e_2)$ \\
+        $FV(n)$ & $=\emptyset$ \\
+        $FV(x)$ & $=\{x\}$ \\
+        $FV(\nott b)$ & $=FV(b)$ \\
+        $FV(b_1 \ort b_2)$ & $=FV(b_1) \cup FV(b_2)$ \\
+        $FV(b_1 \andt b_2)$ & $=FV(b_1) \cup FV(b_2)$ \\
+        $FV(\skipt)$ & $= \emptyset$ \\
+        $FV(x:=e)$ & $= \{x\} \cup FV(e)$ \\
+        $FV(s_1;s_2)$ & $= FV(s_1) \cup FV(e_2)$ \\
+        $FV(\ift b \thent s_1 \elset s_2 \endt )$ & $= FV(b) \cup FV(s_1) \cup FV(s_2)$ \\
+        $FV(\whilet b \dot s \endt)$ & $= FV(b) \cup FV(s)$ \\
+    \end{tabular}
+\end{center}
+
+\subsection{Substitution}
+
+\begin{center}
+    \begin{tabular}{l l}
+        $(e_1 \, op \, e_2)[x \mapsto e]$ & $\equiv (e_1[x\mapsto e])$ \\
+        $n[x\mapsto e]$ & $\equiv n$\\
+        $y[x\mapsto e]$ & $\equiv\begin{cases} e & \text{if } x \equiv y \\ y & \text{otherwise} \end{cases}$\\
+        $(\nott b)[x\mapsto e]$ & $\nott (b[x\mapsto e])$ \\
+        $(b_1 \ort b_2)[x\mapsto e]$ &  $(b_1[x\mapsto e] \ort b_2[x\mapsto e])$ \\
+        $(b_1 \andt b_2)[x\mapsto e]$ &  $(b_1[x\mapsto e] \andt b_2[x\mapsto e])$ \\
+    \end{tabular}
+\end{center}
+
+Substitution Lemma:
+$$ \B \llb b [x \mapsto e]\rrb \sigma = \B \llb b\rrb (\sigma[x \mapsto \A \llb e \rrb \sigma])$$
+
+\subsection{Structural induction on arithmetic and boolean expressions}
+\subsubsection{Session sheet 10, Ex. 2}
+Statement: $ \forall \sigma, e, e', x \, \A \llb e [x \mapsto e']\rrb \sigma = \A \llb e \rrb (\sigma[x \mapsto \A \llb e' \rrb \sigma])$
+\begin{proof}
+    Let $\sigma, x, e'$ be arbitrary. \\
+    Let $P(e) \equiv (\A \llb e [x \mapsto e']\rrb \sigma = \A \llb e \rrb (\sigma[x \mapsto \A \llb e' \rrb \sigma]))$.\\
+    We prove $\forall e. P(e)$ by strong structural induction on $e$. \\
+    We want to show $P(e)$ for some arbitrary $e$ and assume $\forall e''  \sqsubset e \, P(e')$ \\
+    \textbf{Case} $e \equiv n$ for some numerical value n:\\
+    \dots \\
+    \textbf{Case} $e \equiv y$ for some variable y:\\
+    \dots \\
+    \textbf{Case} $e \equiv e_1 \, op \, e_2$ for some arithmetic expressions $e_1, e_2$:\\
+    \dots \\
+\end{proof}
+
+\subsubsection{Sheet 10, Ex. 2}
+Statement: $ \forall \sigma, e, e', x \, (\B \llb b [x \mapsto e]\rrb \sigma = \B \llb b\rrb (\sigma[x \mapsto \A \llb e \rrb \sigma]))$
+\begin{proof}
+    Let $\sigma, x, e$ be arbitrary. \\
+    Let $P(b) \equiv (\B \llb b [x \mapsto e]\rrb \sigma = \B \llb b\rrb (\sigma[x \mapsto \A \llb e \rrb \sigma]))$.\\
+    We prove $\forall b. P(b)$ by strong structural induction on $e$. \\
+    We want to show $P(e)$ for some arbitrary $b$ and assume $\forall b''  \sqsubset b \, P(b')$ \\
+    \textbf{Case} $b \equiv b_1 \ort b_2$ for some boolean expressions $b_1,b_2$:\\
+    \dots \\
+    \textbf{Case} $b \equiv b_1 \andt b_2$ for some boolean expressions $b_1,b_2$:\\
+    \dots \\
+    \textbf{Case} $b \equiv \nott b'$ for some boolean expression $b'$:\\
+    \dots \\
+    \textbf{Case} $b \equiv e_1 \, op \, e_2$ for some arithmetic expressions $e_1, e_2$:\\
+    \dots \\
+\end{proof}
+
 
 \end{document}
