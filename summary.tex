@@ -44,8 +44,12 @@
 \def\skipt{\texttt{skip}}
 \def\whilet{\texttt{while }}
 \def\dot{\texttt{ do }}
+\def\repeatt{\texttt{repeat }}
+\def\untilt{\texttt{ until }}
 \def\llb{\llbracket}
 \def\rrb{\rrbracket}
+\def\la{\langle}
+\def\ra{\rangle}
 
 \title{FMFP}
 \author{Isabel Haas}
@@ -58,7 +62,7 @@
 This document should give an overview over the types of exercises in the FMFP course and how to solve them. 
 It also contains parts of theory and an overview of Haskell. \\
 Main sources are the course material and material provided by the course TA
-Max Schlegel on https://n.ethz.ch/~mschlegel/fmfp22/fmfp.html.
+Max Schlegel on https://n.ethz.ch/~mschlegel/fmfp22/fmfp.html.git
 \end{abstract}
 
 \thispagestyle{empty}
@@ -594,7 +598,7 @@ We know show that then \texttt{P[t $\mapsto$ Node x l r]} holds
     \texttt{= (q->r) -> (m->n) -> m -> o} \\
     \texttt{= (q->r) -> (m->p->q) -> m -> p -> r }
 \end{enumerate}
-\subsection{Typing proof and Inference}
+\subsection{Typing proof and inference}
 Solving type inference constraints
 \begin{enumerate}
     \item Remove trivial equations like $t = t$
@@ -692,7 +696,7 @@ second constraint does not unify, meaning this doesn't type
 \setcounter{section}{0}
 \renewcommand*{\theHsection}{chY.\the\value{section}}
 
-\section{States and Expressions}
+\section{Introduction to language semantics}
 \subsection{States}
 \textbf{State as a function}: 
 $$\text{State: Var} \li \text{Val}$$ 
@@ -796,7 +800,7 @@ Statement: $ \forall \sigma, e, e', x \, \A \llb e [x \mapsto e']\rrb \sigma = \
     \textbf{Case} $e \equiv y$ for some variable y:\\
     \dots \\
     \textbf{Case} $e \equiv e_1 \, op \, e_2$ for some arithmetic expressions $e_1, e_2$:\\
-    \dots \\
+    \dots 
 \end{proof}
 
 \subsubsection{Sheet 10, Ex. 2}
@@ -813,8 +817,318 @@ Statement: $ \forall \sigma, e, e', x \, (\B \llb b [x \mapsto e]\rrb \sigma = \
     \textbf{Case} $b \equiv \nott b'$ for some boolean expression $b'$:\\
     \dots \\
     \textbf{Case} $b \equiv e_1 \, op \, e_2$ for some arithmetic expressions $e_1, e_2$:\\
-    \dots \\
+    \dots 
 \end{proof}
 
+\section{Operational Semantics}
+\subsection{Properties}
+\subsubsection{Big step semantics}
+The execution of a statement $s$ in state $\sigma$
+\begin{itemize}
+    \item \textbf{terminates successfully} iff $\exists \sigma'$ st $\vdash \langle s, \sigma \rangle \li \sigma'$ 
+    \item \textbf{fails to terminate} iff $\nexists \sigma'$ st $\vdash \langle s, \sigma \rangle \li \sigma'$ 
+\end{itemize}
+\textbf{Semantic equivalence}: $s_1$ and $s_2$ are semantically equivalent iff:
+$$\forall \sigma, \sigma'. \, (\vdash \la s_1, \sigma\ra \li \sigma' 
+\Leftrightarrow
+\la s_2, \sigma\ra \li \sigma' 
+ )$$
+
+ \subsubsection{Small step semantics}
+The execution of a statement $s$ in state $\sigma$
+\begin{itemize}
+    \item \textbf{terminates successfully} iff $\exists \sigma'$ st $\vdash \langle s, \sigma \rangle \li_1^* \sigma'$ 
+    \item \textbf{fails to terminate} iff $\nexists \sigma'$ st $\vdash \langle s, \sigma \rangle \li_1^* \sigma'$ 
+\end{itemize}
+\textbf{Semantic equivalence}: $s_1$ and $s_2$ are semantically equivalent iff for all $\sigma$:
+\begin{itemize}
+    \item for all stuck or terminal configurations $\gamma$:
+    $\la s_1, \sigma \ra \li_1^* \gamma$ if and only if $\la s_2, \sigma \ra \li_1^* \gamma$
+    \item there is an infinite derivation sequence starting in $\la s_1, \sigma \ra$ if and only
+    if there is one starting in $\la s_2, \sigma \ra$
+\end{itemize}
+\textbf{Lemma}: The small-step semantics of IMP are \textbf{deterministic}:
+$\vdash \la s, \sigma \ra \li_1 \gamma \; \land \; \la s, \sigma \ra \li_1 \gamma'$ $\Rightarrow$ $\gamma = \gamma'$ 
+
+\subsection{Applying big-step semantics}
+\subsubsection{Example}
+Let $s = \ift x > y \thent (x:=y+1; y:=x-2) \elset \skipt \endt$. \\
+We want to prove $\la s, \sigma\ra \li \sigma'$ 
+for $\sigma$ with $\sigma(x)=4$, $\sigma(y)=2$ and $\sigma' = \sigma[x,y \mapsto 3,1]$
+\begin{prooftree}
+    \AxiomC{}
+    \RightLabel{ASS$_{\text{NS}}$}
+    \UnaryInfC{$\la x:=y+1, \sigma\ra\li \sigma[x \mapsto 3]$}
+    \AxiomC{}
+    \RightLabel{ASS$_{\text{NS}}$}
+    \UnaryInfC{$\la y:=x-2, \sigma[x \mapsto 3] \ra\li \sigma'$}
+    \RightLabel{SEQ$_{\text{NS}}$}
+    \BinaryInfC{$\la (x:=y+1; y:=x-2), \sigma\ra\li \sigma'$}
+    \RightLabel{IFT$_{\text{NS}}$}
+    \UnaryInfC{$\la s, \sigma\ra\li \sigma'$}
+\end{prooftree}
+
+\subsection{Applying small-step semantics}
+\subsubsection{Example}
+Let $s = \ift x > y \thent (x:=y+1; y:=x-2) \elset \skipt \endt$. \\
+We want to prove $\la s, \sigma\ra \li_1^* \sigma'$ 
+for $\sigma$ with $\sigma(x)=4$, $\sigma(y)=2$ and $\sigma' = \sigma[x,y \mapsto 3,1]$
+Derivation sequence:
+\begin{align*}
+    & \la s, \sigma\ra \\
+    \li_1^1  \; & \la (x:=y+1; y:=x-2), \sigma \ra \\
+    \li_1^1  \; & \la y:=x-2, \sigma[x \mapsto 3] \ra \\
+    \li_1^1  \; & \sigma[x,y \mapsto 3,1]
+\end{align*}
+with the following derivation trees justifying the steps
+\begin{prooftree}
+    \AxiomC{}
+    \RightLabel{IFT$_{\text{SOS}}$}
+    \UnaryInfC{$\la s, \sigma\ra \li_1 \la (x:=y+1; y:=x-2), \sigma \ra$}
+\end{prooftree}
+
+\begin{prooftree}
+    \AxiomC{}
+    \RightLabel{ASS$_{\text{SOS}}$}
+    \UnaryInfC{$\la x:=y+1, \sigma \ra \li_1 \sigma[x \mapsto 3]$}
+    \RightLabel{SEQ1$_{\text{SOS}}$}
+    \UnaryInfC{$\la (x:=y+1; y:=x-2), \sigma \ra \li_1 \la y:=x-2, \sigma[x \mapsto 3] \ra$}
+\end{prooftree}
+
+\begin{prooftree}
+    \AxiomC{}
+    \RightLabel{ASS$_{\text{SOS}}$}
+    \UnaryInfC{$\la  y:=x-2, \sigma[x \mapsto 3] \ra \li_1 \sigma[x,y \mapsto 3,1] $}
+\end{prooftree}
+
+\subsection{Induction on shape of derivation tree}
+General idea: \begin{enumerate}
+    \item Prove that for all $\sigma, \sigma',$(expr. in $s_1$), if 
+    $\vdash \la s_1, \sigma \ra \li \sigma'$ then $P$ for some property $P$ \\
+    $\Rightarrow$ Let $P(T) \equiv \forall \sigma, \sigma',(\text{expr. in }s_1) 
+    \; (root(T) \equiv \la s_1, \sigma \ra \li \sigma' \Rightarrow
+    \,P)$ \\
+    Goal: Prove $\forall T. P(T)$
+    \item Induction hypothesis: For arbitrary $T$, $\forall T' \sqsubset T.P(T')$ 
+    \item Let $\sigma, \sigma',(\text{expr. in }s_1)$ be arbitrary, assume $\la s_1, \sigma \ra \li \sigma'$
+    \item Do case analysis of last rule applied in T
+    \item Derive subtrees of T and properties about $\sigma$, like $\B \llb e\rrb \sigma = \tt$
+    \item Use subtrees, properties of $\sigma$ and induction hypothesis to prove $P$
+\end{enumerate}
+Option: Simply do case distinction, I.H. doesn't have to be applied
+
+\subsubsection{Session sheet 11, Ex.4}
+
+\begin{prooftree}
+    \AxiomC{$\la s, \sigma \ra  \li \sigma'$}
+    \RightLabel{(RepT$_{\text{NS}}$) if $\B \llb b\rrb \sigma' = \tt$}
+    \UnaryInfC{$\la \repeatt s \untilt b, \sigma \ra  \li \sigma'$}
+\end{prooftree}
+
+\begin{prooftree}
+    \AxiomC{$\la s, \sigma \ra  \li \sigma''$}
+    \AxiomC{$\la \repeatt s \untilt b, \sigma'' \ra  \li \sigma'$}
+    \RightLabel{(RepF$_{\text{NS}}$) if $\B \llb e\rrb \sigma'' = \ff$}
+    \BinaryInfC{$\la \repeatt s \untilt b, \sigma \ra  \li \sigma'$}
+\end{prooftree}
+
+Prove that for all $\sigma, \sigma, b,s $, if 
+$$\vdash \la \repeatt s \untilt b, \sigma \ra \li \sigma'$$ then 
+$$\vdash s; \whilet \nott b \dot s \endt, \sigma \ra \li \sigma'$$ 
+
+\begin{proof}
+    \begin{align*}
+    P(T) \equiv &\forall \sigma, \sigma', b, s  
+    \; (root(T) \equiv \repeatt s \untilt b, \sigma \ra \li \sigma' \\
+    & \Rightarrow  \, \vdash \la s; \whilet \nott b \dot s \endt, \sigma \ra \li \sigma')
+    \end{align*}
+
+    We prove $\forall T. P(T)$ by induction on the shape of a derivation tree\\
+    \textbf{Induction hypothesis}: For arbitrary $T$, $\forall T' \sqsubset T.P(T')$ \\
+    Let $\sigma, \sigma',b,s$ be arbitrary, assume $\la \repeatt s \untilt b, \sigma \ra \li \sigma'$. \\
+    Case analysis of last rule applied in T: \\
+    \textbf{Case} (REPT)
+    Then T has the form:
+    \begin{prooftree}
+        \AxiomC{$\mathbf{T_1}$} %TODO: box
+        \UnaryInfC{$\la s, \sigma \ra  \li \sigma'$}
+        \RightLabel{(RepT$_{\text{NS}}$)}
+        \UnaryInfC{$\la \repeatt s \untilt b, \sigma \ra  \li \sigma'$}
+    \end{prooftree}
+    for some derivation tree $T_1$ and we must have $\B \llb b\rrb \sigma' = \tt$, hence $\B \llb \nott b\rrb \sigma' = \tt$. \\
+    We can construct following tree:
+    \begin{prooftree}
+        \AxiomC{$\mathbf{T_1}$} %TODO: box
+        \UnaryInfC{$\la s, \sigma \ra  \li \sigma'$}
+        \AxiomC{}
+        \RightLabel{(WHF$_{\text{NS}}$)}
+        \UnaryInfC{$ \la \whilet \nott b \dot s \endt, \sigma' \ra \li \sigma'$}
+        \RightLabel{(SEQ$_{\text{NS}}$)}
+        \BinaryInfC{$ \la s; \whilet \nott b \dot s \endt, \sigma \ra \li \sigma'$}
+    \end{prooftree}
+    \textbf{Case} (REPF)
+    Then T has the form:
+    \begin{prooftree}
+        \AxiomC{$\mathbf{T_1}$}
+        \UnaryInfC{$\la s, \sigma \ra  \li \sigma''$}
+        \AxiomC{$\mathbf{T_2}$}
+        \UnaryInfC{$\la \repeatt s \untilt b, \sigma'' \ra  \li \sigma'$}
+        \RightLabel{(RepF$_{\text{NS}}$)}
+        \BinaryInfC{$\la \repeatt s \untilt b, \sigma \ra  \li \sigma'$}
+    \end{prooftree}
+    for some state $\sigma''$ and derivation trees $T_1, T_2$, where $\B \llb e\rrb \sigma'' = \ff$. \\
+    $T_2$ is a proper subtree of $T$, hence $P(T_2)$ holds by I.H.. 
+    This implies that there's a derivation tree $T_3$ with 
+    $root(T_3)\equiv \la s; \whilet \nott b \dot s \endt, \sigma'' \ra \li \sigma'$.
+    The last rule applied in $T_3$ must be SEQ$_{\text{NS}} $, so $T_3$ has the form:
+    \begin{prooftree}
+        \AxiomC{$\mathbf{T_4}$}
+        \UnaryInfC{$\la s, \sigma' \ra  \li \sigma'''$}
+        \AxiomC{$\mathbf{T_5}$}
+        \UnaryInfC{$\la \whilet \nott b \dot s \endt, \sigma''' \ra  \li \sigma'$}
+        \RightLabel{(SEQ$_{\text{NS}}$)}
+        \BinaryInfC{$\la s; \whilet \nott b \dot s \endt, \sigma'' \ra \li \sigma'$}
+    \end{prooftree}
+    for some state $\sigma'''$ and derivation trees $T_4, T_5$. \\
+    We can now construct following derivation tree
+
+    \begin{prooftree}
+        \AxiomC{$\mathbf{T_1}$}
+        \UnaryInfC{$\la s, \sigma \ra \li \sigma''$}
+        \AxiomC{$\mathbf{T_4}$}
+        \UnaryInfC{$\la s, \sigma' \ra  \li \sigma'''$}
+        \AxiomC{$\mathbf{T_5}$}
+        \UnaryInfC{$\la \whilet \nott b \dot s \endt, \sigma''' \ra  \li \sigma'$}
+        \RightLabel{(WHT$_{\text{NS}}$)}
+        \BinaryInfC{$\la \whilet \nott b \dot s \endt, \sigma'' \ra \li \sigma'$}
+        \RightLabel{(SEQ$_{\text{NS}}$)}
+        \BinaryInfC{$\la s; \whilet \nott b \dot s \endt, \sigma \ra \li \sigma'$}
+    \end{prooftree}
+
+\end{proof}
+
+\subsubsection{Session sheet 12/Sheet 12: Proof of equivalence Lemmas}
+\textbf{Direction big step to small step semantics}: \\
+Use derivation tree of big step semantic to get a derivation sequence for the small step semantic.
+
+\begin{proof}
+    $$P(T) \equiv \forall \sigma, \sigma', s \;
+    (root(T) \equiv (\la s, \sigma \ra \li \sigma') \Rightarrow 
+    \la s, \sigma \ra \li_1^* \sigma'
+    )$$
+    We prove $\forall T. P(T)$ by induction on the shape of a derivation tree\\
+    \textbf{Induction hypothesis}: For arbitrary $T$, $\forall T' \sqsubset T.P(T')$ \\
+    Let $\sigma, \sigma',s$ be arbitrary, assume $\la s, \sigma \ra \li \sigma'$. \\
+    \textbf{Case distinction} by last rule applied in T: \\
+    \textbf{Case} (WHF{\text{NS}})
+    Then T has the form:
+    \begin{prooftree}
+        \AxiomC{} %TODO: box
+        \RightLabel{(WHF$_{\text{NS}}$)}
+        \UnaryInfC{$\la \whilet b \dot s' \endt, \sigma \ra  \li \sigma'$}
+    \end{prooftree}
+    for some $b,s'$ such that $s \equiv \whilet b \dot s' \endt$ and 
+    $ \B \llb e \rrb \sigma = \ff $. \\
+    We can construct following derivation sequence:
+    \begin{align*}
+        & \la \whilet b \dot s' \endt, \sigma\ra \\
+        \li_1^*  \; & ... \\
+        \li_1^1  \; & \sigma
+    \end{align*}
+    \textbf{Case} (IFT$_{\text{NS}}$)
+    Then T has the form:
+    \begin{prooftree}
+        \AxiomC{$\mathbf{T_1}$}
+        \UnaryInfC{$\la s_1, \sigma \ra  \li \sigma'$} %TODO: box
+        \RightLabel{(IFT$_{\text{NS}}$)}
+        \UnaryInfC{$\la \ift b \thent s_1 \elset s_2 \endt, \sigma \ra  \li \sigma'$}
+    \end{prooftree}
+    for some $b,s_1, s_2, T_1$ such that $s \equiv \ift b \thent s_1 \elset s_2 \endt$ and 
+    $ \B \llb e \rrb \sigma = \tt $. \\
+    From $P(T_1)$ we learn $\la s_1, \sigma \ra  \li_1^* \sigma'$
+    We can construct following derivation sequence:
+    \begin{align*}
+        & \la \ift b \thent s_1 \elset s_2 \endt, \sigma \ra\\
+        \li_1^*  \; & \la s_1, \sigma \ra  \\
+        \li_1^1  \; & \sigma
+    \end{align*}
+    \\
+    \dots (other cases)
+
+\end{proof}
+
+
+
+\subsection{Proving properties of derivation sequences}
+General idea:
+\begin{enumerate}
+    \item Prove  $\gamma \li_1^* \gamma' \Rightarrow P$ for some property $P$
+    \item Define $P(k)\equiv (\gamma \li_1^k \gamma' \Rightarrow P)$ to do a strong induction
+    over $k$ 
+    \item Deal with case $k=0$ (if applicable)
+    \item Deal with case $k>0$ by splitting off first execution step 
+    $\sigma \li_1^1 \delta \li_1^{k-1} \gamma$
+    \begin{itemize}
+        \item Get information by case distinction of first execution step
+        \item Apply induction hypothesis to remaining step
+    \end{itemize}
+
+\end{enumerate}
+
+
+\subsubsection{Session sheet 12/Sheet 12: Proof of equivalence Lemmas}
+\textbf{Direction small step to big step semantics}: \\
+\begin{proof}
+    $$Q(k) \equiv (\forall \sigma, \sigma', s \;
+    (\la s, \sigma \ra \li_1^k \sigma') \Rightarrow  \;
+    \vdash \la s, \sigma \ra \li \sigma'
+    )$$
+    Using strong induction, we prove $\forall k \ Q(k)$. \\
+    $\mathbf{k=0}$: Trivially, $\sigma$ must be and end state. \\
+    $\mathbf{k>0}$: Assume $\la s, \sigma \ra \li_1^k \sigma'$. \\
+    The derivation sequence is unrolled to 
+    $\la s, \sigma \ra \li_1^1 \gamma \li_1^{k-1} \sigma'$. 
+    Let T be the derivation tree justifying the first transition. 
+    We do a case distinction on the last rule applied in T: \\
+    \textbf{Case} (ASS$_{\text{SOS}}$): T has the form
+    \begin{prooftree}
+        \AxiomC{} %TODO: box
+        \RightLabel{(ASS$_{\text{SOS}}$)}
+        \UnaryInfC{$\la x:= e, \sigma \ra  \li _1\sigma'$}
+    \end{prooftree}
+    for some $x,e$ such that $s \equiv x :=e$ and 
+    $\gamma =  \sigma[x \mapsto \A \llb e \rrb \sigma]$.
+    Since $\gamma$ is a final state there is no further derivation sequence (k=1), and hence
+    $\sigma' = \gamma =  \sigma[x \mapsto \A \llb e \rrb \sigma]$. 
+    We can construct the following derivation tree:
+    \begin{prooftree}
+        \AxiomC{} %TODO: box
+        \RightLabel{(ASS$_{\text{NS}}$)}
+        \UnaryInfC{$\la x:= e, \sigma \ra  \li \sigma'$}
+    \end{prooftree}
+
+    \dots (other cases)
+
+    % \textbf{Case} (SEQ1$_{\text{SOS}}$, SEQ2$_{\text{SOS}}$): 
+    % Then 
+    % \begin{prooftree}
+    %     \AxiomC{} %TODO: box
+    %     \RightLabel{(ASS$_{\text{SOS}}$)}
+    %     \UnaryInfC{$\la x:= e, \sigma \ra  \li _1\sigma'$}
+    % \end{prooftree}
+    % for some $x,e$ such that $s \equiv x :=e$ and 
+    % $\gamma =  \sigma[x \mapsto \A \llb e \rrb \sigma]$.
+    % Since $\gamma$ is a final state there is no further derivation sequence (k=1), and hence
+    % $\sigma' = \gamma =  \sigma[x \mapsto \A \llb e \rrb \sigma]$. 
+    % We can construct the following derivation tree:
+    % \begin{prooftree}
+    %     \AxiomC{} %TODO: box
+    %     \RightLabel{(ASS$_{\text{NS}}$)}
+    %     \UnaryInfC{$\la x:= e, \sigma \ra  \li \sigma'$}
+    % \end{prooftree}
+
+\end{proof}
+
+\section{}
 
 \end{document}
