@@ -1,10 +1,10 @@
 %!TEX option = --shell-escape
 
-\documentclass[12pt]{article}
+\documentclass[11.5pt]{article}
 
 \usepackage[utf8]{inputenc} 
 \usepackage{enumitem}
-\usepackage[left=3cm, right=3cm, top=3cm, bottom=3cm]{geometry}
+\usepackage[left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm]{geometry}
 \usepackage{minted} % colors for code
 \usepackage{bussproofs} % proof trees
 \usepackage{soul} % highlight text
@@ -20,6 +20,10 @@
 \setenumerate{align=left}
 \sethlcolor{SkyBlue1}
 \renewcommand*{\thesection}{\arabic{section}}
+% underline text in different colors
+\newsavebox\MBox
+\newcommand\Cline[2][red]{{\sbox\MBox{$#2$}%
+  \rlap{\usebox\MBox}\color{#1}\rule[-1.2\dp\MBox]{\wd\MBox}{0.5pt}}}
 
 % Math shortcuts
 \def\li{\rightarrow}
@@ -51,18 +55,19 @@
 \def\la{\langle}
 \def\ra{\rangle}
 
-\title{FMFP}
-\author{Isabel Haas}
-\date{June 2022}
+\title{Formal Methods and Functional Programming}
+\author{Isabel Haas (isabel.haas@inf.ethz.ch)}
+\date{June, July 2022}
 
 \begin{document}
-% \maketitle
+\maketitle
 
 \begin{abstract}
 This document should give an overview over the types of exercises in the FMFP course and how to solve them. 
 It also contains parts of theory and an overview of Haskell. \\
+There is no guarantee for correctness or completeness, please refer to the course material. \\
 Main sources are the course material and material provided by the course TA
-Max Schlegel on https://n.ethz.ch/~mschlegel/fmfp22/fmfp.html.git
+Max Schlegel on https://n.ethz.ch/~mschlegel/fmfp22/
 \end{abstract}
 
 \thispagestyle{empty}
@@ -76,13 +81,14 @@ Max Schlegel on https://n.ethz.ch/~mschlegel/fmfp22/fmfp.html.git
 \renewcommand*{\theHsection}{chX.\the\value{section}}
 
 \section{Haskell}
+\textbf{Credits}: Big parts of this section are copied from/inspired by https://n.ethz.ch/~mschlegel/fmfp22/, hence credits go to Max
 \setcounter{page}{1}
 \subsection{Basics}
 \begin{minted}{Haskell}
 -- Basic function
--- Declaration, comparable to int add(int a, int b){} in Java
-add :: Int -> Int -> Int 
-add a b = a + b -- Definition
+-- Declaration, comparable to int mul(int a, int b){} in Java
+mul :: Int -> Int -> Int 
+mul a b = a + b -- Definition
 -- function composition
 f (g x) = f.g x
 -- $
@@ -182,7 +188,7 @@ span (< 3) [1,2,3,4,1,2,3,4] -- ([1,2],[3,4,1,2,3,4])
 curry :: ((a,b)->c) -> a -> b -> c
 curry f a b = f (a,b)
 uncurry :: (a->b->c) -> (a,b) -> c
-uncurry f (x,y) == f a b
+uncurry f (x,y) = f x y
 \end{minted}
 
 \subsection{Algebraic data types}
@@ -524,22 +530,22 @@ For arbitrary \mintinline{Haskell}{f :: a -> b} and \mintinline{Haskell}{g :: b 
 $\forall$\texttt{t :: Tree a. mapTree g (mapTree f t) = mapTree (g . f) t}
 
 \begin{proof}
-Let \mintinline{Haskell}{f :: a -> b} and \mintinline{Haskell}{g :: b -> c} be arbitrary functions. \\
-Let \texttt{P := mapTree g (mapTree f t) = mapTree (g . f) t}, and we prove by induction that 
-$\forall$\texttt{t :: (Tree a).P} \\
-\textbf{Base Case}: Show \texttt{P[t $\mapsto$ Leaf]} 
-\begin{minted}{Haskell}
-    mapTree g (mapTree f Leaf) = ..
-            =  mapTree (g . f) Leaf
-\end{minted}
-\textbf{Step case}: 
-Let \texttt{x::a, l::Tree a, r::Tree a} be arbitrary. \\
-Assume \texttt{P[t $\mapsto$ l]} and \texttt{P[t $\mapsto$ r]}. (IH) \\
-We know show that then \texttt{P[t $\mapsto$ Node x l r]} holds 
-\begin{minted}{Haskell}
-    mapTree g (mapTree f (Node x l r)) = ..
-            =  mapTree (g . f) (Node x l r)
-\end{minted}
+    Let \mintinline{Haskell}{f :: a -> b} and \mintinline{Haskell}{g :: b -> c} be arbitrary functions. \\
+    Let \texttt{P := mapTree g (mapTree f t) = mapTree (g . f) t}, and we prove by induction that 
+    $\forall$\texttt{t :: (Tree a).P} \\
+    \textbf{Base Case}: Show \texttt{P[t $\mapsto$ Leaf]} 
+    \begin{minted}{Haskell}
+        mapTree g (mapTree f Leaf) = ..
+                =  mapTree (g . f) Leaf
+    \end{minted}
+    \textbf{Step case}: 
+    Let \texttt{x::a, l::Tree a, r::Tree a} be arbitrary. \\
+    Assume \texttt{P[t $\mapsto$ l]} and \texttt{P[t $\mapsto$ r]}. (IH) \\
+    We know show that then \texttt{P[t $\mapsto$ Node x l r]} holds 
+    \begin{minted}{Haskell}
+        mapTree g (mapTree f (Node x l r)) = ..
+                =  mapTree (g . f) (Node x l r)
+    \end{minted}
 \end{proof}
 
 
@@ -590,7 +596,7 @@ We know show that then \texttt{P[t $\mapsto$ Node x l r]} holds
     \texttt{f g :: (a->b) -> a -> c}   \\
     $\Rightarrow$ \texttt{h :: a -> b}  \\
     $\Rightarrow$ \texttt{a = q -> r} (III)\\
-    \texttt{(p->q) -> p -> r} (IV)
+    \texttt{b = (p->q) -> p -> r} (IV)
     \item (I) and (IV) $\Rightarrow$ 
     \texttt{n = p -> q} (V) and \texttt{o = p -> r}
     \item After"taking" two arguments, we have the following type \\
@@ -1077,7 +1083,7 @@ General idea:
 
 
 \subsubsection{Session sheet 12/Sheet 12: Proof of equivalence Lemmas}
-\textbf{Direction small step to big step semantics}: \\
+\textbf{Direction small step to big step semantics}: 
 \begin{proof}
     $$Q(k) \equiv (\forall \sigma, \sigma', s \;
     (\la s, \sigma \ra \li_1^k \sigma') \Rightarrow  \;
@@ -1129,6 +1135,217 @@ General idea:
 
 \end{proof}
 
-\section{}
+\section{Axiomatic Semantics}
+\textbf{Meaning} of $\{P\} \,  s  \, \{Q\}$:
+\begin{itemize}
+    \item \textbf{If} P evaluates to true in an initial state $\sigma$, 
+    and \textbf{if} the execution of s from $\sigma$ terminates in a state $\sigma'$ 
+    \textbf{then} Q will evaluate to true in $\sigma'$.
+    \item This describes \textbf{partial correctness}, that is, termination is not an essential property
+\end{itemize}
+Two statements $s_1$ and $s_2$ are \textbf{provably equivalent} if:
+$$\forall P, Q: ; \vdash \{P\} \; s_1 \; \{Q\} \; \Leftrightarrow \;\{P\} \; s_2 \; \{Q\}  $$ 
+\textbf{Meaning} of $\{P\} \,  s  \, \{\Downarrow Q\}$:
+\begin{itemize}
+    \item \textbf{If} P evaluates to true in an initial state $\sigma$, 
+    \textbf{if} the execution of s from $\sigma$ terminates in a state $\sigma'$ 
+    \textbf{and} Q will evaluate to true in $\sigma'$.
+    \item This describes \textbf{total correctness}, that is, termination is not an essential property
+\end{itemize}
+\smallskip
+Termination is proved using \textbf{loop variants}
+\begin{itemize}
+    \item Loop variant is an expression that evaluates to a value in a well-founded set (for instance, $\mathbb{N}$)
+    \item Each loop iteration must decrease the value of the loop variant
+    \item The loop has to terminate when a minimal value of the well-founded set is reached (or earlier)
+\end{itemize}
+\textbf{Total correctness derivation rule for loops}:
+\begin{prooftree}
+    \AxiomC{$\{n \land P \land e=Z\} \; s \; \{\Downarrow P \land e < Z\}$}
+    \RightLabel{(WHTOT$_{\text{Ax}})$ if $b \land P \vDash 0 \leq e$}
+    \UnaryInfC{$\{P\} \; \whilet b \dot s \endt \; \{\Downarrow \lnot b \land P\}$}
+\end{prooftree}
+where $Z$ is a fresh logical variable (not used in $P$) \smallskip \\ 
+The derivation system for partical correctness of IMP programs is \textbf{sound} or \textbf{complete}
+\begin{itemize}
+    \item Soundness: if a property can be proved it does indeed hold
+    \item Completeness: if a property holds it can be proved
+\end{itemize}
+
+
+\subsection{Induction on shape of derivation trees}
+(Not in exercises, but in slides and old exam) \\
+Same technique as with big-step semantics
+\subsubsection{Example}
+Statement $\forall P, Q. \; \{P\} \; \skipt \; \{Q\} \; \Rightarrow \; P \vDash Q$
+\begin{proof}
+    $$P(T)\equiv \forall P, Q. \; root(T)\equiv(\{P\} \; \skipt \; \{Q\}) \; \Rightarrow \; P \vDash Q$$
+    where T is a derivation tree with axiomatic semantic rules applied. \\
+    We want to prove $\forall T. \, P(T)$ by strong structural induction on the shape of a derivation tree. \\
+    We do a case distinction by the last rule applied in T: \\
+    \dots 
+\end{proof}
+
+
+
+\subsection{Proof outlines}
+\subsubsection{Notations}
+\begin{tabular}{c | c | c | c | c}
+    \begin{tabular}{l}
+        $ \{ P\}$ \\
+        $\quad \skipt$ \\
+        $\{ P\}$ 
+    \end{tabular}
+ &
+    \begin{tabular}{l}
+        $ \{ P[x\mapsto e]\}$ \\
+        $\quad x := e$ \\
+        $\{ P\} $
+    \end{tabular}
+
+&
+    \begin{tabular}{l}
+        $ \{ P\}$ \\
+        $\quad s_1$ \\
+        $\{ Q\} $ \\
+        $\quad s_2$ \\
+        $\{ R\} $
+    \end{tabular}
+&
+    \begin{tabular}{l}
+        $ \{ P\}$ \\
+        $\quad \ift b \thent $ \\
+        $\quad \quad\{ b \land P\} $ \\
+        $\quad \quad \quad s_1 $ \\
+        $\quad \quad \{Q\} $ \\
+        $\quad \elset $ \\
+        $\quad \quad\{ \lnot b \land P\} $ \\
+        $\quad \quad \quad s_2 $ \\
+        $\quad \quad \{Q\} $ \\
+        $\quad \endt$ \\
+        $\{ Q\} $
+    \end{tabular}
+
+    &
+    \begin{tabular}{l}
+        $ \{ P\}$ \\
+        $\quad \whilet b \dot $ \\
+        $\quad \quad\{ b \land P\} $ \\
+        $\quad \quad \quad s_1 $ \\
+        $\quad \quad \{P\} $ \\
+        $\{\lnot b \land P\} $
+    \end{tabular}
+\end{tabular}
+
+\subsubsection{Finding loop invariants and variants}
+Finding an invariant: \begin{itemize}
+    \item Include variables changed in loop
+    \item Include relationships between input and loop variables
+    \item If the goal of a program is to f.e. compute the gcd or compute a sum, include
+    this in the invariant, i.e. $gcd(a,b)=gcd(x,y)$, $\sum_{i=0}^{k}=...$
+    \item Implications for if-statements
+\end{itemize}
+Finding a variant:
+\begin{itemize}
+    \item Find loop variable that decreases
+    \item Find difference/sum of loop variables that decreases
+\end{itemize}
+\smallskip
+\textbf{Session sheet 13: GCD algorithm }: \\
+IMP program $s$:
+\begin{verbatim}
+b := x
+c := y
+while b # c do
+    if b < c then
+        c := c - b
+    else
+        b := b-c
+    end
+end
+z := b
+\end{verbatim}
+Goal: Prove Hoare Triple 
+$\{x=X \land y=Y\land X > 0 \land Y >0\} \; s \; \{\Downarrow z=gcd(X,Y)\}$
+Suitable loop invariant: $gcd(x,y)=gcd(a,b) \land b >0 \land c > 0 \land x=X \land y=Y$ \\
+Suitable loop variant: $b+c$ \smallskip \\
+\textbf{FS10, Ex. 7} \\
+IMP program $s$:
+\begin{verbatim}
+while x < y do
+    t := x
+    x := y
+    y := t
+end
+\end{verbatim}
+Goal: Prove Hoare Triple $\{x=X \land y=Y\} \; s \; \{\Downarrow x = max(X,Y)\}$ \\
+Suitable loop invariant: $max(x,y)=max(X,Y)$ \\
+Suitable loop variant: $y-x$ 
+
+\subsubsection{Sheet 13, Ex.2}
+IMP program $s$:
+\begin{verbatim}
+y := 0
+z := 0
+while y * y < n do
+    y := y+1
+    if y * y <= n then
+        z := z+1
+    else
+        skip
+    end
+end
+\end{verbatim}
+Goal: Prove
+Hoare Triple $\{n=N \land n \geq 0\} \; s \; \{ z^2 \leq N \land N < (z+1)^2\}$ \smallskip \\
+Suitable loop invariant: 
+$$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land (z^2 \leq N) \land (n=N) \land (z \geq 0)$$ 
+Suitable loop variant: $n-y^2$ \\
+\textbf{Proof outline}: \\
+\{ $n=N \land n \geq 0\}$ \\
+$\vDash$ \\
+\{ $(0^2 \leq n \Rightarrow 0 = 0) \land (0^2 > n \Rightarrow 0 = 0 + 1) \land 0^2 \leq n \land n=N \land 0 \geq 0$ \} \\
+\fbox{\texttt{y := 0}} \\
+\{ $(y^2 \leq n \Rightarrow y = 0) \land (y^2 > n \Rightarrow y = 0 + 1) \land 0^2 \leq n \land n=N \land 0 \geq 0$ \} \\
+\fbox{\texttt{z := 0}} \\
+\{\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$} \} \\
+\fbox{\texttt{while \colorbox{magenta!10}{y * y < n} do}} \\
+\{\colorbox{magenta!10}{$y^2 < n$}$\land$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-y^2=V$}\} \\
+$\vDash$ (1) \\
+\{$(y+1-1)^2<n \land y+1 = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-(y+1)^2<V$}\} \\
+\fbox{\texttt{\quad y := y+1}} \\
+\{$\Downarrow (y-1)^2<n \land y = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-y^2<V$} \} \\
+\fbox{\texttt{\quad if \colorbox{NavyBlue!10}{y * y <= n} then}} \\
+\{$\Downarrow$\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\}\\
+$\vDash$ \\
+\{$\Downarrow$\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z+1\land (z+1-1)^2 \leq n \land n=N \land z+1 \geq 0\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\}\\
+\fbox{\texttt{\quad \quad z := z+1}} \\
+\{$\Downarrow$\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z\land (z-1)^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\}\\
+$\vDash$ (2) \\
+\{$\Downarrow$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\} \\
+\fbox{\texttt{\quad else}} \\
+\{$\Downarrow$\colorbox{NavyBlue!10}{$\lnot(y \leq n)$}$\land (y-1)^2<n \land y = z+ 1 \land z^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\}\\
+\fbox{\texttt{\quad \quad skip}} \\
+\{$\Downarrow$\colorbox{NavyBlue!10}{$\lnot(y \leq n)$}$\land (y-1)^2<n \land y = z+ 1 \land z^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\}\\
+$\vDash$ (2) \\
+\{$\Downarrow$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\} \\
+ \fbox{\texttt{\quad end}} \\
+\{$\Downarrow$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\} \\
+\fbox{\texttt{end}} \\
+\{$\Downarrow$\colorbox{magenta!10}{$\lnot (y^2 < n)$}$\land$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq N \land n=N \land z \geq 0$}\} \\
+$\vDash$ (3) \\
+\{$\Downarrow z^2 \leq N \land N < (z+1)^2\}$\\
+\begin{enumerate}[label=(\arabic*)]
+    \item $y^2<n$ and $y^2 \leq n \Rightarrow y = z$ implies $y=z$, $y \leq 0$ must hold for $n-y^2 > n-(y+1)^2$
+    \item As either $y^2>n$ or $y^2\leq n$ are false, they immediately imply the right hand side
+    \item $N < (z+1)^2$ can be shown by case distinction on y: \\
+    \textbf{Case} $y^<n$: As $y^2\geq n$, this case is not possible \\
+    \textbf{Case} $y^2=n$: $y^2 = n \land (y^2 \leq n \implies y=z)$ implies $y^2=z^2$ and then $N=n=y^2 = z^2 < (z+1)^2$ (last step requires $z \geq 0$)\\
+    \textbf{Case} $y2 > n$: $y^2 > n \land (y^2 >n \Rightarrow y = z+1)$ implies $y = z+1$ and then 
+    $N=n < y^2 = (z+1)^2$
+
+\end{enumerate}
+
+% TODO: proof with termination
 
 \end{document}
