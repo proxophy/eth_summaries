@@ -1189,6 +1189,12 @@ Statement $\forall P, Q. \; \{P\} \; \skipt \; \{Q\} \; \Rightarrow \; P \vDash 
 
 
 \subsection{Proof outlines}
+\begin{enumerate}
+    \item Write pre- and postcondition at beginning/start
+    \item If you have a loop: Write loop invariant before loop, at starts of loop and after loop
+    \item Add conditions of while and if statements at start of the statement body
+\end{enumerate}
+
 \subsubsection{Notations}
 \begin{tabular}{c | c | c | c | c}
     \begin{tabular}{l}
@@ -1341,7 +1347,7 @@ $\vDash$ (3) \\
     \item $N < (z+1)^2$ can be shown by case distinction on y: \\
     \textbf{Case} $y^<n$: As $y^2\geq n$, this case is not possible \\
     \textbf{Case} $y^2=n$: $y^2 = n \land (y^2 \leq n \implies y=z)$ implies $y^2=z^2$ and then $N=n=y^2 = z^2 < (z+1)^2$ (last step requires $z \geq 0$)\\
-    \textbf{Case} $y2 > n$: $y^2 > n \land (y^2 >n \Rightarrow y = z+1)$ implies $y = z+1$ and then 
+    \textbf{Case} $y^2 > n$: $y^2 > n \land (y^2 >n \Rightarrow y = z+1)$ implies $y = z+1$ and then 
     $N=n < y^2 = (z+1)^2$
 
 \end{enumerate}
