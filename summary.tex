@@ -1,5 +1,3 @@
-%!TEX option = --shell-escape
-
 \documentclass[11.5pt]{article}
 
 \usepackage[utf8]{inputenc} 
@@ -15,15 +13,11 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{stmaryrd}
+\usepackage{wasysym}
 
 \setitemize{align=left, topsep = 5pt, parsep = 2pt}
 \setenumerate{align=left}
-\sethlcolor{SkyBlue1}
 \renewcommand*{\thesection}{\arabic{section}}
-% underline text in different colors
-\newsavebox\MBox
-\newcommand\Cline[2][red]{{\sbox\MBox{$#2$}%
-  \rlap{\usebox\MBox}\color{#1}\rule[-1.2\dp\MBox]{\wd\MBox}{0.5pt}}}
 
 % Math shortcuts
 \def\li{\rightarrow}
@@ -36,6 +30,7 @@
 \def\exz{\exists z.}
 \def\A{\mathcal{A}}
 \def\B{\mathcal{B}}
+\def\P{\mathcal{P}}
 \def\tt{\texttt{tt}}
 \def\ff{\texttt{ff}}
 \def\nott{\texttt{not }}
@@ -54,6 +49,10 @@
 \def\rrb{\rrbracket}
 \def\la{\langle}
 \def\ra{\rangle}
+\def\unt{\, \text{U} \,}
+\def\nex{\fullmoon}
+\def\evt{\lozenge}
+\def\alw{\square}
 
 \title{Formal Methods and Functional Programming}
 \author{Isabel Haas (isabel.haas@inf.ethz.ch)}
@@ -67,7 +66,7 @@ This document should give an overview over the types of exercises in the FMFP co
 It also contains parts of theory and an overview of Haskell. \\
 There is no guarantee for correctness or completeness, please refer to the course material. \\
 Main sources are the course material and material provided by the course TA
-Max Schlegel on https://n.ethz.ch/~mschlegel/fmfp22/
+Max Schlegel on \\ https://n.ethz.ch/~mschlegel/fmfp22/
 \end{abstract}
 
 \thispagestyle{empty}
@@ -91,7 +90,7 @@ mul :: Int -> Int -> Int
 mul a b = a + b -- Definition
 -- function composition
 f (g x) = f.g x
--- $
+-- dollar sign:
 f $ x = f x
 f $ map g xs = f (map g xs) -- to avoid parentheses 
 -- functions can also be arguments
@@ -279,7 +278,7 @@ fibLouis 1 = 1
 fibLouis n = fibLouis (n - 1) + fibLouis (n - 2)
 fibEva :: Int -> Int
 fibEva n = fst (aux n) where 
-    aux 0 = (0, 1)B
+    aux 0 = (0, 1)
     aux n = next (aux (n - 1))
     next (a, b) = (b, a + b)
 \end{minted}
@@ -366,7 +365,7 @@ Let $\Gamma \equiv (\lnot A) \land (A \lor B)$
         \RightLabel{$\lor E$}
         \TrinaryInfC{$\Gamma \vdash B$}
         \RightLabel{$\li I$}
-        \UnaryInfC{ $\vdash (\lnot A) \land (A \lor B)$}
+        \UnaryInfC{ $\vdash (\lnot A) \land (A \lor B) \li B$}
 \end{prooftree}
 
 \subsection{Natural Deduction with quantifiers}
@@ -398,19 +397,19 @@ Let $\Gamma \equiv \exx P \land Q, P \land Q$
         \UnaryInfC{$\Gamma \vdash \exx Q$}
 
         \RightLabel{$\land I$}
-        \BinaryInfC{$\Gamma \vdash (\exx P) \lor (\exx Q)$}
+        \BinaryInfC{$\Gamma \vdash (\exx P) \land (\exx Q)$}
     \RightLabel{$\exists E ^{**}$}
-    \BinaryInfC{$(\exx P \land Q) \vdash (\exx P) \lor (\exx Q)$}
+    \BinaryInfC{$(\exx P \land Q) \vdash (\exx P) \land (\exx Q)$}
     \RightLabel{$\li I$}
-    \UnaryInfC{$\vdash (\exx P \land Q) \li ((\exx P) \lor (\exx Q))$}
+    \UnaryInfC{$\vdash (\exx P \land Q) \li ((\exx P) \land (\exx Q))$}
 \end{prooftree}
 
 ** side condition OK: x not free in $\exx P \land Q$ nor $(\exx P) \lor (\exx Q)$
 
 \section{Binding and $\alpha$-conversion}
 \textbf{Bound}: Each occurrence of a variable is bound or free:
-A variable occurrence x in a formula A is \textbf{bound} if x occurs within a sub formula B of A of the form $\exx B$ or $\fax B$.
-\textbf{Alpha-conversion}: bound variables can be renamed \\
+A variable occurrence x in a formula A is \textbf{bound} if x occurs within a sub formula B of A of the form $\exx B$ or $\fax B$. \\
+\textbf{Alpha-conversion}: bound variables can be renamed to names not yet used \\
 \textbf{Examples} \\
 \begin{tabular}{l l c}
      & & $\alpha$-convertible \\
@@ -442,8 +441,9 @@ Induction scheme:
     aux 0 = ...
         = (fibLouis 0, fibLouis (0+1))
     \end{minted}
-    \textbf{Step case}. Let \texttt{m:Nat} be arbitrary. \\
-    Show that \texttt{P[n $\mapsto$ m]} implies \texttt{P[n $\mapsto$ m+1]}. \\
+    \textbf{Step case}: Let \texttt{m:Nat} be arbitrary. \\
+    \textbf{I.H.}: \texttt{P[n $\mapsto$ m]} \\
+    Show \texttt{P[n $\mapsto$ (m+1)]}. \\
     Assume \texttt{aux m = (fibLouis m, fibLouis (m+1))}
     \begin{minted}{Haskell}
     aux (m+1) = ...
@@ -471,9 +471,10 @@ Induction scheme:
     \begin{minted}{Haskell}
     foldr (:) [] [] = [] 
     \end{minted}
-    \textbf{Step case}. Let \texttt{y::a, ys::[a]} be arbitrary. \\
-    Show that \texttt{P[xs $\mapsto$ ys]} implies \texttt{P[xs $\mapsto$ (y:ys)]} \\
-    Assume \texttt{foldr (:) [] ys = ys} and we show that \texttt{foldr (:) [] (y:ys) = y:ys}
+    \textbf{Step case}: Let \texttt{y::a, ys::[a]} be arbitrary. \\
+    \textbf{I.H}.: \texttt{P[xs $\mapsto$ ys]}\\
+    Show \texttt{P[xs $\mapsto$ (y:ys)]} \\
+    Assume \texttt{foldr (:) [] ys = ys} % and we show that \texttt{foldr (:) [] (y:ys) = y:ys}
     \begin{minted}{Haskell}
     foldr (:) [] (y:ys) = 
         = ...
@@ -494,12 +495,10 @@ Induction scheme:
     rev ([] ++ rev ys) = ...
         = ys ++ rev []
     \end{minted}
-    \textbf{Step case}: We need to show 
-    $\forall$\texttt{z, zs P[xs $\mapsto$ zs]} $\li$ \texttt{ P[xs $\mapsto$ (z:zs)]}.\\
+    \textbf{Step case}: Let \texttt{z::a, zs::[a]} be arbitrary. \\
     Fix arbitrary \texttt{y::a}, \texttt{ys::[a]}. \\
-    We assume \texttt{IH: rev (zs ++ rev ys) = ys ++ rev zs} \\
-    and show that \texttt{rev ((z:zs) ++ rev ys) = ys ++ rev (z:zs)}
-    
+    \textbf{I.H.}: \texttt{ rev (zs ++ rev ys) = ys ++ rev zs}  \\
+    We show \texttt{ P[xs $\mapsto$ (z:zs)]}.
     \begin{minted}{Haskell}
     rev ((z:zs) ++ rev ys)
         = ...
@@ -540,8 +539,9 @@ $\forall$\texttt{t :: Tree a. mapTree g (mapTree f t) = mapTree (g . f) t}
     \end{minted}
     \textbf{Step case}: 
     Let \texttt{x::a, l::Tree a, r::Tree a} be arbitrary. \\
-    Assume \texttt{P[t $\mapsto$ l]} and \texttt{P[t $\mapsto$ r]}. (IH) \\
-    We know show that then \texttt{P[t $\mapsto$ Node x l r]} holds 
+    I.H.1: \texttt{P[t $\mapsto$ l]} \\
+    I.H.2: \texttt{P[t $\mapsto$ r]} \\
+    We show \texttt{P[t $\mapsto$ Node x l r]} 
     \begin{minted}{Haskell}
         mapTree g (mapTree f (Node x l r)) = ..
                 =  mapTree (g . f) (Node x l r)
@@ -599,7 +599,7 @@ $\forall$\texttt{t :: Tree a. mapTree g (mapTree f t) = mapTree (g . f) t}
     \texttt{b = (p->q) -> p -> r} (IV)
     \item (I) and (IV) $\Rightarrow$ 
     \texttt{n = p -> q} (V) and \texttt{o = p -> r}
-    \item After"taking" two arguments, we have the following type \\
+    \item After "taking" two arguments, we have the following type \\
     \texttt{f g h :: a -> c} \\
     \texttt{= (q->r) -> (m->n) -> m -> o} \\
     \texttt{= (q->r) -> (m->p->q) -> m -> p -> r }
@@ -696,7 +696,7 @@ Finding out $\tau_0$: \\ \\
 Collected type constraints: $\tau_0 = Bool$ from $iszero$, $(Int = (Int, \tau_1))$ from $BinOp$, 
 second constraint does not unify, meaning this doesn't type
 
-
+\newpage
 \part*{Formal Methods}
 \addcontentsline{toc}{part}{Formal Methods}
 \setcounter{section}{0}
@@ -715,12 +715,12 @@ v & \text{if } x \equiv y \\
 \end{cases}
 $$
 \textbf{Two states are equal}:
-$$ \sigma_1 = sigma_2 \Leftrightarrow \fax (\sigma_1(x) = \sigma_2(x))$$
+$$ \sigma_1 = \sigma_2 \Leftrightarrow \fax (\sigma_1(x) = \sigma_2(x))$$
 
 \subsection{Semantics of arithmetic expression}
 \textbf{Semantic function}:
 $$ \A: \text{Aexp}\li \text{State} \li \text{Val}$$
-\textbf{Mapping} \\
+\textbf{Mapping}
 \begin{center}
 \begin{tabular}{l l}
     $\A \llb x\rrb \sigma$ & $= \sigma(x)$ \\
@@ -733,7 +733,7 @@ with $\overline{op}$ the relation $\text{Val}\times\text{Val}$ corresponding to 
 \subsection{Semantics of boolean expression}
 \textbf{Semantic function}:
 $$ \B: \text{Bexp}\li \text{State} \li \text{Val}$$
-\textbf{Mapping} \\
+\textbf{Mapping}
 \begin{center}
 \begin{tabular}{l l}
     $\B \llb e_1 \, op \, e_2 \rrb \sigma$ & $=
@@ -790,7 +790,7 @@ with $\overline{op}$ the relation $\text{Val}\times\text{Val}$ corresponding to 
     \end{tabular}
 \end{center}
 
-Substitution Lemma:
+\textbf{Substitution Lemma}:
 $$ \B \llb b [x \mapsto e]\rrb \sigma = \B \llb b\rrb (\sigma[x \mapsto \A \llb e \rrb \sigma])$$
 
 \subsection{Structural induction on arithmetic and boolean expressions}
@@ -800,7 +800,7 @@ Statement: $ \forall \sigma, e, e', x \, \A \llb e [x \mapsto e']\rrb \sigma = \
     Let $\sigma, x, e'$ be arbitrary. \\
     Let $P(e) \equiv (\A \llb e [x \mapsto e']\rrb \sigma = \A \llb e \rrb (\sigma[x \mapsto \A \llb e' \rrb \sigma]))$.\\
     We prove $\forall e. P(e)$ by strong structural induction on $e$. \\
-    We want to show $P(e)$ for some arbitrary $e$ and assume $\forall e''  \sqsubset e \, P(e')$ \\
+    We want to show $P(e)$ for some arbitrary $e$ and assume $\forall e''  \sqsubset e \, P(e')$ (\textbf{I.H.})\\
     \textbf{Case} $e \equiv n$ for some numerical value n:\\
     \dots \\
     \textbf{Case} $e \equiv y$ for some variable y:\\
@@ -815,7 +815,7 @@ Statement: $ \forall \sigma, e, e', x \, (\B \llb b [x \mapsto e]\rrb \sigma = \
     Let $\sigma, x, e$ be arbitrary. \\
     Let $P(b) \equiv (\B \llb b [x \mapsto e]\rrb \sigma = \B \llb b\rrb (\sigma[x \mapsto \A \llb e \rrb \sigma]))$.\\
     We prove $\forall b. P(b)$ by strong structural induction on $e$. \\
-    We want to show $P(e)$ for some arbitrary $b$ and assume $\forall b''  \sqsubset b \, P(b')$ \\
+    We want to show $P(e)$ for some arbitrary $b$ and assume $\forall b''  \sqsubset b \, P(b')$ (\textbf{I.H.})\\
     \textbf{Case} $b \equiv b_1 \ort b_2$ for some boolean expressions $b_1,b_2$:\\
     \dots \\
     \textbf{Case} $b \equiv b_1 \andt b_2$ for some boolean expressions $b_1,b_2$:\\
@@ -909,14 +909,14 @@ with the following derivation trees justifying the steps
 
 \subsection{Induction on shape of derivation tree}
 General idea: \begin{enumerate}
-    \item Prove that for all $\sigma, \sigma',$(expr. in $s_1$), if 
+    \item Prove that for all $\sigma, \sigma',$(var. in $s_1$), if 
     $\vdash \la s_1, \sigma \ra \li \sigma'$ then $P$ for some property $P$ \\
-    $\Rightarrow$ Let $P(T) \equiv \forall \sigma, \sigma',(\text{expr. in }s_1) 
+    $\Rightarrow$ Let $P(T) \equiv \forall \sigma, \sigma',(\text{var. in }s_1) 
     \; (root(T) \equiv \la s_1, \sigma \ra \li \sigma' \Rightarrow
     \,P)$ \\
-    Goal: Prove $\forall T. P(T)$
+    Goal: Prove $\forall T. P(T)$ by induction on the shape of a derivation tree
     \item Induction hypothesis: For arbitrary $T$, $\forall T' \sqsubset T.P(T')$ 
-    \item Let $\sigma, \sigma',(\text{expr. in }s_1)$ be arbitrary, assume $\la s_1, \sigma \ra \li \sigma'$
+    \item Let $\sigma, \sigma',(\text{var. in }s_1)$ be arbitrary, assume $\la s_1, \sigma \ra \li \sigma'$
     \item Do case analysis of last rule applied in T
     \item Derive subtrees of T and properties about $\sigma$, like $\B \llb e\rrb \sigma = \tt$
     \item Use subtrees, properties of $\sigma$ and induction hypothesis to prove $P$
@@ -940,7 +940,7 @@ Option: Simply do case distinction, I.H. doesn't have to be applied
 
 Prove that for all $\sigma, \sigma, b,s $, if 
 $$\vdash \la \repeatt s \untilt b, \sigma \ra \li \sigma'$$ then 
-$$\vdash s; \whilet \nott b \dot s \endt, \sigma \ra \li \sigma'$$ 
+$$\vdash \la s; \whilet \nott b \dot s \endt, \sigma \ra \li \sigma'$$ 
 
 \begin{proof}
     \begin{align*}
@@ -961,7 +961,7 @@ $$\vdash s; \whilet \nott b \dot s \endt, \sigma \ra \li \sigma'$$
         \RightLabel{(RepT$_{\text{NS}}$)}
         \UnaryInfC{$\la \repeatt s \untilt b, \sigma \ra  \li \sigma'$}
     \end{prooftree}
-    for some derivation tree $T_1$ and we must have $\B \llb b\rrb \sigma' = \tt$, hence $\B \llb \nott b\rrb \sigma' = \tt$. \\
+    for some derivation tree $T_1$ and we must have $\B \llb b\rrb \sigma' = \tt$, hence $\B \llb \nott b\rrb \sigma' = \ff$. \\
     We can construct following tree:
     \begin{prooftree}
         \AxiomC{$\mathbf{T_1}$} %TODO: box
@@ -1013,7 +1013,7 @@ $$\vdash s; \whilet \nott b \dot s \endt, \sigma \ra \li \sigma'$$
 
 \end{proof}
 
-\subsubsection{Session sheet 12/Sheet 12: Proof of equivalence Lemmas}
+\subsubsection{Session sheet 12/Sheet 12: Proof of equivalence lemmas}
 \textbf{Direction big step to small step semantics}: \\
 Use derivation tree of big step semantic to get a derivation sequence for the small step semantic.
 
@@ -1055,8 +1055,8 @@ Use derivation tree of big step semantic to get a derivation sequence for the sm
     We can construct following derivation sequence:
     \begin{align*}
         & \la \ift b \thent s_1 \elset s_2 \endt, \sigma \ra\\
-        \li_1^*  \; & \la s_1, \sigma \ra  \\
-        \li_1^1  \; & \sigma
+        \li_1^1  \; & \la s_1, \sigma \ra  \\
+        \li_1^*  \; & \sigma
     \end{align*}
     \\
     \dots (other cases)
@@ -1076,13 +1076,12 @@ General idea:
     $\sigma \li_1^1 \delta \li_1^{k-1} \gamma$
     \begin{itemize}
         \item Get information by case distinction of first execution step
-        \item Apply induction hypothesis to remaining step
+        \item Apply induction hypothesis to remaining steps
     \end{itemize}
 
 \end{enumerate}
 
-
-\subsubsection{Session sheet 12/Sheet 12: Proof of equivalence Lemmas}
+\subsubsection{Session sheet 12/Sheet 12: Proof of equivalence lemmas}
 \textbf{Direction small step to big step semantics}: 
 \begin{proof}
     $$Q(k) \equiv (\forall \sigma, \sigma', s \;
@@ -1135,7 +1134,7 @@ General idea:
 
 \end{proof}
 
-\section{Axiomatic Semantics}
+\section{Axiomatic semantics}
 \textbf{Meaning} of $\{P\} \,  s  \, \{Q\}$:
 \begin{itemize}
     \item \textbf{If} P evaluates to true in an initial state $\sigma$, 
@@ -1248,7 +1247,7 @@ Finding an invariant: \begin{itemize}
     \item Include variables changed in loop
     \item Include relationships between input and loop variables
     \item If the goal of a program is to f.e. compute the gcd or compute a sum, include
-    this in the invariant, i.e. $gcd(a,b)=gcd(x,y)$, $\sum_{i=0}^{k}=...$
+    this in the invariant, i.e. $gcd(a,b)=gcd(x,y)$, $\sum_{i=0}^{k}(...)=...$
     \item Implications for if-statements
 \end{itemize}
 Finding a variant:
@@ -1272,7 +1271,7 @@ end
 z := b
 \end{verbatim}
 Goal: Prove Hoare Triple 
-$\{x=X \land y=Y\land X > 0 \land Y >0\} \; s \; \{\Downarrow z=gcd(X,Y)\}$
+$\{x=X \land y=Y\land X > 0 \land Y >0\} \; s \; \{\Downarrow z=gcd(X,Y)\}$ \\
 Suitable loop invariant: $gcd(x,y)=gcd(a,b) \land b >0 \land c > 0 \land x=X \land y=Y$ \\
 Suitable loop variant: $b+c$ \smallskip \\
 \textbf{FS10, Ex. 7} \\
@@ -1284,8 +1283,8 @@ while x < y do
     y := t
 end
 \end{verbatim}
-Goal: Prove Hoare Triple $\{x=X \land y=Y\} \; s \; \{\Downarrow x = max(X,Y)\}$ \\
-Suitable loop invariant: $max(x,y)=max(X,Y)$ \\
+Goal: Prove Hoare Triple $\{x=X \land y=Y\} \; s \; \{\Downarrow x = \max(X,Y)\}$ \\
+Suitable loop invariant: $\max(x,y)=\max(X,Y)$ \\
 Suitable loop variant: $y-x$ 
 
 \subsubsection{Sheet 13, Ex.2}
@@ -1307,6 +1306,7 @@ Hoare Triple $\{n=N \land n \geq 0\} \; s \; \{ z^2 \leq N \land N < (z+1)^2\}$ 
 Suitable loop invariant: 
 $$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land (z^2 \leq N) \land (n=N) \land (z \geq 0)$$ 
 Suitable loop variant: $n-y^2$ \\
+\hl{Please disregard the termination part of the proof for now, as I'm not sure where we can write the $\Downarrow$ symbol already} \\
 \textbf{Proof outline}: \\
 \{ $n=N \land n \geq 0\}$ \\
 $\vDash$ \\
@@ -1322,21 +1322,21 @@ $\vDash$ (1) \\
 \fbox{\texttt{\quad y := y+1}} \\
 \{$\Downarrow (y-1)^2<n \land y = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-y^2<V$} \} \\
 \fbox{\texttt{\quad if \colorbox{NavyBlue!10}{y * y <= n} then}} \\
-\{$\Downarrow$\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\}\\
+\{\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
 $\vDash$ \\
-\{$\Downarrow$\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z+1\land (z+1-1)^2 \leq n \land n=N \land z+1 \geq 0\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\}\\
+\{\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z+1\land (z+1-1)^2 \leq n \land n=N \land z+1 \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
 \fbox{\texttt{\quad \quad z := z+1}} \\
-\{$\Downarrow$\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z\land (z-1)^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\}\\
+\{$\Downarrow$\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z\land (z-1)^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
 $\vDash$ (2) \\
 \{$\Downarrow$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\} \\
 \fbox{\texttt{\quad else}} \\
-\{$\Downarrow$\colorbox{NavyBlue!10}{$\lnot(y \leq n)$}$\land (y-1)^2<n \land y = z+ 1 \land z^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\}\\
+\{\colorbox{NavyBlue!10}{$\lnot(y \leq n)$}$\land (y-1)^2<n \land y = z+ 1 \land z^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
 \fbox{\texttt{\quad \quad skip}} \\
-\{$\Downarrow$\colorbox{NavyBlue!10}{$\lnot(y \leq n)$}$\land (y-1)^2<n \land y = z+ 1 \land z^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\}\\
+\{$\Downarrow$\colorbox{NavyBlue!10}{$\lnot(y \leq n)$}$\land (y-1)^2<n \land y = z+ 1 \land z^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
 $\vDash$ (2) \\
-\{$\Downarrow$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\} \\
- \fbox{\texttt{\quad end}} \\
-\{$\Downarrow$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\} \\
+\{$\Downarrow$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-y^2<V$}\} \\
+\fbox{\texttt{\quad end}} \\
+\{$\Downarrow$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-y^2<V$}\} \\
 \fbox{\texttt{end}} \\
 \{$\Downarrow$\colorbox{magenta!10}{$\lnot (y^2 < n)$}$\land$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq N \land n=N \land z \geq 0$}\} \\
 $\vDash$ (3) \\
@@ -1349,9 +1349,154 @@ $\vDash$ (3) \\
     \textbf{Case} $y^2=n$: $y^2 = n \land (y^2 \leq n \implies y=z)$ implies $y^2=z^2$ and then $N=n=y^2 = z^2 < (z+1)^2$ (last step requires $z \geq 0$)\\
     \textbf{Case} $y^2 > n$: $y^2 > n \land (y^2 >n \Rightarrow y = z+1)$ implies $y = z+1$ and then 
     $N=n < y^2 = (z+1)^2$
-
 \end{enumerate}
 
-% TODO: proof with termination
+\section{Model Checking}
+Process: 
+\begin{enumerate}
+    \item Modeling phase: Model the system under consideration using the description language of your choice;
+    Formalize the properties to be checked
+    \item Running phase: Run the model checker to check the validity of the property in the system model
+    \item Analysis Phase: if the property is satisfied, celebrate and move on; if the property is violated, analyze counterexample;
+    If out of memory, reduce model and try again
+\end{enumerate}
+\smallskip
+Main Purposes of Model checking:
+\begin{itemize}
+    \item Model checking is mainly used to analyze system designs
+    \item Typical properties to be analyzed include: Deadlocks, reachability of undesired states, protocol violations
+\end{itemize}
+\smallskip
+Modeling concurrent systems:
+\begin{itemize}
+    \item Systems are modelled as \textbf{finite transition systems}
+    \item We model systems as \textbf{communicating sequential processes} (agents): Finite number of processes, interleaved process execution
+    \item Processes can communicate via: shared variables, synchronous message passing, asynchronous message passing
+\end{itemize}
+
+\subsection{Promela}
+\subsubsection{Syntax}
+\begin{itemize}
+    \item Constant declarations: 
+    \begin{verbatim}
+#define N 5
+mtype = { ack, req };
+    \end{verbatim}
+    \item Structure declarations: \texttt{typedef vector { int x; int y};}
+    \item Global channel declarations: \texttt{chan buf = [2] of { int };}
+    \item Global variable declarations: \texttt{byte counter;}
+    \item Process declarations: \texttt{proctype myProc(int p) {...}}
+    \item \texttt{skip}: does not change state (except the location counter), always executable
+    \item \texttt{timeout}: does not change state (except the location counter), executable if all other statements in the system are blocked
+    \item \texttt{assert(e)}: aborts execution if expression E evaluates to zero, otherwise equivalent to skip; always executable
+    \item Sequential compositions: \texttt{s1;s2} is executable if \texttt{s1} is executable
+    \item Expression statement: evaluates expression \texttt{E}, executable if E evaluates to value different from zero,
+    \texttt{E} must not change state (no side effects)
+    \item Selection: executable if at least one of its options is executable, chooses an option non-determinisitically and executes it, 
+    statement \texttt{else} is executable if no other option is executable
+\begin{verbatim}
+if
+:: x > 0 -> x = x + 1
+:: x < 0 -> x = x - 1
+:: y > 0 -> y = y + 1
+:: y < 0 -> y = y - 1
+:: color = color + 1
+fi
+\end{verbatim}
+    \item Repetions: executable if at least one of its options is executable, chooses repeatedly an option non-determinisitically and executes it, 
+    terminates when a \texttt{break} or \texttt{goto} is executed
+\begin{verbatim}
+do
+:: n > 1 -> r = r*n; n = n-1
+:: else -> break
+od
+\end{verbatim}
+    \item Atomic: \texttt{atomic { s }}, executable if first statement of s is executable
+    \item Macros: \texttt{inline func(x){}}, defines replacement text for symbolix name, no new variable scopes, recursion or return values
+\end{itemize}
+
+\subsubsection{Examples from session sheet 13}
+\textbf{1.2}: \texttt{x := 1 [] x := 2; x + 2} will result in a state $\sigma$ where either $\sigma(x)=1$ or $\sigma(x)=4$  
+\begin{verbatim}
+int x
+init{
+    if 
+    :: x = 1
+    :: x = 2; x = x + 2
+    fi
+    assert (x == 1 || x == 4)
+}
+\end{verbatim}
+\textbf{1.4*}: \texttt{y = 1 (x := 1 par (x := 2; x + 2))} will result in a state $\sigma$ where either $\sigma(x)\in \{1,3,4\}$ 
+\begin{verbatim}
+int x,y
+proctype left(){
+    x = 1
+}
+proctype right(){
+    x = 2
+    x = x + 2
+}
+init{
+    y = 1
+    atomic{
+        run left()
+        run right() 
+    }
+    // wait for processes to terminate
+    _nr_pr == 1
+    assert(x == 1 || x == 3 || x == 4)
+}
+\end{verbatim}
+
+\section{Linear temporal logic}
+\subsection{Properties}
+A \textbf{finite transition system} is a tuple $(\Gamma, \Sigma_I, \li)$
+\begin{itemize}
+    \item $\Gamma$: a finite set of configurations
+    \item $\sigma_I\in \Gamma$: an initial congiguration
+    \item $\li \subseteq \Gamma \times \Gamma$: a transition relation
+    \item ommiting terminal configurations
+\end{itemize} \smallskip
+$\gamma \in \Gamma^\omega$ ($\Gamma^\omega$ set of infinite sequences) is a \textbf{computation} of a transition system if:
+\begin{itemize}
+    \item $\gamma_{[0]}=\sigma_I$
+    \item $\gamma_{[i]} \li \gamma_{[i+1]}$ (for all $i \geq 0$)
+\end{itemize} \smallskip
+\textbf{Linear-time property $P$ over $\Gamma$}: subset of $\Gamma^\omega$ \smallskip \\
+\textbf{Atomic proposition $AP$}: proposition containing no logical connectives \smallskip \\
+\textbf{Labling function}: $L:\Gamma \mapsto \P(AP)$, we call $L(\sigma)$ an \textbf{abstract state} \smallskip \\
+\textbf{Trace $t\in \P(AP)^\omega$}: Abstraction of a computation, $t = L(\gamma_{[0]})L(\gamma_{[1]})L(\gamma_{[2]})...$ for a transition system \smallskip \\
+\textbf{Liveness property} \begin{itemize}
+    \item Intuition: if the thing has not happened yet, it could happen in the future
+    \item A liveness property does not rule out any prefix
+    \item Every finite prefix can be extended to an infinte sequence that is in $P$
+    \item Liveness properties are violated in infinite time
+\end{itemize} \smallskip
+\textbf{Safety property} \begin{itemize}
+    \item Intuition: Something bad is never allowed to happen (and can't be fixed)
+    \item If in a finite prefix a property is violated, all sequences with this prefix violate the property
+    \item Liveness properties are violated in finite time
+\end{itemize} \smallskip
+
+\subsubsection{Example}
+maybe will be added some time
+
+\subsection{Operators}
+For a trace $t\in\P(AP)^\omega$
+\begin{center}
+    \begin{tabular}{l l l}
+        $t \vDash p$ & iff $p \in t_{[0]}$ & now \\
+        $t \vDash\lnot \phi$ & iff not $\phi \in t_{[0]}$ & not now \\
+        $t \vDash \phi \land \psi$ & iff $t \vDash \phi$ and $t \vDash \psi$ & and \\
+        $t \vDash \phi \unt \psi$ & iff $\exists k \geq 0$ with  $t_{\geq k} \vDash \psi$ and $t_{\geq j} \vDash \phi$ $\forall 0 \leq j < k$ & until \\
+        $t \vDash \nex \phi$ & iff  $t_{[1]} \vDash \phi$ & next \\
+        $t \vDash \evt \phi$ & $\equiv true \unt \psi$ & eventually \\
+        $t \vDash \alw \phi$ & iff  $\equiv \lnot (\evt (\lnot  \phi))$ & always (from now) \\
+    \end{tabular}
+\end{center}
+
+\subsubsection{Example}
+maybe will be added some time
 
 \end{document}
