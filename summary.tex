@@ -1256,7 +1256,7 @@ Finding a variant:
     \item Find difference/sum of loop variables that decreases
 \end{itemize}
 \smallskip
-\textbf{Session sheet 13: GCD algorithm }: \\
+\textbf{Session sheet 13: GCD algorithm} \\
 IMP program $s$:
 \begin{verbatim}
 b := x
@@ -1272,8 +1272,14 @@ z := b
 \end{verbatim}
 Goal: Prove Hoare Triple 
 $\{x=X \land y=Y\land X > 0 \land Y >0\} \; s \; \{\Downarrow z=gcd(X,Y)\}$ \\
-Suitable loop invariant: $gcd(x,y)=gcd(a,b) \land b >0 \land c > 0 \land x=X \land y=Y$ \\
-Suitable loop variant: $b+c$ \smallskip \\
+Suitable loop invariant: $gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$ 
+\begin{itemize}
+    \item Computation goal of loop: $gcd(x,y) = gcd(a,b)$
+    \item Conditions important for computation of $gcd$: $b>0 \land c > 0$
+    \item Constant values: $x=X$
+\end{itemize}
+Suitable loop variant: $b+c$ (either b or c) increases
+ \smallskip \\
 \textbf{FS10, Ex. 7} \\
 IMP program $s$:
 \begin{verbatim}
@@ -1284,10 +1290,10 @@ while x < y do
 end
 \end{verbatim}
 Goal: Prove Hoare Triple $\{x=X \land y=Y\} \; s \; \{\Downarrow x = \max(X,Y)\}$ \\
-Suitable loop invariant: $\max(x,y)=\max(X,Y)$ \\
+Suitable loop invariant: $\max(x,y)=\max(X,Y) \land x=X \land y=Y$
 Suitable loop variant: $y-x$ 
 
-\subsubsection{Sheet 13, Ex.2}
+\subsubsection{Sheet 13, Ex. 2}
 IMP program $s$:
 \begin{verbatim}
 y := 0
@@ -1305,42 +1311,58 @@ Goal: Prove
 Hoare Triple $\{n=N \land n \geq 0\} \; s \; \{ z^2 \leq N \land N < (z+1)^2\}$ \smallskip \\
 Suitable loop invariant: 
 $$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land (z^2 \leq N) \land (n=N) \land (z \geq 0)$$ 
-Suitable loop variant: $n-y^2$ \\
-\hl{Please disregard the termination part of the proof for now, as I'm not sure where we can write the $\Downarrow$ symbol already} \\
+\begin{itemize}
+    \item Computation goal of loop: $(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2\leq N$
+    \item Conditions important for computation: $z \geq 0$
+    \item Constant values: $n=N$
+\end{itemize}
+Suitable loop variant: $n-y^2$ 
+\smallskip \\
 \textbf{Proof outline}: \\
 \{ $n=N \land n \geq 0\}$ \\
 $\vDash$ \\
-\{ $(0^2 \leq n \Rightarrow 0 = 0) \land (0^2 > n \Rightarrow 0 = 0 + 1) \land 0^2 \leq n \land n=N \land 0 \geq 0$ \} \\
+\{ $(0^2 \leq n \Rightarrow 0 = 0) \land (0^2 > n \Rightarrow 0 = 0 + 1) \land 0^2 \leq n \land n=N \land 0 \geq 0$ \} 
+\\
 \fbox{\texttt{y := 0}} \\
-\{ $(y^2 \leq n \Rightarrow y = 0) \land (y^2 > n \Rightarrow y = 0 + 1) \land 0^2 \leq n \land n=N \land 0 \geq 0$ \} \\
+\{ $(y^2 \leq n \Rightarrow y = 0) \land (y^2 > n \Rightarrow y = 0 + 1) \land 0^2 \leq n \land n=N \land 0 \geq 0$ \}
+\\
 \fbox{\texttt{z := 0}} \\
-\{\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$} \} \\
+\{\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$} \}
+\\
 \fbox{\texttt{while \colorbox{magenta!10}{y * y < n} do}} \\
 \{\colorbox{magenta!10}{$y^2 < n$}$\land$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-y^2=V$}\} \\
 $\vDash$ (1) \\
-\{$(y+1-1)^2<n \land y+1 = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-(y+1)^2<V$}\} \\
+\{$(y+1-1)^2<n \land y+1 = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-(y+1)^2<V$}\} 
+\\
 \fbox{\texttt{\quad y := y+1}} \\
-\{$\Downarrow (y-1)^2<n \land y = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-y^2<V$} \} \\
+\{$(y-1)^2<n \land y = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-y^2<V$} \}
+\\
 \fbox{\texttt{\quad if \colorbox{NavyBlue!10}{y * y <= n} then}} \\
-\{\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
+\{\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\} \\
 $\vDash$ \\
-\{\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z+1\land (z+1-1)^2 \leq n \land n=N \land z+1 \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
+\{\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z+1\land (z+1-1)^2 \leq n \land n=N \land z+1 \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}
+\\
 \fbox{\texttt{\quad \quad z := z+1}} \\
-\{$\Downarrow$\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z\land (z-1)^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
+\{\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z\land (z-1)^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
 $\vDash$ (2) \\
-\{$\Downarrow$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\} \\
+\{\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\} 
+\\
 \fbox{\texttt{\quad else}} \\
-\{\colorbox{NavyBlue!10}{$\lnot(y \leq n)$}$\land (y-1)^2<n \land y = z+ 1 \land z^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
+\{\colorbox{NavyBlue!10}{$\lnot(y \leq n)$}$\land (y-1)^2<n \land y = z+ 1 \land z^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}
+\\
 \fbox{\texttt{\quad \quad skip}} \\
-\{$\Downarrow$\colorbox{NavyBlue!10}{$\lnot(y \leq n)$}$\land (y-1)^2<n \land y = z+ 1 \land z^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
+\{\colorbox{NavyBlue!10}{$\lnot(y \leq n)$}$\land (y-1)^2<n \land y = z+ 1 \land z^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
 $\vDash$ (2) \\
-\{$\Downarrow$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-y^2<V$}\} \\
+\{\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-y^2<V$}\} 
+\\
 \fbox{\texttt{\quad end}} \\
-\{$\Downarrow$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-y^2<V$}\} \\
+\{$\Downarrow$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-y^2<V$}\}
+\\
 \fbox{\texttt{end}} \\
 \{$\Downarrow$\colorbox{magenta!10}{$\lnot (y^2 < n)$}$\land$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq N \land n=N \land z \geq 0$}\} \\
 $\vDash$ (3) \\
-\{$\Downarrow z^2 \leq N \land N < (z+1)^2\}$\\
+\{$\Downarrow z^2 \leq N \land N < (z+1)^2\}$
+
 \begin{enumerate}[label=(\arabic*)]
     \item $y^2<n$ and $y^2 \leq n \Rightarrow y = z$ implies $y=z$, $y \leq 0$ must hold for $n-y^2 > n-(y+1)^2$
     \item As either $y^2>n$ or $y^2\leq n$ are false, they immediately imply the right hand side
@@ -1349,6 +1371,142 @@ $\vDash$ (3) \\
     \textbf{Case} $y^2=n$: $y^2 = n \land (y^2 \leq n \implies y=z)$ implies $y^2=z^2$ and then $N=n=y^2 = z^2 < (z+1)^2$ (last step requires $z \geq 0$)\\
     \textbf{Case} $y^2 > n$: $y^2 > n \land (y^2 >n \Rightarrow y = z+1)$ implies $y = z+1$ and then 
     $N=n < y^2 = (z+1)^2$
+\end{enumerate}
+
+\subsubsection{Session sheet 13, Ex. 2}
+
+IMP program $s$:
+\begin{verbatim}
+b := x
+c := y
+while b # c do
+    if b < c then
+        c := c - b
+    else
+        b := b-c
+    end
+end
+z := b
+\end{verbatim}
+Goal: Prove Hoare Triple 
+$\{x=X \land y=Y\land X > 0 \land Y >0\} \; s \; \{\Downarrow z=gcd(X,Y)\}$ \\
+Suitable loop invariant: $gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$  \\
+Suitable loop variant: $b+c$ \smallskip 
+\\
+\textbf{Proof outline step by step}
+\begin{enumerate}
+    \item "Preparation"
+    \begin{itemize}
+        \item Put pre- and postcondition at beggining/end 
+        \item Put \colorbox{blue!10}{loop invariant} before, at the beginning and at the end of the loop
+        \item Put \colorbox{magenta!10}{while condition} at start of loop and negated while condition after loop 
+        \item Put \colorbox{NavyBlue!10}{if condition} at start of if block and negated if condition at start
+        \item Put \colorbox{teal!10}{variant} at start and end of the loop, like $\dots = V$ and $\dots < V$. Put terminating symbol in all conditions just before and of loop.
+    \end{itemize}
+    
+    $P=$\{$x=X \land y=Y\land X > 0 \land Y >0$\}
+    \\
+    \fbox{\texttt{b := x}} \\
+    \{\}
+    \\
+    \fbox{\texttt{c := y}} \\
+    \{\colorbox{blue!10}{$gcd(x,y)=gcd(a,b) \land b >0 \land c > 0 \land x=X \land y=Y$}\}
+    \\
+    \fbox{\texttt{while \colorbox{magenta!10}{b \# c} do}} \\
+    \{\colorbox{magenta!10}{$b \neq c$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(a,b) \land b >0 \land c > 0 \land x=X \land y=Y$}
+    $\land$\colorbox{teal!10}{$b+c = V$}\}
+    \\
+    \fbox{\texttt{\quad if \colorbox{NavyBlue!10}{b < c}}} \\
+    \{\colorbox{NavyBlue!10}{$b<c$}\}
+    \\
+    \fbox{\texttt{\quad \quad c := c - b}} \\
+    \{\}
+    \\
+    \fbox{\texttt{\quad else}} \\
+    \{\colorbox{NavyBlue!10}{$\lnot(b<c$)}\}
+    \\
+    \fbox{\texttt{\quad \quad b := b-c}} \\
+    \{\}
+    \\
+    \fbox{\texttt{\quad end}} \\
+    \{$\Downarrow$\colorbox{teal!10}{$b+c < V$}\}
+    \\
+    \fbox{\texttt{end}} \\
+    \{$\Downarrow$ \colorbox{magenta!10}{$\lnot(b \neq c)$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(a,b) \land b >0 \land c > 0 \land x=X \land y=Y$}\}
+    \\
+    \fbox{\texttt{z := b}} \\
+    $Q=$\{$\Downarrow z=gcd(X,Y)$\}
+
+    \item Build proof from botton up using axiomatic semantic rules
+    
+    $P=$\{$x=X \land y=Y\land X > 0 \land Y >0$\}
+    \\  \textcolor{gray}{Justify $\vDash$} \\
+    $\vDash^{(1)}$ \\ 
+    \textcolor{gray}{Using assignment rule:} \\
+    \{$gcd(x,y)=gcd(x,y) \land x >0 \land y > 0 \land x=X \land y=Y$\}
+    \\
+    \fbox{\texttt{b := x}} \\
+    \textcolor{gray}{Using assignment rule:} \\
+    \{$gcd(x,y)=gcd(b,y) \land b >0 \land y > 0 \land x=X \land y=Y$\}
+    \\
+    \fbox{\texttt{c := y}} \\
+    \textcolor{gray}{Justified using while rule:} \\
+    \{\colorbox{blue!10}{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$}\}
+    \\
+    \fbox{\texttt{while \colorbox{magenta!10}{b \# c} do}} \\
+    \textcolor{gray}{Justified using if rule:} \\
+    \{\colorbox{magenta!10}{$b \neq c$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$}
+    $\land$ \colorbox{teal!10}{$b+c = V$}\}
+    \\
+    \fbox{\texttt{\quad if \colorbox{NavyBlue!10}{b < c} then}} \\
+    \textcolor{gray}{Try to match condition with condition coming before if-statement, meaning here the condition at start of loop} \\
+    \{\colorbox{magenta!10}{$b \neq c$} $\land$ \colorbox{NavyBlue!10}{$b<c$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(b,c) \land b > 0 \land c > 0 \land x=X \land y=Y$}
+    $\land$ \colorbox{teal!10}{$b+c = V$}\} 
+    \\  \textcolor{gray}{Justify $\vDash$} \\
+    $\vDash^{(2)}$ \\
+    \textcolor{gray}{Using assignment rule:} \\
+    \{$gcd(x,y)=gcd(b,c-b) \land b > 0 \land c-b > 0 \land x=X \land y=Y$ $\land$ \colorbox{teal!10}{$b+(c-b) < V$}\} 
+    \\
+    \fbox{\texttt{\quad \quad c := c - b}} \\
+    \textcolor{gray}{Using if rule:} \\
+    \{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$ $\land$ \colorbox{teal!10}{$b+c < V$}\} 
+    \\
+    \fbox{\texttt{\quad else}} \\
+    \textcolor{gray}{Try to match condition with condition coming before if-statement, meaning here the condition at start of loop} \\
+    \{\colorbox{magenta!10}{$b \neq c$} $\land$ \colorbox{NavyBlue!10}{$\lnot(b<c)$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(b,c) \land b > 0 \land c > 0 \land x=X \land y=Y$}
+    $\land$ \colorbox{teal!10}{$b+c = V$}\} 
+    \\  \textcolor{gray}{Justify $\vDash$} \\
+    $\vDash^{(3)}$ \\
+    \textcolor{gray}{Using assignment rule:} \\
+    \{$gcd(x,y)=gcd(b-c,c) \land b-c > 0 \land c > 0 \land x=X \land y=Y$ $\land$ \colorbox{teal!10}{$(b-c)+c < V$}\} 
+    \\
+    \fbox{\texttt{\quad \quad b := b-c}} \\
+    \textcolor{gray}{Using if rule:} \\
+    \{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$ $\land$ \colorbox{teal!10}{$b+c < V$}\} 
+    \\
+    \fbox{\texttt{\quad end}} \\
+    \textcolor{gray}{Using while rule:} \\
+    \{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$ $\land$ \colorbox{teal!10}{$b+c < V$}\} 
+    \\
+    \fbox{\texttt{end}} \\
+    \{$\Downarrow$ \colorbox{magenta!10}{$\lnot(b \neq c)$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$}\} 
+    \\  \textcolor{gray}{Justify $\vDash$} \\
+    $\vDash^{(4)}$ \\
+    \textcolor{gray}{Using assignment rule:}\\
+    \{$\Downarrow b=gcd(X,Y)$\}
+    \\
+    \fbox{\texttt{z := b}} \\
+    $Q=$\{$\Downarrow z=gcd(X,Y)$\}
+
+    Justifications for $\vDash$
+    \begin{enumerate}[label=(\arabic*)]
+        \item $x=X \land X > 0 \Rightarrow x>0$, same for $y$. $gcd(x,y)=gcd(x,y)$ trivially true, and $P \vDash P \land true$
+        \item $b < c \land b > 0 \land c >0 \Rightarrow gcd(x,y)=gcd(b,c)=gcd(b, c-b)$. $b<c \Rightarrow c-b>0$. 
+        For the variant: $b>0 \Rightarrow c = b +(c-b) < b+c = V$
+        \item $b \neq c \land \lnot(b<c) \Rightarrow b>c.$  $b > c  \land b > 0 \land c >0 \Rightarrow gcd(x,y)=gcd(b,c)=gcd(b-c, c)$. $b>c \Rightarrow b-c>0$. 
+        For the variant: $c>0 \Rightarrow b = (b-c)+b < b+c = V$
+        \item $\lnot(b \neq c) \equiv b = c \Rightarrow gcd(x,y)=gcd(b,c)=b$. $x=X \land y=Y \Rightarrow gcd(X,Y)=gcd(x,y)=b$
+    \end{enumerate}
 \end{enumerate}
 
 \section{Model Checking}
