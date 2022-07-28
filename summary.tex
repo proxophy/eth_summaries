@@ -1188,11 +1188,11 @@ Statement $\forall P, Q. \; \{P\} \; \skipt \; \{Q\} \; \Rightarrow \; P \vDash 
 
 
 \subsection{Proof outlines}
-\begin{enumerate}
-    \item Write pre- and postcondition at beginning/start
-    \item If you have a loop: Write loop invariant before loop, at starts of loop and after loop
-    \item Add conditions of while and if statements at start of the statement body
-\end{enumerate}
+% \begin{enumerate}
+%     \item Write pre- and postcondition at beginning/start
+%     \item If you have a loop: Write loop invariant before loop, at starts of loop and after loop
+%     \item Add conditions of while and if statements at start of the statement body
+% \end{enumerate}
 
 \subsubsection{Notations}
 \begin{tabular}{c | c | c | c | c}
@@ -1244,11 +1244,13 @@ Statement $\forall P, Q. \; \{P\} \; \skipt \; \{Q\} \; \Rightarrow \; P \vDash 
 
 \subsubsection{Finding loop invariants and variants}
 Finding an invariant: \begin{itemize}
-    \item Include variables changed in loop
-    \item Include relationships between input and loop variables
+    % \item Include variables changed in loop
+    \item Include relationships between input and loop variables/variables changed in loop
     \item If the goal of a program is to f.e. compute the gcd or compute a sum, include
     this in the invariant, i.e. $gcd(a,b)=gcd(x,y)$, $\sum_{i=0}^{k}(...)=...$
-    \item Implications for if-statements
+    \item Write constant values like $x=X$
+    \item Add conditions like $x>0$ if it's important for the computation of a variable
+    \item Optional: Implications for if-statements
 \end{itemize}
 Finding a variant:
 \begin{itemize}
