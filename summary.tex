@@ -8,7 +8,8 @@
 \usepackage{soul} % highlight text
 \usepackage[x11names, dvipsnames]{xcolor} % choose color
 \usepackage{amsthm} % for proof environment
-\usepackage{hyperref} % Correct Section numbering
+\usepackage{hyperref} % Correct Section numbering, links
+\usepackage{graphicx} % graphics
 % math symbols
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -50,13 +51,13 @@
 \def\la{\langle}
 \def\ra{\rangle}
 \def\unt{\, \text{U} \,}
-\def\nex{\fullmoon}
-\def\evt{\lozenge}
-\def\alw{\square}
+\def\nex{\bigcirc \,}
+\def\evt{\lozenge  \,}
+\def\alw{\square \,}
 
 \title{Formal Methods and Functional Programming}
 \author{Isabel Haas (isabel.haas@inf.ethz.ch)}
-\date{June, July 2022}
+\date{Summer 2022}
 
 \begin{document}
 \maketitle
@@ -66,7 +67,7 @@ This document should give an overview over the types of exercises in the FMFP co
 It also contains parts of theory and an overview of Haskell. \\
 There is no guarantee for correctness or completeness, please refer to the course material. \\
 Main sources are the course material and material provided by the course TA
-Max Schlegel on \\ https://n.ethz.ch/~mschlegel/fmfp22/
+Max Schlegel on \\ \url{https://n.ethz.ch/~mschlegel/fmfp22/}
 \end{abstract}
 
 \thispagestyle{empty}
@@ -80,7 +81,7 @@ Max Schlegel on \\ https://n.ethz.ch/~mschlegel/fmfp22/
 \renewcommand*{\theHsection}{chX.\the\value{section}}
 
 \section{Haskell}
-\textbf{Credits}: Big parts of this section are copied from/inspired by https://n.ethz.ch/~mschlegel/fmfp22/, hence credits go to Max
+\textbf{Credits}: Big parts of this section are copied from/inspired by \url{https://n.ethz.ch/~mschlegel/fmfp22/}, hence credits go to Max
 \setcounter{page}{1}
 \subsection{Basics}
 \begin{minted}{Haskell}
@@ -420,8 +421,7 @@ A variable occurrence x in a formula A is \textbf{bound} if x occurs within a su
 \end{tabular}
 
 \section{Induction}
-For proofs with \texttt{[]}, \texttt{0}. \texttt{Leaf} or similar, you may first have to proof a generalised statement with 
-induction and then simply plug in your values.
+For proofs with \texttt{[]}, \texttt{0}. \texttt{Leaf} or similar, you may first have to proof a generalised statement with induction and then simply plug in your values.
 \subsection{Induction on natural numbers}
 Induction scheme:
 \begin{prooftree}
@@ -1175,8 +1175,8 @@ The derivation system for partical correctness of IMP programs is \textbf{sound}
 \subsection{Induction on shape of derivation trees}
 (Not in exercises, but in slides and old exam) \\
 Same technique as with big-step semantics
-\subsubsection{Example}
-Statement $\forall P, Q. \; \{P\} \; \skipt \; \{Q\} \; \Rightarrow \; P \vDash Q$
+\subsubsection{Example from slides}
+\textbf{Statement}: $\forall P, Q. \; \{P\} \; \skipt \; \{Q\} \; \Rightarrow \; P \vDash Q$
 \begin{proof}
     $$P(T)\equiv \forall P, Q. \; root(T)\equiv(\{P\} \; \skipt \; \{Q\}) \; \Rightarrow \; P \vDash Q$$
     where T is a derivation tree with axiomatic semantic rules applied. \\
@@ -1185,7 +1185,61 @@ Statement $\forall P, Q. \; \{P\} \; \skipt \; \{Q\} \; \Rightarrow \; P \vDash 
     \dots 
 \end{proof}
 
+\subsubsection{FS19, Task 6b}
+\begin{prooftree}
+    \AxiomC{}
+    \RightLabel{(GUESS$_{\text{Ax}}$) where $n$ is a numeral and does not occur in $P$}
+    \UnaryInfC{$\{\exists n. \, P[x \mapsto n]\} \; \texttt{guess }x \; \{P\}$}
+\end{prooftree}
+\begin{prooftree}
+    \AxiomC{}
+    \RightLabel{(ASSERT$_{\text{Ax}}$)}
+    \UnaryInfC{$\{b \land P\} \; \texttt{assert }x \; \{P\}$}
+\end{prooftree}
+\textbf{Statement}: $\forall P, Q. \; \{P\} \; \texttt{x := e} \; \{Q\}$ $\Rightarrow$ $\vdash \{P\} \; \texttt{guess } x \texttt{; assert } x=e \; \{Q\}$
+\begin{proof}
+$$P(T):= \forall P, Q, x, e. \; (root(T) \equiv \{P\} \; \texttt{x := e} \; \{Q\} \; \Rightarrow \; \vdash \{P\} \; \texttt{guess } x \texttt{; assert } x=e \; \{Q\})$$
+where T is a derivation tree with axiomatic semantic rules applied. \smallskip \\
+Proof by induction over the shape of the derivation tree $T$. \\
+Let T be arbitrary. Assume $\forall T' \sqsubset T. \; P(T') $ (I.H). Let $P,Q,x,e$ be arbitrary. \smallskip \\
+Case distinction on the rule applied in T: 
+\begin{itemize}
+    \item Case ASS$_{\text{Ax}}$: T has the form 
+    \begin{prooftree}
+        \AxiomC{}
+        \RightLabel{(ASS$_{\text{Ax}}$)}
+        \UnaryInfC{$\{Q[x \mapsto e]\} \; \texttt{x := e}  \; \{Q\}$}
+    \end{prooftree}
+    We can build a proof outline as follows: \\
+    \{$Q[x \mapsto e]$\} \\
+    $\vDash$ (can be shown by picking $n := \A\llb e\rrb $)\\
+    \{$\exists n. \; n=e \land Q[x \mapsto n]$\} \\
+    $\vDash$ (works by def. of substitution and uses the fact that $x\notin FV(e)$)\\
+    \{$\exists n. \; (n=e \land Q)[x \mapsto n]$\} \\
+    \texttt{guess x}; \\
+    \{$x=e \land Q$\} \\
+    \texttt{assert x=e} \\
+    \{$Q$\}
+    \item Case CONS$_{\text{Ax}}$: T has the form 
+    \begin{prooftree}
+        \AxiomC{$\mathbf{T_1}$}
+        \UnaryInfC{$\{P'\} \; \texttt{x := e}  \; \{Q'\}$}
+        \RightLabel{(CONS$_{\text{Ax}}$)}
+        \UnaryInfC{$\{P\} \; \texttt{x := e}  \; \{Q\}$}
+    \end{prooftree}
+    for some $P',T'$ such that $P \vDash P', Q \vDash Q'$ and a derivation tree $T_1$. \\
+    By I.H. $P(T')$ holds, therefore $\exists T_2$ with $root(T_2)\equiv\{P'\} \; \texttt{guess } x \texttt{; assert } x=e  \; \{Q'\}$. \\
+    With this we can build the following derivation tree:
+    \begin{prooftree}
+        \AxiomC{$\mathbf{T_2}$}
+        \UnaryInfC{$\{P'\} \;\texttt{guess } x \texttt{; assert } x=e  \; \{Q'\}$}
+        \RightLabel{(CONS$_{\text{Ax}}$)}
+        \UnaryInfC{$\{P\} \;\texttt{guess } x \texttt{; assert } x=e   \; \{Q\}$}
+    \end{prooftree}
 
+\end{itemize}
+
+\end{proof}
 
 \subsection{Proof outlines}
 % \begin{enumerate}
@@ -1340,20 +1394,20 @@ $\vDash$ (1) \\
 \{$(y-1)^2<n \land y = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-y^2<V$} \}
 \\
 \fbox{\texttt{\quad if \colorbox{NavyBlue!10}{y * y <= n} then}} \\
-\{\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\} \\
+\{\colorbox{NavyBlue!10}{$y^2 \leq n$}$\land (y-1)^2<n \land y = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\} \\
 $\vDash$ \\
-\{\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z+1\land (z+1-1)^2 \leq n \land n=N \land z+1 \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}
+\{\colorbox{NavyBlue!10}{$y^2 \leq n$}$\land (y-1)^2<n \land y = z+1\land (z+1-1)^2 \leq n \land n=N \land z+1 \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}
 \\
 \fbox{\texttt{\quad \quad z := z+1}} \\
-\{\colorbox{NavyBlue!10}{$y \leq n$}$\land (y-1)^2<n \land y = z\land (z-1)^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
+\{\colorbox{NavyBlue!10}{$y^2 \leq n$}$\land (y-1)^2<n \land y = z\land (z-1)^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
 $\vDash$ (2) \\
 \{\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\} 
 \\
 \fbox{\texttt{\quad else}} \\
-\{\colorbox{NavyBlue!10}{$\lnot(y \leq n)$}$\land (y-1)^2<n \land y = z+ 1 \land z^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}
+\{\colorbox{NavyBlue!10}{$\lnot(y^2 \leq n)$}$\land (y-1)^2<n \land y = z+ 1 \land z^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}
 \\
 \fbox{\texttt{\quad \quad skip}} \\
-\{\colorbox{NavyBlue!10}{$\lnot(y \leq n)$}$\land (y-1)^2<n \land y = z+ 1 \land z^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
+\{\colorbox{NavyBlue!10}{$\lnot(y^2 \leq n)$}$\land (y-1)^2<n \land y = z+ 1 \land z^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
 $\vDash$ (2) \\
 \{\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-y^2<V$}\} 
 \\
@@ -1511,7 +1565,9 @@ Suitable loop variant: $b+c$ \smallskip
     \end{enumerate}
 \end{enumerate}
 
-\section{Model Checking}
+\section{Modeling}
+
+\subsection{Overview}
 Process: 
 \begin{enumerate}
     \item Modeling phase: Model the system under consideration using the description language of your choice;
@@ -1571,7 +1627,7 @@ do
 :: else -> break
 od
 \end{verbatim}
-    \item Atomic: \texttt{atomic { s }}, executable if first statement of s is executable
+    \item Atomic: \texttt{atomic \{ s \}}, executable if first statement of s is executable
     \item Macros: \texttt{inline func(x){}}, defines replacement text for symbolix name, no new variable scopes, recursion or return values
 \end{itemize}
 
@@ -1609,6 +1665,39 @@ init{
 }
 \end{verbatim}
 
+\subsection{Examples}
+\subsubsection{FS18, Task 8}
+Train track: Loop on the right can be travelled in both directions, loop on the left clock-wise. Cannot travel further from position 7.
+\begin{center}
+    \includegraphics[scale=0.8]{fs18_t8.png}
+\end{center}
+\textbf{8a} Promela model for train system
+\begin{verbatim}
+byte pos = 0; // train position
+init {
+    do
+        :: pos >= 0 && pos <= 5 -> pos = pos + 1
+        :: pos == 2 -> pos = 0
+        :: pos == 5 -> pos = 7
+        :: pos == 6 -> pos = 4
+        :: pos == 7 -> break; // end point
+    end
+}
+\end{verbatim} 
+\textbf{8b} \texttt{assert}-statements can be used to test \textbf{safety} properties: can check if the "bad thing" happened up to that point. For a liveness property we would have to know what happens after. \smallskip \\
+\textbf{8c} For the four statements: Can you modify the promela code using assert statements to check this property? If yes, state how, if no, state why not. 
+\begin{enumerate}
+    \item "The train will never reach position 6": \\
+    Change \texttt{::pos == 6 -> pos = 4} to \texttt{::pos == 6 -> assert (false);}
+    \item "The train is guaranteed to eventually position 7":\\
+    Liveness property, cannot be checked 
+    \item "It is possible for the train to reach position 7": \\
+    Change \texttt{::pos == 5 -> pos = 7} to \texttt{::pos == 5 -> assert (false); pos = 7;}
+    \item "The train cannot reach position 7 without first visiting position 3": \\
+    Add \texttt{pos == 3 -> break;}. Change \texttt{::pos == 7 -> break;} to \texttt{::pos == 7 -> assert (false);}. Change \texttt{::pos >= 0 \&\& pos <= 5 -> break;} to \texttt{::pos >= 0 \&\& pos <= 2 -> pos = pos + 1;} and  \texttt{::pos >= 4 \&\& pos <= 5 -> pos = pos + 1;}. You can't continue after visiting 3. If the assertion does not get triggered then there is no way to reach 7 without first visiting 3.
+    
+\end{enumerate}
+
 \section{Linear temporal logic}
 \subsection{Properties}
 A \textbf{finite transition system} is a tuple $(\Gamma, \Sigma_I, \li)$
@@ -1639,9 +1728,6 @@ $\gamma \in \Gamma^\omega$ ($\Gamma^\omega$ set of infinite sequences) is a \tex
     \item Liveness properties are violated in finite time
 \end{itemize} \smallskip
 
-\subsubsection{Example}
-maybe will be added some time
-
 \subsection{Operators}
 For a trace $t\in\P(AP)^\omega$
 \begin{center}
@@ -1656,7 +1742,34 @@ For a trace $t\in\P(AP)^\omega$
     \end{tabular}
 \end{center}
 
-\subsubsection{Example}
-maybe will be added some time
+\subsubsection{Sheet 13, Ex.2}
+Transition system $T$  with atomic propositions $P=\{p,q,r\}$
+\begin{center}
+\includegraphics[scale=0.8]{sheet13_a2.png}
+\end{center}
+\textbf{2.1} Which of the following LTL formulas are satisfied in $T$?
+\begin{itemize}
+    \item $\varphi_1 = \evt \alw r$ "=" eventually always $r$: $T \nvDash \varphi_1$, counter example $\gamma = s_1s_4s_5s_4s_5s_4\dots$
+    \item $\varphi_2 = \alw \evt r$ "=" always eventually $r$: $T \vDash \varphi_2$ since there is no loop in which r does not hold at some point 
+    \item $\varphi_3 = \nex \lnot r \Rightarrow \nex \nex r$ "=" next not r implies second next r: $T \vDash \varphi_3$, $\lnot r$ holds in $s_4$ and $s_1$. $s_1$ cannot be reached as next state. From $s_4$ we transition to one of $s_2, s_3, s_5$, where $r$ holds
+    \item $\varphi_4 = \alw p$ "=" always $p$: $T \nvDash \varphi_4$, counter example $\gamma = s_1s_4s_5s_4s_5s_4\dots$
+    \item $\varphi_5 = p \unt \alw (q \lor r)$ "=" $p$ until always $q$ or $r$: after starting at $s_1$ where $p$ holds, the state changes between $s_2,s_3,s_4,s_5$, where $q \lor p$ holds 
+    \item $\varphi_6 = (\nex \nex q) \unt (q \lor r)$ "=" second next $q$ until $q$ or $r$: $T \nvDash \varphi_6$, counter example $\gamma = s_1s_4s_2s_4s_2s_4\dots$
+    \item $\varphi_7 = \evt \alw \nex q$ "=" eventually always $q$ as next: $T \nvDash \varphi_7$, counter example $\gamma = s_1s_4s_2s_4s_2s_4\dots$
+    \item $\varphi_8 = (\evt \alw p) \Rightarrow  (\evt \alw r)$ "=" if eventually always r holds, then eventually always t holds: $(\evt \alw p)$ holds only if the trace goes into a loop $s_5s_5s_5\dots$. For those traces $\evt \alw r$ holds. If $(\evt \alw p)$ does not hold, the implication holds trivially
+\end{itemize}
+\textbf{2.2} Formalize the following properties in LTL
+\begin{enumerate}
+    \item Eventually, it will not be possible for the system to go to state $s_1$: $\evt \alw \lnot (p \land \lnot q \land \lnot r)$
+    \item Whenever the system is in a state that satisfies $r$, then the next state satisfies $q$: $\alw (r \Rightarrow \nex q)$
+    \item $p$ always implies $r$ except perhaps in the initial state: $\nex \alw (p \Rightarrow r)$ (possible alternative solution: $\alw(p \land (q \lor r)\Rightarrow r)$)
+    \item Whenever the system is in state $s_5$, it will remain there until $r$ becomes false: $\alw ((p \land q \land r ) \Rightarrow ((p \land q \land r) \unt \lnot r) )$
+    \item $q$ will be true at least twice: $\evt(q \land \nex \evt q)$
+    \item $q$ will be true infinitely often: $\alw \evt q$
+    \item If $p$ is true only at the initial state of a trace, then $r$ is false infinitely many times in that trace: $(p \land \nex\alw \lnot p) \Rightarrow (\alw \evt \lnot r)$
+    \item $s4$ can never be repeated (there is no transition from s4 to itself): $\alw(\lnot p \land q \land \lnot r \Rightarrow \nex \lnot (\lnot p \land q \land \lnot r))$
+\end{enumerate}
+
 
 \end{document}
+
