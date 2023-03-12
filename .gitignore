@@ -1,1 +1,4 @@
-# ../
+# exclude latex build stuff
+FMFP/summary.*
+!FMFP/summary.pdf
+!FMFP/summary.tex
