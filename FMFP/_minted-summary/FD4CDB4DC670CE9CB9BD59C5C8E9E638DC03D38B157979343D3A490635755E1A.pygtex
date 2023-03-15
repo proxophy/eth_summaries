@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{mapTree}\PYG{+w}{ }\PYG{n}{f}\PYG{+w}{ }\PYG{k+kt}{Leaf}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{k+kt}{Leaf}
+\PYG{n+nf}{mapTree}\PYG{+w}{ }\PYG{n}{f}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{Node}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{n}{t1}\PYG{+w}{ }\PYG{n}{t2}\PYG{p}{)}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{k+kt}{Node}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{f}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{mapTree}\PYG{+w}{ }\PYG{n}{f}\PYG{+w}{ }\PYG{n}{t1}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{mapTree}\PYG{+w}{ }\PYG{n}{f}\PYG{+w}{ }\PYG{n}{t2}\PYG{p}{)}
+\end{Verbatim}

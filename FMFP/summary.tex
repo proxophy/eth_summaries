@@ -1,9 +1,17 @@
-\documentclass[11.5pt]{article}
+\documentclass{article}
 
 \usepackage[utf8]{inputenc} 
 \usepackage{enumitem}
 \usepackage[left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm]{geometry}
+
+% You may get an error here
+% Some stackoverflow links that may be help you
+% [Modifying settings.json in vscode to add shell escape flag to pdflatex in latex workshop] link: https://stackoverflow.com/questions/56743092/modifying-settings-json-in-vscode-to-add-shell-escape-flag-to-pdflatex-in-latex
+% [How can I open Visual Studio Code's 'settings.json' file?] link: https://stackoverflow.com/questions/65908987/how-can-i-open-visual-studio-codes-settings-json-file
+% [Pygmentize not installed error on Visual Studio Code] link: https://tex.stackexchange.com/questions/432459/pygmentize-not-installed-error-on-visual-studio-code
+% Also note that pygmentize, which minted depends on uses python, so there may also be some issue with that (I lost some hours when first trying to set up minted :|)
 \usepackage{minted} % colors for code
+
 \usepackage{bussproofs} % proof trees
 \usepackage{soul} % highlight text
 \usepackage[x11names, dvipsnames]{xcolor} % choose color

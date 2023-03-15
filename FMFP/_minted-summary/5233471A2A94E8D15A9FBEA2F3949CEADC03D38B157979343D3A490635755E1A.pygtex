@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nf}{fibLouis}\PYG{+w}{ }\PYG{o+ow}{::}\PYG{+w}{ }\PYG{k+kt}{Int}\PYG{+w}{ }\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{k+kt}{Int}
+\PYG{n+nf}{fibLouis}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{l+m+mi}{1}
+\PYG{n+nf}{fibLouis}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{l+m+mi}{1}
+\PYG{n+nf}{fibLouis}\PYG{+w}{ }\PYG{n}{n}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{n}{fibLouis}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{n}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{fibLouis}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{n}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{p}{)}
+\PYG{n+nf}{fibEva}\PYG{+w}{ }\PYG{o+ow}{::}\PYG{+w}{ }\PYG{k+kt}{Int}\PYG{+w}{ }\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{k+kt}{Int}
+\PYG{n+nf}{fibEva}\PYG{+w}{ }\PYG{n}{n}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{n}{fst}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{aux}\PYG{+w}{ }\PYG{n}{n}\PYG{p}{)}\PYG{+w}{ }\PYG{k+kr}{where}
+\PYG{+w}{    }\PYG{n}{aux}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{+w}{    }\PYG{n}{aux}\PYG{+w}{ }\PYG{n}{n}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{n}{next}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{aux}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{n}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{))}
+\PYG{+w}{    }\PYG{n}{next}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{a}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{b}\PYG{p}{)}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{b}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{a}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{b}\PYG{p}{)}
+\end{Verbatim}

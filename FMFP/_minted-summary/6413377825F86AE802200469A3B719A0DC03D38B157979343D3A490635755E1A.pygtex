@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{+w}{    }\PYG{n}{foldr}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{:}\PYG{p}{)}\PYG{+w}{ }\PYG{k+kt}{[]}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{y}\PYG{k+kt}{:}\PYG{n}{ys}\PYG{p}{)}\PYG{+w}{ }\PYG{o+ow}{=}
+\PYG{+w}{        }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{o}{...}
+\PYG{+w}{        }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{y}\PYG{k+kt}{:}\PYG{n}{ys}\PYG{p}{)}
+\end{Verbatim}

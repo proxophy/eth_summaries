@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{+w}{    }\PYG{n}{rev}\PYG{+w}{ }\PYG{p}{((}\PYG{n}{z}\PYG{k+kt}{:}\PYG{n}{zs}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{++}\PYG{+w}{ }\PYG{n}{rev}\PYG{+w}{ }\PYG{n}{ys}\PYG{p}{)}
+\PYG{+w}{        }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{o}{...}
+\PYG{+w}{        }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{n}{ys}\PYG{+w}{ }\PYG{o}{++}\PYG{+w}{ }\PYG{n}{rev}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{z}\PYG{k+kt}{:}\PYG{n}{zs}\PYG{p}{)}
+\end{Verbatim}

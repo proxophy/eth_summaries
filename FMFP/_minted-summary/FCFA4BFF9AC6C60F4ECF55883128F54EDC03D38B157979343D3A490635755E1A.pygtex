@@ -1,0 +1,54 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} Structure: on the right side are value constructors}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} data type can have one of those different values}
+\PYG{k+kr}{data}\PYG{+w}{ }\PYG{n}{keyword}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{n}{constr1}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{n}{constr2}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{o}{...}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{n}{constrn}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} Option can be simple types}
+\PYG{k+kr}{data}\PYG{+w}{ }\PYG{k+kt}{Bool}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{k+kt}{False}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{k+kt}{True}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} New value constructors can be defined}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} Circle takes three floats as fields, rectangle 4}
+\PYG{k+kr}{data}\PYG{+w}{ }\PYG{k+kt}{Shape}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{k+kt}{Circle}\PYG{+w}{ }\PYG{k+kt}{Float}\PYG{+w}{ }\PYG{k+kt}{Float}\PYG{+w}{ }\PYG{k+kt}{Float}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{k+kt}{Rectangle}\PYG{+w}{ }\PYG{k+kt}{Float}\PYG{+w}{ }\PYG{k+kt}{Float}\PYG{+w}{ }\PYG{k+kt}{Float}\PYG{+w}{ }\PYG{k+kt}{Float}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} ghci\PYGZgt{} :t Circle}
+\PYG{k+kt}{Circle}\PYG{+w}{ }\PYG{o+ow}{::}\PYG{+w}{ }\PYG{k+kt}{Float}\PYG{+w}{ }\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{k+kt}{Float}\PYG{+w}{ }\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{k+kt}{Float}\PYG{+w}{ }\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{k+kt}{Shape}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} functions for data types}
+\PYG{n+nf}{surface}\PYG{+w}{ }\PYG{o+ow}{::}\PYG{+w}{ }\PYG{k+kt}{Shape}\PYG{+w}{ }\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{k+kt}{Float}
+\PYG{n+nf}{surface}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{Circle}\PYG{+w}{ }\PYG{k+kr}{\PYGZus{}}\PYG{+w}{ }\PYG{k+kr}{\PYGZus{}}\PYG{+w}{ }\PYG{n}{r}\PYG{p}{)}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{n}{pi}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{n}{r}\PYG{+w}{ }\PYG{o}{\PYGZca{}}\PYG{+w}{ }\PYG{l+m+mi}{2}
+\PYG{n+nf}{surface}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{Rectangle}\PYG{+w}{ }\PYG{n}{x1}\PYG{+w}{ }\PYG{n}{y1}\PYG{+w}{ }\PYG{n}{x2}\PYG{+w}{ }\PYG{n}{y2}\PYG{p}{)}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{abs}\PYG{+w}{ }\PYG{o}{\PYGZdl{}}\PYG{+w}{ }\PYG{n}{x2}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{n}{x1}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{*}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{abs}\PYG{+w}{ }\PYG{o}{\PYGZdl{}}\PYG{+w}{ }\PYG{n}{y2}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{n}{y1}\PYG{p}{)}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} has argument of type a or b}
+\PYG{k+kr}{data}\PYG{+w}{ }\PYG{n}{myType}\PYG{+w}{ }\PYG{n}{a}\PYG{+w}{ }\PYG{n}{b}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{n}{myConstr}\PYG{+w}{ }\PYG{n}{a}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{n}{myOtherConstructor}\PYG{+w}{ }\PYG{n}{b}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} definitions can  be recursive}
+\PYG{k+kr}{data}\PYG{+w}{ }\PYG{n}{myList}\PYG{+w}{ }\PYG{n}{a}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{k+kt}{Empty}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{k+kt}{Cons}\PYG{+w}{ }\PYG{n}{a}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{MyList}\PYG{+w}{ }\PYG{n}{a}\PYG{p}{)}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} tree}
+\PYG{k+kr}{data}\PYG{+w}{ }\PYG{k+kt}{Tree}\PYG{+w}{ }\PYG{n}{t}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{k+kt}{Leaf}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{k+kt}{Node}\PYG{+w}{ }\PYG{n}{t}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{Tree}\PYG{+w}{ }\PYG{n}{t}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{Tree}\PYG{+w}{ }\PYG{n}{t}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} deriving keyword}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} typeclasses like Eq, Ord, Enum, Bounded, Show, Read can function as \PYGZdq{}interfaces\PYGZdq{}}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} Example: == and /= and can now be used to compare values}
+\PYG{k+kr}{data}\PYG{+w}{ }\PYG{k+kt}{Vector}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{k+kt}{Vector}\PYG{+w}{ }\PYG{k+kt}{Int}\PYG{+w}{ }\PYG{k+kt}{Int}\PYG{+w}{ }\PYG{k+kt}{Int}\PYG{+w}{ }\PYG{k+kr}{deriving}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{Eq}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{Show}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} instance keyword}
+\PYG{k+kr}{data}\PYG{+w}{ }\PYG{k+kt}{TrafficLight}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{k+kt}{Red}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{k+kt}{Yellow}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{k+kt}{Green}
+\PYG{k+kr}{instance}\PYG{+w}{ }\PYG{k+kt}{Eq}\PYG{+w}{ }\PYG{k+kt}{TrafficLight}\PYG{+w}{ }\PYG{k+kr}{where}
+\PYG{+w}{    }\PYG{k+kt}{Red}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k+kt}{Red}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{k+kt}{True}
+\PYG{+w}{    }\PYG{k+kt}{Green}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k+kt}{Green}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{k+kt}{True}
+\PYG{+w}{    }\PYG{k+kt}{Yellow}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k+kt}{Yellow}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{k+kt}{True}
+\PYG{+w}{    }\PYG{k+kr}{\PYGZus{}}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k+kr}{\PYGZus{}}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{k+kt}{False}
+\PYG{k+kr}{instance}\PYG{+w}{ }\PYG{k+kt}{Show}\PYG{+w}{ }\PYG{k+kt}{TrafficLight}\PYG{+w}{ }\PYG{k+kr}{where}
+\PYG{+w}{    }\PYG{n}{show}\PYG{+w}{ }\PYG{k+kt}{Red}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Red light\PYGZdq{}}
+\PYG{+w}{    }\PYG{n}{show}\PYG{+w}{ }\PYG{k+kt}{Yellow}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Yellow light\PYGZdq{}}
+\PYG{+w}{    }\PYG{n}{show}\PYG{+w}{ }\PYG{k+kt}{Green}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Green light\PYGZdq{}}
+
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} fold for data types}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} data type:}
+\PYG{k+kr}{data}\PYG{+w}{ }\PYG{k+kt}{DType}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{k+kt}{C1}\PYG{+w}{ }\PYG{o}{...}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{k+kt}{C2}\PYG{+w}{ }\PYG{o}{...}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{o}{...}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{k+kt}{CN}\PYG{+w}{ }\PYG{o}{...}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} fold}
+\PYG{n+nf}{foldDType}\PYG{+w}{ }\PYG{o+ow}{::}\PYG{+w}{ }\PYG{n}{foldC1}\PYG{+w}{ }\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{n}{foldC2}\PYG{+w}{ }\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{o}{...}\PYG{+w}{ }\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{n}{foldCN}\PYG{+w}{ }\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{k+kt}{DType}\PYG{+w}{ }\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{n}{b}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} example}
+\PYG{k+kr}{data}\PYG{+w}{ }\PYG{k+kt}{Prop}\PYG{+w}{ }\PYG{n}{a}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{k+kt}{Var}\PYG{+w}{ }\PYG{n}{a}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{k+kt}{Not}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{Prop}\PYG{+w}{ }\PYG{n}{a}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{k+kt}{And}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{Prop}\PYG{+w}{ }\PYG{n}{a}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{Prop}\PYG{+w}{ }\PYG{n}{a}\PYG{p}{)}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{k+kt}{Or}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{Prop}\PYG{+w}{ }\PYG{n}{a}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{Prop}\PYG{+w}{ }\PYG{n}{a}\PYG{p}{)}
+\PYG{n+nf}{foldProp}\PYG{+w}{ }\PYG{o+ow}{::}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{a}\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{n}{b}\PYG{p}{)}\PYG{+w}{ }\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{b}\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{n}{b}\PYG{p}{)}\PYG{+w}{ }\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{b}\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{n}{b}\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{n}{b}\PYG{p}{)}\PYG{+w}{ }\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{b}\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{n}{b}\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{n}{b}\PYG{p}{)}\PYG{+w}{ }\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{Prop}\PYG{+w}{ }\PYG{n}{a}\PYG{p}{)}\PYG{+w}{ }\PYG{o+ow}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{n}{b}
+\PYG{n+nf}{foldProp}\PYG{+w}{ }\PYG{n}{fVar}\PYG{+w}{ }\PYG{n}{fNot}\PYG{+w}{ }\PYG{n}{fAnd}\PYG{+w}{ }\PYG{n}{fOr}\PYG{+w}{ }\PYG{n}{prop}\PYG{+w}{  }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{n}{go}\PYG{+w}{ }\PYG{n}{prop}
+\PYG{+w}{    }\PYG{k+kr}{where}
+\PYG{+w}{        }\PYG{n}{go}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{Var}\PYG{+w}{ }\PYG{n}{v}\PYG{p}{)}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{n}{fVar}\PYG{+w}{ }\PYG{n}{v}
+\PYG{+w}{        }\PYG{n}{go}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{Not}\PYG{+w}{ }\PYG{n}{v}\PYG{p}{)}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{n}{fNot}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{go}\PYG{+w}{ }\PYG{n}{v}\PYG{p}{)}
+\PYG{+w}{        }\PYG{n}{go}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{And}\PYG{+w}{ }\PYG{n}{v}\PYG{+w}{ }\PYG{n}{w}\PYG{p}{)}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{n}{fAnd}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{go}\PYG{+w}{ }\PYG{n}{v}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{go}\PYG{+w}{ }\PYG{n}{w}\PYG{p}{)}
+\PYG{+w}{        }\PYG{n}{go}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{Or}\PYG{+w}{ }\PYG{n}{v}\PYG{+w}{ }\PYG{n}{w}\PYG{p}{)}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{n}{fOr}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{go}\PYG{+w}{ }\PYG{n}{v}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{go}\PYG{+w}{ }\PYG{n}{w}\PYG{p}{)}
+\end{Verbatim}

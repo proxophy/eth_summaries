@@ -1,0 +1,20 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{[]}\PYG{+w}{ }\PYG{c+c1}{\PYGZhy{}\PYGZhy{} empty list}
+\PYG{n+nf}{x}\PYG{k+kt}{:}\PYG{n}{xs}\PYG{+w}{ }\PYG{c+c1}{\PYGZhy{}\PYGZhy{} first element is x, xs is rest of list}
+\PYG{p}{[}\PYG{n}{a}\PYG{p}{,}\PYG{n}{b}\PYG{p}{,}\PYG{n}{c}\PYG{p}{]}\PYG{+w}{ }\PYG{c+c1}{\PYGZhy{}\PYGZhy{} syntactic sugar for a:b:c:[]}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} Basic pattern matching}
+\PYG{n+nf}{f}\PYG{+w}{ }\PYG{k+kt}{[]}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{l+m+mi}{0}
+\PYG{n+nf}{f}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{x}\PYG{k+kt}{:}\PYG{n}{xs}\PYG{p}{)}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{f}\PYG{+w}{ }\PYG{n}{xs}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} [1..x]}
+\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{o}{..}\PYG{l+m+mi}{4}\PYG{p}{]}\PYG{+w}{ }\PYG{c+c1}{\PYGZhy{}\PYGZhy{} [1,2,3,4]}
+\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{o}{..}\PYG{l+m+mi}{10}\PYG{p}{]}\PYG{+w}{ }\PYG{c+c1}{\PYGZhy{}\PYGZhy{} [1,3,5,7,9]}
+\PYG{p}{[}\PYG{l+m+mi}{5}\PYG{p}{,}\PYG{+w}{ }\PYG{l+m+mi}{4}\PYG{o}{..}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{+w}{ }\PYG{c+c1}{\PYGZhy{}\PYGZhy{} [5,4,3,2,1]}
+\PYG{p}{[}\PYG{l+m+mi}{5}\PYG{o}{..}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{+w}{ }\PYG{c+c1}{\PYGZhy{}\PYGZhy{} []}
+\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{o}{...}\PYG{p}{]}\PYG{+w}{ }\PYG{c+c1}{\PYGZhy{}\PYGZhy{} [1,2,...], used with lazy evaluation}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} List comprehensions}
+\PYG{p}{[}\PYG{n}{f}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o+ow}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n}{list}\PYG{+w}{ }\PYG{p}{,}\PYG{+w}{ }\PYG{n}{guard\PYGZus{}1}\PYG{p}{,}\PYG{+w}{ }\PYG{o}{...}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{guard\PYGZus{}n}\PYG{p}{]}
+\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o+ow}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{o}{..}\PYG{l+m+mi}{20}\PYG{p}{],}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{p}{`}\PYG{n}{mod}\PYG{p}{`}\PYG{+w}{ }\PYG{l+m+mi}{2}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{+w}{ }\PYG{c+c1}{\PYGZhy{}\PYGZhy{} [2,6,10,..38]}
+\PYG{p}{[(}\PYG{n}{l}\PYG{p}{,}\PYG{n}{r}\PYG{p}{)}\PYG{o}{|}\PYG{+w}{ }\PYG{n}{l}\PYG{+w}{ }\PYG{o+ow}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}abc\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{r}\PYG{+w}{ }\PYG{o+ow}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}xyz\PYGZdq{}}\PYG{p}{]}\PYG{+w}{ }\PYG{c+c1}{\PYGZhy{}\PYGZhy{} all comb. of characters in \PYGZdq{}abc\PYGZdq{} \PYGZam{} \PYGZdq{}xyz\PYGZdq{}}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} Quick sort, very pretty}
+\PYG{n+nf}{q}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{p}\PYG{k+kt}{:}\PYG{n}{xs}\PYG{p}{)}\PYG{+w}{ }\PYG{o+ow}{=}\PYG{+w}{ }\PYG{n}{q}\PYG{+w}{ }\PYG{p}{[}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o+ow}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n}{xs}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZlt{}=}\PYG{+w}{ }\PYG{n}{p}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{++}\PYG{+w}{ }\PYG{p}{[}\PYG{n}{p}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{++}\PYG{+w}{ }\PYG{n}{q}\PYG{+w}{ }\PYG{p}{[}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{|}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o+ow}{\PYGZlt{}\PYGZhy{}}\PYG{+w}{ }\PYG{n}{xs}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{p}\PYG{p}{]}
+\end{Verbatim}

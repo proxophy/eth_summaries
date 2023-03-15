@@ -1,4 +1,9 @@
 # exclude latex build stuff
-FMFP/summary.*
-!FMFP/summary.pdf
-!FMFP/summary.tex
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.pyg
+*.synctex.gz
+*.toc
