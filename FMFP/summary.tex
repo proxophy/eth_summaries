@@ -561,7 +561,7 @@ $\forall$\texttt{t :: Tree a. mapTree g (mapTree f t) = mapTree (g . f) t}
 \section{Types and typing inference}
 \texttt{f :: a -> b -> c -> d}:
 \begin{itemize}
-    \item same as \texttt{f :: a -> (b -> (c -> d))} (parentheses are right associative) 
+    \item same as \texttt{f :: a -> (b -> (c -> d))} (arrows are right associative) 
     \item \texttt{f x y z} implies \texttt{x::a, y::b, z::c} 
     \item f.e. \texttt{f x :: b -> c -> d}
 \end{itemize}
