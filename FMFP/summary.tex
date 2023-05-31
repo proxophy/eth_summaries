@@ -71,11 +71,11 @@
 \maketitle
 
 \begin{abstract}
-This document should give an overview over the types of exercises in the FMFP course and how to solve them. 
-It also contains parts of theory and an overview of Haskell. \\
-There is no guarantee for correctness or completeness, please refer to the course material. \\
-Main sources are the course material and material provided by the course TA
-Max Schlegel on \\ \url{https://n.ethz.ch/~mschlegel/fmfp22/}
+    This document should give an overview over the types of exercises in the FMFP course and how to solve them.
+    It also contains parts of theory and an overview of Haskell. \\
+    There is no guarantee for correctness or completeness, please refer to the course material. \\
+    Main sources are the course material and material provided by the course TA
+    Max Schlegel on \\ \url{https://n.ethz.ch/~mschlegel/fmfp22/}
 \end{abstract}
 
 \thispagestyle{empty}
@@ -254,7 +254,7 @@ foldProp fVar fNot fAnd fOr prop  = go prop
         go (Not v) = fNot (go v)
         go (And v w) = fAnd (go v) (go w) 
         go (Or v w) = fOr (go v) (go w)
-\end{minted}  
+\end{minted}
 
 
 \section{Evaluation strategies}
@@ -262,8 +262,8 @@ Lazy evaluation strategy of application \texttt{t1 t2}
 \begin{enumerate}
     \item Evaluate \texttt{t1}
     \item The argument \texttt{t2} is substituted in \texttt{t1} without being evaluated
-    \item No evaluation inside lambda abstractions. In other words, in an abstraction 
-    \texttt{$\backslash$... -> f t}, then \texttt{f t} is not evaluated
+    \item No evaluation inside lambda abstractions. In other words, in an abstraction
+          \texttt{$\backslash$... -> f t}, then \texttt{f t} is not evaluated
 \end{enumerate}
 Eager evaluation strategy of application \texttt{t1 t2}
 \begin{enumerate}
@@ -328,19 +328,19 @@ fst ((0+1)+(1+(0+1)), (1+(0+1))+((0+1)+(1+(0+1)))) =
 \end{verbatim}
 
 \section{Natural Deduction}
-\subsection{Parenthesizing formulas} 
+\subsection{Parenthesizing formulas}
 \begin{itemize}
     \item $\land$ binds stronger than $\lor$ stronger than $\li$
     \item $\li$ associates to right; $\land$ and $\lor$ to the left
-    \item Negation binds stronger than binary operators 
+    \item Negation binds stronger than binary operators
     \item Quantifiers extend to the right as far as possible: end of line or )
 \end{itemize}
 \begin{tabular}{l l}
-    $p \lor q \land \lnot r \li p \lor q$ & $(p \lor (q \land (\lnot r))) \li (p \lor q)$ \\
-    $p \li q \lor p \li r$ & $p \li ((q \lor p) \li r$) \\
-    $p \land \fax q(x) \lor r$ & $p \land (\fax (q(x) \lor r))$ \\
-    $\lnot \fax p(x) \land \fax q(x) \land r(x) \land s$ &  $\lnot( \fax (p(x) \land (\fax ((q(x) \land r(x)) \land s))))$
-\end{tabular} 
+    $p \lor q \land \lnot r \li p \lor q$                & $(p \lor (q \land (\lnot r))) \li (p \lor q)$                  \\
+    $p \li q \lor p \li r$                               & $p \li ((q \lor p) \li r$)                                     \\
+    $p \land \fax q(x) \lor r$                           & $p \land (\fax (q(x) \lor r))$                                 \\
+    $\lnot \fax p(x) \land \fax q(x) \land r(x) \land s$ & $\lnot( \fax (p(x) \land (\fax ((q(x) \land r(x)) \land s))))$
+\end{tabular}
 \subsection{Natural Deduction without quantifiers}
 If you cannot continue, try to add assumptions by using $\lor E$
 \subsubsection{Example}
@@ -356,25 +356,25 @@ Let $\Gamma \equiv (\lnot A) \land (A \lor B)$
     \UnaryInfC{$\Gamma, A \vdash (\lnot A) \land (A \lor B)$}
     \RightLabel{$\land ER$}
     \UnaryInfC{$\Gamma \vdash A \lor B$}
-        \AxiomC{}
-        \RightLabel{$ax$}
-        \UnaryInfC{$\Gamma, A \vdash A$}
+    \AxiomC{}
+    \RightLabel{$ax$}
+    \UnaryInfC{$\Gamma, A \vdash A$}
 
-        \AxiomC{}
-        \RightLabel{$ax$}
-        \UnaryInfC{$\Gamma, A \vdash (\lnot A) \land (A \lor B)$}
-        \RightLabel{$\land EL$}
-        \UnaryInfC{$\Gamma, A \vdash \lnot A$}
+    \AxiomC{}
+    \RightLabel{$ax$}
+    \UnaryInfC{$\Gamma, A \vdash (\lnot A) \land (A \lor B)$}
+    \RightLabel{$\land EL$}
+    \UnaryInfC{$\Gamma, A \vdash \lnot A$}
 
-        \RightLabel{$\lnot E$}
-        \BinaryInfC{$\Gamma, A \vdash B$}
-            \AxiomC{}
-            \RightLabel{$ax$}
-            \UnaryInfC{$\Gamma, B \vdash B$}
-        \RightLabel{$\lor E$}
-        \TrinaryInfC{$\Gamma \vdash B$}
-        \RightLabel{$\li I$}
-        \UnaryInfC{ $\vdash (\lnot A) \land (A \lor B) \li B$}
+    \RightLabel{$\lnot E$}
+    \BinaryInfC{$\Gamma, A \vdash B$}
+    \AxiomC{}
+    \RightLabel{$ax$}
+    \UnaryInfC{$\Gamma, B \vdash B$}
+    \RightLabel{$\lor E$}
+    \TrinaryInfC{$\Gamma \vdash B$}
+    \RightLabel{$\li I$}
+    \UnaryInfC{ $\vdash (\lnot A) \land (A \lor B) \li B$}
 \end{prooftree}
 
 \subsection{Natural Deduction with quantifiers}
@@ -389,24 +389,24 @@ Let $\Gamma \equiv \exx P \land Q, P \land Q$
     \AxiomC{}
     \RightLabel{$ax$}
     \UnaryInfC{$(\exx P \land Q) \vdash (\exx P \land Q)$}
-        \AxiomC{}
-        \RightLabel{$ax$}
-        \UnaryInfC{$\Gamma \vdash P \land Q$}
-        \RightLabel{$\land EL$}
-        \UnaryInfC{$\Gamma \vdash P$}
-        \RightLabel{$\exists I$}
-        \UnaryInfC{$\Gamma \vdash \exx P$}
+    \AxiomC{}
+    \RightLabel{$ax$}
+    \UnaryInfC{$\Gamma \vdash P \land Q$}
+    \RightLabel{$\land EL$}
+    \UnaryInfC{$\Gamma \vdash P$}
+    \RightLabel{$\exists I$}
+    \UnaryInfC{$\Gamma \vdash \exx P$}
 
-        \AxiomC{}
-        \RightLabel{$ax$}
-        \UnaryInfC{$\Gamma \vdash P \land Q$}
-        \RightLabel{$\land ER$}
-        \UnaryInfC{$\Gamma \vdash Q$}
-        \RightLabel{$\exists I$}
-        \UnaryInfC{$\Gamma \vdash \exx Q$}
+    \AxiomC{}
+    \RightLabel{$ax$}
+    \UnaryInfC{$\Gamma \vdash P \land Q$}
+    \RightLabel{$\land ER$}
+    \UnaryInfC{$\Gamma \vdash Q$}
+    \RightLabel{$\exists I$}
+    \UnaryInfC{$\Gamma \vdash \exx Q$}
 
-        \RightLabel{$\land I$}
-        \BinaryInfC{$\Gamma \vdash (\exx P) \land (\exx Q)$}
+    \RightLabel{$\land I$}
+    \BinaryInfC{$\Gamma \vdash (\exx P) \land (\exx Q)$}
     \RightLabel{$\exists E ^{**}$}
     \BinaryInfC{$(\exx P \land Q) \vdash (\exx P) \land (\exx Q)$}
     \RightLabel{$\li I$}
@@ -421,11 +421,11 @@ A variable occurrence x in a formula A is \textbf{bound} if x occurs within a su
 \textbf{Alpha-conversion}: bound variables can be renamed to names not yet used \\
 \textbf{Examples} \\
 \begin{tabular}{l l c}
-     & & $\alpha$-convertible \\
-    $\fax \exy p(x,y)$ & $\fay \exx p(y,x)$ & yes \\
-    $\exz \fay p(z, f(y))$ &  $\exy \fay p(y, f(y))$ & no \\
-    $(\fax p(x)) \lor (\exx q(x))$ & $(\faz p(z)) \lor (\exy q(y))$ & yes \\
-    $p(x) \li \fax p(x)$ & $p(y) \li \fay p(y)$ & no \\
+                                   &                                & $\alpha$-convertible \\
+    $\fax \exy p(x,y)$             & $\fay \exx p(y,x)$             & yes                  \\
+    $\exz \fay p(z, f(y))$         & $\exy \fay p(y, f(y))$         & no                   \\
+    $(\fax p(x)) \lor (\exx q(x))$ & $(\faz p(z)) \lor (\exy q(y))$ & yes                  \\
+    $p(x) \li \fax p(x)$           & $p(y) \li \fay p(y)$           & no                   \\
 \end{tabular}
 
 \section{Induction}
@@ -444,7 +444,7 @@ Induction scheme:
 \textbf{Lemma}: $\fan$ \texttt{aux n = (fibLouis n, fibLouis (n+1))}
 \begin{proof}
     Let \texttt{P:=}(aux n = (fibLouis n, fibLouis (n+1)))\\
-    \textbf{Base case}. Show \texttt{P[n $\mapsto$ 0]} 
+    \textbf{Base case}. Show \texttt{P[n $\mapsto$ 0]}
     \begin{minted}{Haskell}
     aux 0 = ...
         = (fibLouis 0, fibLouis (0+1))
@@ -475,7 +475,7 @@ Induction scheme:
 \begin{proof}
     Let \texttt{P:= (foldr (:) [] xs = xs)}. \\
     We prove by induction over lists that $\forall xs::[a].$ \texttt{P} holds. \\
-    \textbf{Base case}. Show \texttt{P[xs $\mapsto$ []]} 
+    \textbf{Base case}. Show \texttt{P[xs $\mapsto$ []]}
     \begin{minted}{Haskell}
     foldr (:) [] [] = [] 
     \end{minted}
@@ -493,12 +493,12 @@ Induction scheme:
 (Important parts/"framework" of proof) \\
 \textbf{Lemma}: \texttt{rev (xs ++ rev ys) = ys ++ rev xs}
 \begin{proof}
-    Let \texttt{P' := rev (xs ++ rev ys') = ys' ++ rev xs}. 
+    Let \texttt{P' := rev (xs ++ rev ys') = ys' ++ rev xs}.
     We show that $\forall$ \texttt{ys'.}$\forall$ \texttt{xs.}. \\
     Fix an arbitrary \texttt{ys} and let \texttt{P := [ys' $\mapsto$ ys]}.
     We show that $\forall$\texttt{xs P.} \\
     (This implies $\forall$\texttt{ys'.}$\forall$\texttt{xs.P'}) \\
-    \textbf{Base case}: We show \texttt{P[xs $\mapsto$ []]} 
+    \textbf{Base case}: We show \texttt{P[xs $\mapsto$ []]}
     \begin{minted}{Haskell}
     rev ([] ++ rev ys) = ...
         = ys ++ rev []
@@ -528,28 +528,28 @@ Induction scheme:
 \end{prooftree}
 
 \subsubsection{Sheet 6, Ex. 1}
-(Important parts/"framework" of proof) 
+(Important parts/"framework" of proof)
 \begin{minted}{Haskell}
 mapTree f Leaf = Leaf
 mapTree f (Node x t1 t2) = Node (f x) (mapTree f t1) (mapTree f t2) 
-\end{minted}  
+\end{minted}
 For arbitrary \mintinline{Haskell}{f :: a -> b} and \mintinline{Haskell}{g :: b -> c} \\
 $\forall$\texttt{t :: Tree a. mapTree g (mapTree f t) = mapTree (g . f) t}
 
 \begin{proof}
     Let \mintinline{Haskell}{f :: a -> b} and \mintinline{Haskell}{g :: b -> c} be arbitrary functions. \\
-    Let \texttt{P := mapTree g (mapTree f t) = mapTree (g . f) t}, and we prove by induction that 
+    Let \texttt{P := mapTree g (mapTree f t) = mapTree (g . f) t}, and we prove by induction that
     $\forall$\texttt{t :: (Tree a).P} \\
-    \textbf{Base Case}: Show \texttt{P[t $\mapsto$ Leaf]} 
+    \textbf{Base Case}: Show \texttt{P[t $\mapsto$ Leaf]}
     \begin{minted}{Haskell}
         mapTree g (mapTree f Leaf) = ..
                 =  mapTree (g . f) Leaf
     \end{minted}
-    \textbf{Step case}: 
+    \textbf{Step case}:
     Let \texttt{x::a, l::Tree a, r::Tree a} be arbitrary. \\
     I.H.1: \texttt{P[t $\mapsto$ l]} \\
     I.H.2: \texttt{P[t $\mapsto$ r]} \\
-    We show \texttt{P[t $\mapsto$ Node x l r]} 
+    We show \texttt{P[t $\mapsto$ Node x l r]}
     \begin{minted}{Haskell}
         mapTree g (mapTree f (Node x l r)) = ..
                 =  mapTree (g . f) (Node x l r)
@@ -561,15 +561,15 @@ $\forall$\texttt{t :: Tree a. mapTree g (mapTree f t) = mapTree (g . f) t}
 \section{Types and typing inference}
 \texttt{f :: a -> b -> c -> d}:
 \begin{itemize}
-    \item same as \texttt{f :: a -> (b -> (c -> d))} (parentheses are right associative) 
-    \item \texttt{f x y z} implies \texttt{x::a, y::b, z::c} 
-    \item f.e. \texttt{f x :: b -> c -> d}
+    \item same as \texttt{f :: a -> (b -> (c -> d))} (parentheses are right associative)
+    \item \texttt{f x y z} implies \texttt{x::a, y::b, z::c}
+    \item e.g. \texttt{f x :: b -> c -> d}
 \end{itemize}
 \subsection{Types}
 \begin{itemize}
-    \item Detect function applications, f.e. \texttt{f x} $\Rightarrow$ \texttt{f::a->b, x::a}
+    \item Detect function applications, e.g. \texttt{f x} $\Rightarrow$ \texttt{f::a->b, x::a}
     \item Detect prelude functions such as map, filter, foldr etc.
-    \item "Match" types of different function, f.e. \texttt{f :: (a->b) -> [a] -> b} for  \texttt{f x} $\Rightarrow$ \texttt{x :: (a->b)}
+    \item "Match" types of different function, e.g. \texttt{f :: (a->b) -> [a] -> b} for  \texttt{f x} $\Rightarrow$ \texttt{x :: (a->b)}
     \item Don't forget things like \texttt{Num a, Eq b => ...}
 \end{itemize}
 % \textbf{Example} \\
@@ -589,37 +589,37 @@ $\forall$\texttt{t :: Tree a. mapTree g (mapTree f t) = mapTree (g . f) t}
 \textbf{2a.4} \texttt{(.).(.)} (the end boss)
 \begin{enumerate}
     \item \texttt{(.) :: (b->c) -> (a->b) -> a -> c}
-    \item Rewrite: \texttt{\textcolor{Red}{(.)}\textcolor{Cyan}{.}\textcolor{Green}{(.)} 
-    = \textcolor{Cyan}{.}\textcolor{Red}{(.)}\textcolor{Green}{(.)} 
-    = \textcolor{Cyan}{f} \textcolor{Red}{g} \textcolor{Green}{h}}
+    \item Rewrite: \texttt{\textcolor{Red}{(.)}\textcolor{Cyan}{.}\textcolor{Green}{(.)}
+              = \textcolor{Cyan}{.}\textcolor{Red}{(.)}\textcolor{Green}{(.)}
+              = \textcolor{Cyan}{f} \textcolor{Red}{g} \textcolor{Green}{h}}
     \item Definition of \texttt{(.)}: \\
-    \texttt{f :: (b->c) -> ((a->b) -> a -> c)} \\
-    \texttt{g :: (n->o) -> ((m->n) -> m -> o)} \\
-    \texttt{h :: (q->r) -> ((p->q) -> p -> r)} 
+          \texttt{f :: (b->c) -> ((a->b) -> a -> c)} \\
+          \texttt{g :: (n->o) -> ((m->n) -> m -> o)} \\
+          \texttt{h :: (q->r) -> ((p->q) -> p -> r)}
     \item \texttt{g} is first argument of \texttt{f}: \\
-    \texttt{g :: b -> c} \\
-    $\Rightarrow$ \texttt{b = n -> o} (I) and
-    \texttt{c = (m->n) -> m -> o} (II)
+          \texttt{g :: b -> c} \\
+          $\Rightarrow$ \texttt{b = n -> o} (I) and
+          \texttt{c = (m->n) -> m -> o} (II)
     \item \texttt{h} is first argument of \texttt{f g}:\\
-    \texttt{f g :: (a->b) -> a -> c}   \\
-    $\Rightarrow$ \texttt{h :: a -> b}  \\
-    $\Rightarrow$ \texttt{a = q -> r} (III)\\
-    \texttt{b = (p->q) -> p -> r} (IV)
-    \item (I) and (IV) $\Rightarrow$ 
-    \texttt{n = p -> q} (V) and \texttt{o = p -> r}
+          \texttt{f g :: (a->b) -> a -> c}   \\
+          $\Rightarrow$ \texttt{h :: a -> b}  \\
+          $\Rightarrow$ \texttt{a = q -> r} (III)\\
+          \texttt{b = (p->q) -> p -> r} (IV)
+    \item (I) and (IV) $\Rightarrow$
+          \texttt{n = p -> q} (V) and \texttt{o = p -> r}
     \item After "taking" two arguments, we have the following type \\
-    \texttt{f g h :: a -> c} \\
-    \texttt{= (q->r) -> (m->n) -> m -> o} \\
-    \texttt{= (q->r) -> (m->p->q) -> m -> p -> r }
+          \texttt{f g h :: a -> c} \\
+          \texttt{= (q->r) -> (m->n) -> m -> o} \\
+          \texttt{= (q->r) -> (m->p->q) -> m -> p -> r }
 \end{enumerate}
 \subsection{Typing proof and inference}
 Solving type inference constraints
 \begin{enumerate}
     \item Remove trivial equations like $t = t$
-    % \item Merge equations $\{x=s, x =t\}$ into $\{s=t\}$ (if x doesn't appear in other equations)
+          % \item Merge equations $\{x=s, x =t\}$ into $\{s=t\}$ (if x doesn't appear in other equations)
     \item Transform equations of form $\{f(s_0, ..., s_k)=g(t_0, ..., s_m)\}$ into $\{s_0 = t_0, ..., s_k = t_k\}$ if
-    $f=g$ and $k=m$, else there is no solution
-    \item Substitute one equation into the others 
+          $f=g$ and $k=m$, else there is no solution
+    \item Substitute one equation into the others
 \end{enumerate}
 \subsubsection{Sheet 5, Ex. 3}
 \textbf{a} Proof $\lambda$\texttt{x.(x 1 True, x 0) :: (Int -> Bool -> a) -> (a, Bool -> a)}:\\
@@ -637,11 +637,11 @@ Try to match left and right side with typing rule and apply it, should be straig
     \UnaryInfC{$ x : \tau_1 \vdash \lambda y. (y \; (\mathbf{iszero}\; (y \; x))) :: \tau_0$}
     \RightLabel{$Abs$}
     \UnaryInfC{$\vdash \lambda x. \lambda y. (y \; (\mathbf{iszero}\; (y \; x))) :: \tau_1 \li \tau_0$}
-        \AxiomC{}
-        \RightLabel{$True^1$}
-        \UnaryInfC{$\vdash True :: \tau_1$}
+    \AxiomC{}
+    \RightLabel{$True^1$}
+    \UnaryInfC{$\vdash True :: \tau_1$}
     \RightLabel{$App$}
-    
+
     \BinaryInfC{ $\vdash (\lambda x. \lambda y. (y \; (\mathbf{iszero} \; (y \; x)))) \; True :: \tau_0$ }
 \end{prooftree}
 T$_2$:
@@ -656,34 +656,34 @@ T$_2$:
     \BinaryInfC{$x : \tau_1, y : \tau_2 \vdash  y \; x :: Int$}
     \RightLabel{$iszero^1$}
     \UnaryInfC{$x : \tau_1, y : \tau_2\vdash \mathbf{iszero}\; (y \; x) :: \tau_4$}
-    
+
 \end{prooftree}
 
 Finding out $\tau_0$: \\ \\
 \begin{tabular}{l | l | l | l }
-    $\tau_0 = \tau_2 \li \tau_3$ ($Abs^1$) & $\tau_0 = \tau_2 \li \tau_3$ & $\tau_0 = \tau_2 \li \tau_3$
-    &  $\tau_0 = (Bool \li Int) \li \tau_3$\\
+    $\tau_0 = \tau_2 \li \tau_3$ ($Abs^1$) & $\tau_0 = \tau_2 \li \tau_3$         & $\tau_0 = \tau_2 \li \tau_3$
+                                           & $\tau_0 = (Bool \li Int) \li \tau_3$                                  \\
 
-    $\tau_2 = \tau_4 \li \tau_3$ ($Var^1$) & $\tau_2 = \tau_4 \li \tau_3$ & $\tau_2 = \tau_4 \li \tau_3$
-    & $Bool \li Int=\tau_4 \li \tau_3$\\
+    $\tau_2 = \tau_4 \li \tau_3$ ($Var^1$) & $\tau_2 = \tau_4 \li \tau_3$         & $\tau_2 = \tau_4 \li \tau_3$
+                                           & $Bool \li Int=\tau_4 \li \tau_3$                                      \\
 
-    $\tau_4 = Bool$ ($iszero^1$)& $\tau_4 = Bool$ & $\tau_4 = Bool$
-    & $\tau_4 = Bool$\\
+    $\tau_4 = Bool$ ($iszero^1$)           & $\tau_4 = Bool$                      & $\tau_4 = Bool$
+                                           & $\tau_4 = Bool$                                                       \\
 
-    $\tau_2 = \tau_5 \li Int$ ($Var^2$)& $\tau_2 = \tau_5 \li Int$ & $\tau_2 = Bool \li Int$
-    & $\tau_5 = Bool$\\
+    $\tau_2 = \tau_5 \li Int$ ($Var^2$)    & $\tau_2 = \tau_5 \li Int$            & $\tau_2 = Bool \li Int$
+                                           & $\tau_5 = Bool$                                                       \\
 
-    $\tau_1 = \tau_5$ ($Var^3$)& $\tau_5 = Bool$ & $\tau_5 = Bool$
-    & \\
+    $\tau_1 = \tau_5$ ($Var^3$)            & $\tau_5 = Bool$                      & $\tau_5 = Bool$
+                                           &                                                                       \\
 
-    $\tau_1 = Bool$ ($True^1$)& & & \\ \hline
+    $\tau_1 = Bool$ ($True^1$)             &                                      &                              & \\ \hline
 \end{tabular}
 \\
 \begin{tabular}{l | l}
-    $\tau_0 = (Bool \li Int) \li \tau_3$ & $\tau_0 = (Bool \li Int) \li Int$\\
-    $\tau_3 = Int$ &  $\tau_3 = Int$\\
-    $\tau_4 = Bool$ & $\tau_4 = Bool$\\
-    $\tau_5 = Bool$ &  $\tau_5 = Bool$\\
+    $\tau_0 = (Bool \li Int) \li \tau_3$ & $\tau_0 = (Bool \li Int) \li Int$ \\
+    $\tau_3 = Int$                       & $\tau_3 = Int$                    \\
+    $\tau_4 = Bool$                      & $\tau_4 = Bool$                   \\
+    $\tau_5 = Bool$                      & $\tau_5 = Bool$                   \\
 \end{tabular}
 \\ \\
 \textbf{d} Infer type of \texttt{iszero(fst (3+5))}
@@ -701,7 +701,7 @@ Finding out $\tau_0$: \\ \\
     \RightLabel{$iszero$}
     \UnaryInfC{$\vdash \mathbf{iszero}(\mathbf{fst} (3+5)) :: \tau_0$}
 \end{prooftree}
-Collected type constraints: $\tau_0 = Bool$ from $iszero$, $(Int = (Int, \tau_1))$ from $BinOp$, 
+Collected type constraints: $\tau_0 = Bool$ from $iszero$, $(Int = (Int, \tau_1))$ from $BinOp$,
 second constraint does not unify, meaning this doesn't type
 
 \newpage
@@ -712,15 +712,15 @@ second constraint does not unify, meaning this doesn't type
 
 \section{Introduction to language semantics}
 \subsection{States}
-\textbf{State as a function}: 
-$$\text{State: Var} \li \text{Val}$$ 
-\textbf{Zero state}: 
+\textbf{State as a function}:
+$$\text{State: Var} \li \text{Val}$$
+\textbf{Zero state}:
 $$\sigma_{zero}(x)=0\text{ for all }x$$
-\textbf{Updating states}: 
+\textbf{Updating states}:
 $$ (\sigma[y\mapsto v](x)) = \begin{cases}
-v & \text{if } x \equiv y \\
-\sigma(x) & x \not\equiv y \\
-\end{cases}
+        v         & \text{if } x \equiv y \\
+        \sigma(x) & x \not\equiv y        \\
+    \end{cases}
 $$
 \textbf{Two states are equal}:
 $$ \sigma_1 = \sigma_2 \Leftrightarrow \fax (\sigma_1(x) = \sigma_2(x))$$
@@ -730,11 +730,11 @@ $$ \sigma_1 = \sigma_2 \Leftrightarrow \fax (\sigma_1(x) = \sigma_2(x))$$
 $$ \A: \text{Aexp}\li \text{State} \li \text{Val}$$
 \textbf{Mapping}
 \begin{center}
-\begin{tabular}{l l}
-    $\A \llb x\rrb \sigma$ & $= \sigma(x)$ \\
-    $\A \llb n\rrb \sigma$ & $= \mathcal{N}\llb n\rrb$ \\
-    $\A \llb e_1 \, op \, e_2\rrb \sigma$ & $= \A\llb e_1\rrb \, \overline{op} \, \A\llb e_2\rrb$ 
-\end{tabular}
+    \begin{tabular}{l l}
+        $\A \llb x\rrb \sigma$                & $= \sigma(x)$                                         \\
+        $\A \llb n\rrb \sigma$                & $= \mathcal{N}\llb n\rrb$                             \\
+        $\A \llb e_1 \, op \, e_2\rrb \sigma$ & $= \A\llb e_1\rrb \, \overline{op} \, \A\llb e_2\rrb$
+    \end{tabular}
 \end{center}
 with $\overline{op}$ the relation $\text{Val}\times\text{Val}$ corresponding to $op$
 
@@ -743,45 +743,45 @@ with $\overline{op}$ the relation $\text{Val}\times\text{Val}$ corresponding to 
 $$ \B: \text{Bexp}\li \text{State} \li \text{Val}$$
 \textbf{Mapping}
 \begin{center}
-\begin{tabular}{l l}
-    $\B \llb e_1 \, op \, e_2 \rrb \sigma$ & $=
-    \begin{cases}
-        \tt & \text{if } \A \llb e_1\rrb \sigma \, \overline{op} \, \A \llb e_2\rrb \sigma \\
-        \ff & \text{otherwise}
-    \end{cases}$ \\
-    $\B \llb b_1 \ort b_2 \rrb \sigma$ & $=
-    \begin{cases}
-        \tt & \text{if } \B \llb b_1\rrb \sigma = \tt \text{ or } \B \llb b_2\rrb \sigma  = \tt\\
-        \ff & \text{otherwise}
-    \end{cases}$ \\
-    $\B \llb b_1 \andt b_2 \rrb \sigma$ & $=
-    \begin{cases}
-        \tt & \text{if } \B \llb b_1\rrb \sigma  = \tt \text{ and } \B \llb b_2\rrb \sigma  = \tt\\
-        \ff & \text{otherwise}
-    \end{cases}$ \\
-    $\B \llb \nott b \rrb \sigma$ & $=
-    \begin{cases}
-        \tt & \text{if } \B \llb b\rrb \sigma = \ff \\
-        \ff & \text{otherwise}
-    \end{cases}$ \\
-\end{tabular}
+    \begin{tabular}{l l}
+        $\B \llb e_1 \, op \, e_2 \rrb \sigma$ & $=
+            \begin{cases}
+                \tt & \text{if } \A \llb e_1\rrb \sigma \, \overline{op} \, \A \llb e_2\rrb \sigma \\
+                \ff & \text{otherwise}
+            \end{cases}$             \\
+        $\B \llb b_1 \ort b_2 \rrb \sigma$     & $=
+            \begin{cases}
+                \tt & \text{if } \B \llb b_1\rrb \sigma = \tt \text{ or } \B \llb b_2\rrb \sigma  = \tt \\
+                \ff & \text{otherwise}
+            \end{cases}$             \\
+        $\B \llb b_1 \andt b_2 \rrb \sigma$    & $=
+            \begin{cases}
+                \tt & \text{if } \B \llb b_1\rrb \sigma  = \tt \text{ and } \B \llb b_2\rrb \sigma  = \tt \\
+                \ff & \text{otherwise}
+            \end{cases}$             \\
+        $\B \llb \nott b \rrb \sigma$          & $=
+            \begin{cases}
+                \tt & \text{if } \B \llb b\rrb \sigma = \ff \\
+                \ff & \text{otherwise}
+            \end{cases}$             \\
+    \end{tabular}
 \end{center}
 with $\overline{op}$ the relation $\text{Val}\times\text{Val}$ corresponding to $op$
 
 \subsection{Free variables}
 \begin{center}
     \begin{tabular}{l l}
-        $FV(e_1 \, op \, e_2)$ & $=FV(e_1) \cup FV(e_2)$ \\
-        $FV(n)$ & $=\emptyset$ \\
-        $FV(x)$ & $=\{x\}$ \\
-        $FV(\nott b)$ & $=FV(b)$ \\
-        $FV(b_1 \ort b_2)$ & $=FV(b_1) \cup FV(b_2)$ \\
-        $FV(b_1 \andt b_2)$ & $=FV(b_1) \cup FV(b_2)$ \\
-        $FV(\skipt)$ & $= \emptyset$ \\
-        $FV(x:=e)$ & $= \{x\} \cup FV(e)$ \\
-        $FV(s_1;s_2)$ & $= FV(s_1) \cup FV(e_2)$ \\
+        $FV(e_1 \, op \, e_2)$                    & $=FV(e_1) \cup FV(e_2)$             \\
+        $FV(n)$                                   & $=\emptyset$                        \\
+        $FV(x)$                                   & $=\{x\}$                            \\
+        $FV(\nott b)$                             & $=FV(b)$                            \\
+        $FV(b_1 \ort b_2)$                        & $=FV(b_1) \cup FV(b_2)$             \\
+        $FV(b_1 \andt b_2)$                       & $=FV(b_1) \cup FV(b_2)$             \\
+        $FV(\skipt)$                              & $= \emptyset$                       \\
+        $FV(x:=e)$                                & $= \{x\} \cup FV(e)$                \\
+        $FV(s_1;s_2)$                             & $= FV(s_1) \cup FV(e_2)$            \\
         $FV(\ift b \thent s_1 \elset s_2 \endt )$ & $= FV(b) \cup FV(s_1) \cup FV(s_2)$ \\
-        $FV(\whilet b \dot s \endt)$ & $= FV(b) \cup FV(s)$ \\
+        $FV(\whilet b \dot s \endt)$              & $= FV(b) \cup FV(s)$                \\
     \end{tabular}
 \end{center}
 
@@ -789,12 +789,12 @@ with $\overline{op}$ the relation $\text{Val}\times\text{Val}$ corresponding to 
 
 \begin{center}
     \begin{tabular}{l l}
-        $(e_1 \, op \, e_2)[x \mapsto e]$ & $\equiv (e_1[x\mapsto e])$ \\
-        $n[x\mapsto e]$ & $\equiv n$\\
-        $y[x\mapsto e]$ & $\equiv\begin{cases} e & \text{if } x \equiv y \\ y & \text{otherwise} \end{cases}$\\
-        $(\nott b)[x\mapsto e]$ & $\nott (b[x\mapsto e])$ \\
-        $(b_1 \ort b_2)[x\mapsto e]$ &  $(b_1[x\mapsto e] \ort b_2[x\mapsto e])$ \\
-        $(b_1 \andt b_2)[x\mapsto e]$ &  $(b_1[x\mapsto e] \andt b_2[x\mapsto e])$ \\
+        $(e_1 \, op \, e_2)[x \mapsto e]$ & $\equiv (e_1[x\mapsto e])$                \\
+        $n[x\mapsto e]$                   & $\equiv n$                                \\
+        $y[x\mapsto e]$                   & $\equiv\begin{cases} e & \text{if } x \equiv y \\ y & \text{otherwise} \end{cases}$        \\
+        $(\nott b)[x\mapsto e]$           & $\nott (b[x\mapsto e])$                   \\
+        $(b_1 \ort b_2)[x\mapsto e]$      & $(b_1[x\mapsto e] \ort b_2[x\mapsto e])$  \\
+        $(b_1 \andt b_2)[x\mapsto e]$     & $(b_1[x\mapsto e] \andt b_2[x\mapsto e])$ \\
     \end{tabular}
 \end{center}
 
@@ -814,7 +814,7 @@ Statement: $ \forall \sigma, e, e', x \, \A \llb e [x \mapsto e']\rrb \sigma = \
     \textbf{Case} $e \equiv y$ for some variable y:\\
     \dots \\
     \textbf{Case} $e \equiv e_1 \, op \, e_2$ for some arithmetic expressions $e_1, e_2$:\\
-    \dots 
+    \dots
 \end{proof}
 
 \subsubsection{Sheet 10, Ex. 2}
@@ -831,7 +831,7 @@ Statement: $ \forall \sigma, e, e', x \, (\B \llb b [x \mapsto e]\rrb \sigma = \
     \textbf{Case} $b \equiv \nott b'$ for some boolean expression $b'$:\\
     \dots \\
     \textbf{Case} $b \equiv e_1 \, op \, e_2$ for some arithmetic expressions $e_1, e_2$:\\
-    \dots 
+    \dots
 \end{proof}
 
 \section{Operational Semantics}
@@ -839,35 +839,35 @@ Statement: $ \forall \sigma, e, e', x \, (\B \llb b [x \mapsto e]\rrb \sigma = \
 \subsubsection{Big step semantics}
 The execution of a statement $s$ in state $\sigma$
 \begin{itemize}
-    \item \textbf{terminates successfully} iff $\exists \sigma'$ st $\vdash \langle s, \sigma \rangle \li \sigma'$ 
-    \item \textbf{fails to terminate} iff $\nexists \sigma'$ st $\vdash \langle s, \sigma \rangle \li \sigma'$ 
+    \item \textbf{terminates successfully} iff $\exists \sigma'$ st $\vdash \langle s, \sigma \rangle \li \sigma'$
+    \item \textbf{fails to terminate} iff $\nexists \sigma'$ st $\vdash \langle s, \sigma \rangle \li \sigma'$
 \end{itemize}
 \textbf{Semantic equivalence}: $s_1$ and $s_2$ are semantically equivalent iff:
-$$\forall \sigma, \sigma'. \, (\vdash \la s_1, \sigma\ra \li \sigma' 
-\Leftrightarrow
-\la s_2, \sigma\ra \li \sigma' 
- )$$
+$$\forall \sigma, \sigma'. \, (\vdash \la s_1, \sigma\ra \li \sigma'
+    \Leftrightarrow
+    \la s_2, \sigma\ra \li \sigma'
+    )$$
 
- \subsubsection{Small step semantics}
+\subsubsection{Small step semantics}
 The execution of a statement $s$ in state $\sigma$
 \begin{itemize}
-    \item \textbf{terminates successfully} iff $\exists \sigma'$ st $\vdash \langle s, \sigma \rangle \li_1^* \sigma'$ 
-    \item \textbf{fails to terminate} iff $\nexists \sigma'$ st $\vdash \langle s, \sigma \rangle \li_1^* \sigma'$ 
+    \item \textbf{terminates successfully} iff $\exists \sigma'$ st $\vdash \langle s, \sigma \rangle \li_1^* \sigma'$
+    \item \textbf{fails to terminate} iff $\nexists \sigma'$ st $\vdash \langle s, \sigma \rangle \li_1^* \sigma'$
 \end{itemize}
 \textbf{Semantic equivalence}: $s_1$ and $s_2$ are semantically equivalent iff for all $\sigma$:
 \begin{itemize}
     \item for all stuck or terminal configurations $\gamma$:
-    $\la s_1, \sigma \ra \li_1^* \gamma$ if and only if $\la s_2, \sigma \ra \li_1^* \gamma$
+          $\la s_1, \sigma \ra \li_1^* \gamma$ if and only if $\la s_2, \sigma \ra \li_1^* \gamma$
     \item there is an infinite derivation sequence starting in $\la s_1, \sigma \ra$ if and only
-    if there is one starting in $\la s_2, \sigma \ra$
+          if there is one starting in $\la s_2, \sigma \ra$
 \end{itemize}
 \textbf{Lemma}: The small-step semantics of IMP are \textbf{deterministic}:
-$\vdash \la s, \sigma \ra \li_1 \gamma \; \land \; \la s, \sigma \ra \li_1 \gamma'$ $\Rightarrow$ $\gamma = \gamma'$ 
+$\vdash \la s, \sigma \ra \li_1 \gamma \; \land \; \la s, \sigma \ra \li_1 \gamma'$ $\Rightarrow$ $\gamma = \gamma'$
 
 \subsection{Applying big-step semantics}
 \subsubsection{Example}
 Let $s = \ift x > y \thent (x:=y+1; y:=x-2) \elset \skipt \endt$. \\
-We want to prove $\la s, \sigma\ra \li \sigma'$ 
+We want to prove $\la s, \sigma\ra \li \sigma'$
 for $\sigma$ with $\sigma(x)=4$, $\sigma(y)=2$ and $\sigma' = \sigma[x,y \mapsto 3,1]$
 \begin{prooftree}
     \AxiomC{}
@@ -885,12 +885,12 @@ for $\sigma$ with $\sigma(x)=4$, $\sigma(y)=2$ and $\sigma' = \sigma[x,y \mapsto
 \subsection{Applying small-step semantics}
 \subsubsection{Example}
 Let $s = \ift x > y \thent (x:=y+1; y:=x-2) \elset \skipt \endt$. \\
-We want to prove $\la s, \sigma\ra \li_1^* \sigma'$ 
+We want to prove $\la s, \sigma\ra \li_1^* \sigma'$
 for $\sigma$ with $\sigma(x)=4$, $\sigma(y)=2$ and $\sigma' = \sigma[x,y \mapsto 3,1]$
 Derivation sequence:
 \begin{align*}
-    & \la s, \sigma\ra \\
-    \li_1^1  \; & \la (x:=y+1; y:=x-2), \sigma \ra \\
+                & \la s, \sigma\ra                    \\
+    \li_1^1  \; & \la (x:=y+1; y:=x-2), \sigma \ra    \\
     \li_1^1  \; & \la y:=x-2, \sigma[x \mapsto 3] \ra \\
     \li_1^1  \; & \sigma[x,y \mapsto 3,1]
 \end{align*}
@@ -917,13 +917,13 @@ with the following derivation trees justifying the steps
 
 \subsection{Induction on shape of derivation tree}
 General idea: \begin{enumerate}
-    \item Prove that for all $\sigma, \sigma',$(var. in $s_1$), if 
-    $\vdash \la s_1, \sigma \ra \li \sigma'$ then $P$ for some property $P$ \\
-    $\Rightarrow$ Let $P(T) \equiv \forall \sigma, \sigma',(\text{var. in }s_1) 
-    \; (root(T) \equiv \la s_1, \sigma \ra \li \sigma' \Rightarrow
-    \,P)$ \\
-    Goal: Prove $\forall T. P(T)$ by induction on the shape of a derivation tree
-    \item Induction hypothesis: For arbitrary $T$, $\forall T' \sqsubset T.P(T')$ 
+    \item Prove that for all $\sigma, \sigma',$(var. in $s_1$), if
+          $\vdash \la s_1, \sigma \ra \li \sigma'$ then $P$ for some property $P$ \\
+          $\Rightarrow$ Let $P(T) \equiv \forall \sigma, \sigma',(\text{var. in }s_1)
+              \; (root(T) \equiv \la s_1, \sigma \ra \li \sigma' \Rightarrow
+              \,P)$ \\
+          Goal: Prove $\forall T. P(T)$ by induction on the shape of a derivation tree
+    \item Induction hypothesis: For arbitrary $T$, $\forall T' \sqsubset T.P(T')$
     \item Let $\sigma, \sigma',(\text{var. in }s_1)$ be arbitrary, assume $\la s_1, \sigma \ra \li \sigma'$
     \item Do case analysis of last rule applied in T
     \item Derive subtrees of T and properties about $\sigma$, like $\B \llb e\rrb \sigma = \tt$
@@ -946,15 +946,15 @@ Option: Simply do case distinction, I.H. doesn't have to be applied
     \BinaryInfC{$\la \repeatt s \untilt b, \sigma \ra  \li \sigma'$}
 \end{prooftree}
 
-Prove that for all $\sigma, \sigma, b,s $, if 
-$$\vdash \la \repeatt s \untilt b, \sigma \ra \li \sigma'$$ then 
-$$\vdash \la s; \whilet \nott b \dot s \endt, \sigma \ra \li \sigma'$$ 
+Prove that for all $\sigma, \sigma, b,s $, if
+$$\vdash \la \repeatt s \untilt b, \sigma \ra \li \sigma'$$ then
+$$\vdash \la s; \whilet \nott b \dot s \endt, \sigma \ra \li \sigma'$$
 
 \begin{proof}
     \begin{align*}
-    P(T) \equiv &\forall \sigma, \sigma', b, s  
-    \; (root(T) \equiv \repeatt s \untilt b, \sigma \ra \li \sigma' \\
-    & \Rightarrow  \, \vdash \la s; \whilet \nott b \dot s \endt, \sigma \ra \li \sigma')
+        P(T) \equiv & \forall \sigma, \sigma', b, s
+        \; (root(T) \equiv \repeatt s \untilt b, \sigma \ra \li \sigma'                                   \\
+                    & \Rightarrow  \, \vdash \la s; \whilet \nott b \dot s \endt, \sigma \ra \li \sigma')
     \end{align*}
 
     We prove $\forall T. P(T)$ by induction on the shape of a derivation tree\\
@@ -991,8 +991,8 @@ $$\vdash \la s; \whilet \nott b \dot s \endt, \sigma \ra \li \sigma'$$
         \BinaryInfC{$\la \repeatt s \untilt b, \sigma \ra  \li \sigma'$}
     \end{prooftree}
     for some state $\sigma''$ and derivation trees $T_1, T_2$, where $\B \llb e\rrb \sigma'' = \ff$. \\
-    $T_2$ is a proper subtree of $T$, hence $P(T_2)$ holds by I.H.. 
-    This implies that there's a derivation tree $T_3$ with 
+    $T_2$ is a proper subtree of $T$, hence $P(T_2)$ holds by I.H..
+    This implies that there's a derivation tree $T_3$ with
     $root(T_3)\equiv \la s; \whilet \nott b \dot s \endt, \sigma'' \ra \li \sigma'$.
     The last rule applied in $T_3$ must be SEQ$_{\text{NS}} $, so $T_3$ has the form:
     \begin{prooftree}
@@ -1027,9 +1027,9 @@ Use derivation tree of big step semantic to get a derivation sequence for the sm
 
 \begin{proof}
     $$P(T) \equiv \forall \sigma, \sigma', s \;
-    (root(T) \equiv (\la s, \sigma \ra \li \sigma') \Rightarrow 
-    \la s, \sigma \ra \li_1^* \sigma'
-    )$$
+        (root(T) \equiv (\la s, \sigma \ra \li \sigma') \Rightarrow
+        \la s, \sigma \ra \li_1^* \sigma'
+        )$$
     We prove $\forall T. P(T)$ by induction on the shape of a derivation tree\\
     \textbf{Induction hypothesis}: For arbitrary $T$, $\forall T' \sqsubset T.P(T')$ \\
     Let $\sigma, \sigma',s$ be arbitrary, assume $\la s, \sigma \ra \li \sigma'$. \\
@@ -1041,12 +1041,12 @@ Use derivation tree of big step semantic to get a derivation sequence for the sm
         \RightLabel{(WHF$_{\text{NS}}$)}
         \UnaryInfC{$\la \whilet b \dot s' \endt, \sigma \ra  \li \sigma'$}
     \end{prooftree}
-    for some $b,s'$ such that $s \equiv \whilet b \dot s' \endt$ and 
+    for some $b,s'$ such that $s \equiv \whilet b \dot s' \endt$ and
     $ \B \llb e \rrb \sigma = \ff $. \\
     We can construct following derivation sequence:
     \begin{align*}
-        & \la \whilet b \dot s' \endt, \sigma\ra \\
-        \li_1^*  \; & ... \\
+                    & \la \whilet b \dot s' \endt, \sigma\ra \\
+        \li_1^*  \; & ...                                    \\
         \li_1^1  \; & \sigma
     \end{align*}
     \textbf{Case} (IFT$_{\text{NS}}$)
@@ -1057,13 +1057,13 @@ Use derivation tree of big step semantic to get a derivation sequence for the sm
         \RightLabel{(IFT$_{\text{NS}}$)}
         \UnaryInfC{$\la \ift b \thent s_1 \elset s_2 \endt, \sigma \ra  \li \sigma'$}
     \end{prooftree}
-    for some $b,s_1, s_2, T_1$ such that $s \equiv \ift b \thent s_1 \elset s_2 \endt$ and 
+    for some $b,s_1, s_2, T_1$ such that $s \equiv \ift b \thent s_1 \elset s_2 \endt$ and
     $ \B \llb e \rrb \sigma = \tt $. \\
     From $P(T_1)$ we learn $\la s_1, \sigma \ra  \li_1^* \sigma'$
     We can construct following derivation sequence:
     \begin{align*}
-        & \la \ift b \thent s_1 \elset s_2 \endt, \sigma \ra\\
-        \li_1^1  \; & \la s_1, \sigma \ra  \\
+                    & \la \ift b \thent s_1 \elset s_2 \endt, \sigma \ra \\
+        \li_1^1  \; & \la s_1, \sigma \ra                                \\
         \li_1^*  \; & \sigma
     \end{align*}
     \\
@@ -1078,30 +1078,30 @@ General idea:
 \begin{enumerate}
     \item Prove  $\gamma \li_1^* \gamma' \Rightarrow P$ for some property $P$
     \item Define $P(k)\equiv (\gamma \li_1^k \gamma' \Rightarrow P)$ to do a strong induction
-    over $k$ 
+          over $k$
     \item Deal with case $k=0$ (if applicable)
-    \item Deal with case $k>0$ by splitting off first execution step 
-    $\sigma \li_1^1 \delta \li_1^{k-1} \gamma$
-    \begin{itemize}
-        \item Get information by case distinction of first execution step
-        \item Apply induction hypothesis to remaining steps
-    \end{itemize}
+    \item Deal with case $k>0$ by splitting off first execution step
+          $\sigma \li_1^1 \delta \li_1^{k-1} \gamma$
+          \begin{itemize}
+              \item Get information by case distinction of first execution step
+              \item Apply induction hypothesis to remaining steps
+          \end{itemize}
 
 \end{enumerate}
 
 \subsubsection{Session sheet 12/Sheet 12: Proof of equivalence lemmas}
-\textbf{Direction small step to big step semantics}: 
+\textbf{Direction small step to big step semantics}:
 \begin{proof}
     $$Q(k) \equiv (\forall \sigma, \sigma', s \;
-    (\la s, \sigma \ra \li_1^k \sigma') \Rightarrow  \;
-    \vdash \la s, \sigma \ra \li \sigma'
-    )$$
+        (\la s, \sigma \ra \li_1^k \sigma') \Rightarrow  \;
+        \vdash \la s, \sigma \ra \li \sigma'
+        )$$
     Using strong induction, we prove $\forall k \ Q(k)$. \\
     $\mathbf{k=0}$: Trivially, $\sigma$ must be and end state. \\
     $\mathbf{k>0}$: Assume $\la s, \sigma \ra \li_1^k \sigma'$. \\
-    The derivation sequence is unrolled to 
-    $\la s, \sigma \ra \li_1^1 \gamma \li_1^{k-1} \sigma'$. 
-    Let T be the derivation tree justifying the first transition. 
+    The derivation sequence is unrolled to
+    $\la s, \sigma \ra \li_1^1 \gamma \li_1^{k-1} \sigma'$.
+    Let T be the derivation tree justifying the first transition.
     We do a case distinction on the last rule applied in T: \\
     \textbf{Case} (ASS$_{\text{SOS}}$): T has the form
     \begin{prooftree}
@@ -1109,10 +1109,10 @@ General idea:
         \RightLabel{(ASS$_{\text{SOS}}$)}
         \UnaryInfC{$\la x:= e, \sigma \ra  \li _1\sigma'$}
     \end{prooftree}
-    for some $x,e$ such that $s \equiv x :=e$ and 
+    for some $x,e$ such that $s \equiv x :=e$ and
     $\gamma =  \sigma[x \mapsto \A \llb e \rrb \sigma]$.
     Since $\gamma$ is a final state there is no further derivation sequence (k=1), and hence
-    $\sigma' = \gamma =  \sigma[x \mapsto \A \llb e \rrb \sigma]$. 
+    $\sigma' = \gamma =  \sigma[x \mapsto \A \llb e \rrb \sigma]$.
     We can construct the following derivation tree:
     \begin{prooftree}
         \AxiomC{} %TODO: box
@@ -1145,18 +1145,18 @@ General idea:
 \section{Axiomatic semantics}
 \textbf{Meaning} of $\{P\} \,  s  \, \{Q\}$:
 \begin{itemize}
-    \item \textbf{If} P evaluates to true in an initial state $\sigma$, 
-    and \textbf{if} the execution of s from $\sigma$ terminates in a state $\sigma'$ 
-    \textbf{then} Q will evaluate to true in $\sigma'$.
+    \item \textbf{If} P evaluates to true in an initial state $\sigma$,
+          and \textbf{if} the execution of s from $\sigma$ terminates in a state $\sigma'$
+          \textbf{then} Q will evaluate to true in $\sigma'$.
     \item This describes \textbf{partial correctness}, that is, termination is not an essential property
 \end{itemize}
 Two statements $s_1$ and $s_2$ are \textbf{provably equivalent} if:
-$$\forall P, Q: ; \vdash \{P\} \; s_1 \; \{Q\} \; \Leftrightarrow \;\{P\} \; s_2 \; \{Q\}  $$ 
+$$\forall P, Q: ; \vdash \{P\} \; s_1 \; \{Q\} \; \Leftrightarrow \;\{P\} \; s_2 \; \{Q\}  $$
 \textbf{Meaning} of $\{P\} \,  s  \, \{\Downarrow Q\}$:
 \begin{itemize}
-    \item \textbf{If} P evaluates to true in an initial state $\sigma$, 
-    \textbf{if} the execution of s from $\sigma$ terminates in a state $\sigma'$ 
-    \textbf{and} Q will evaluate to true in $\sigma'$.
+    \item \textbf{If} P evaluates to true in an initial state $\sigma$,
+          \textbf{if} the execution of s from $\sigma$ terminates in a state $\sigma'$
+          \textbf{and} Q will evaluate to true in $\sigma'$.
     \item This describes \textbf{total correctness}, that is, termination is not an essential property
 \end{itemize}
 \smallskip
@@ -1172,7 +1172,7 @@ Termination is proved using \textbf{loop variants}
     \RightLabel{(WHTOT$_{\text{Ax}})$ if $b \land P \vDash 0 \leq e$}
     \UnaryInfC{$\{P\} \; \whilet b \dot s \endt \; \{\Downarrow \lnot b \land P\}$}
 \end{prooftree}
-where $Z$ is a fresh logical variable (not used in $P$) \smallskip \\ 
+where $Z$ is a fresh logical variable (not used in $P$) \smallskip \\
 The derivation system for partical correctness of IMP programs is \textbf{sound} or \textbf{complete}
 \begin{itemize}
     \item Soundness: if a property can be proved it does indeed hold
@@ -1190,7 +1190,7 @@ Same technique as with big-step semantics
     where T is a derivation tree with axiomatic semantic rules applied. \\
     We want to prove $\forall T. \, P(T)$ by strong structural induction on the shape of a derivation tree. \\
     We do a case distinction by the last rule applied in T: \\
-    \dots 
+    \dots
 \end{proof}
 
 \subsubsection{FS19, Task 6b}
@@ -1206,46 +1206,46 @@ Same technique as with big-step semantics
 \end{prooftree}
 \textbf{Statement}: $\forall P, Q. \; \{P\} \; \texttt{x := e} \; \{Q\}$ $\Rightarrow$ $\vdash \{P\} \; \texttt{guess } x \texttt{; assert } x=e \; \{Q\}$
 \begin{proof}
-$$P(T):= \forall P, Q, x, e. \; (root(T) \equiv \{P\} \; \texttt{x := e} \; \{Q\} \; \Rightarrow \; \vdash \{P\} \; \texttt{guess } x \texttt{; assert } x=e \; \{Q\})$$
-where T is a derivation tree with axiomatic semantic rules applied. \smallskip \\
-Proof by induction over the shape of the derivation tree $T$. \\
-Let T be arbitrary. Assume $\forall T' \sqsubset T. \; P(T') $ (I.H). Let $P,Q,x,e$ be arbitrary. \smallskip \\
-Case distinction on the rule applied in T: 
-\begin{itemize}
-    \item Case ASS$_{\text{Ax}}$: T has the form 
-    \begin{prooftree}
-        \AxiomC{}
-        \RightLabel{(ASS$_{\text{Ax}}$)}
-        \UnaryInfC{$\{Q[x \mapsto e]\} \; \texttt{x := e}  \; \{Q\}$}
-    \end{prooftree}
-    We can build a proof outline as follows: \\
-    \{$Q[x \mapsto e]$\} \\
-    $\vDash$ (can be shown by picking $n := \A\llb e\rrb $)\\
-    \{$\exists n. \; n=e \land Q[x \mapsto n]$\} \\
-    $\vDash$ (works by def. of substitution and uses the fact that $x\notin FV(e)$)\\
-    \{$\exists n. \; (n=e \land Q)[x \mapsto n]$\} \\
-    \texttt{guess x}; \\
-    \{$x=e \land Q$\} \\
-    \texttt{assert x=e} \\
-    \{$Q$\}
-    \item Case CONS$_{\text{Ax}}$: T has the form 
-    \begin{prooftree}
-        \AxiomC{$\mathbf{T_1}$}
-        \UnaryInfC{$\{P'\} \; \texttt{x := e}  \; \{Q'\}$}
-        \RightLabel{(CONS$_{\text{Ax}}$)}
-        \UnaryInfC{$\{P\} \; \texttt{x := e}  \; \{Q\}$}
-    \end{prooftree}
-    for some $P',T'$ such that $P \vDash P', Q \vDash Q'$ and a derivation tree $T_1$. \\
-    By I.H. $P(T')$ holds, therefore $\exists T_2$ with $root(T_2)\equiv\{P'\} \; \texttt{guess } x \texttt{; assert } x=e  \; \{Q'\}$. \\
-    With this we can build the following derivation tree:
-    \begin{prooftree}
-        \AxiomC{$\mathbf{T_2}$}
-        \UnaryInfC{$\{P'\} \;\texttt{guess } x \texttt{; assert } x=e  \; \{Q'\}$}
-        \RightLabel{(CONS$_{\text{Ax}}$)}
-        \UnaryInfC{$\{P\} \;\texttt{guess } x \texttt{; assert } x=e   \; \{Q\}$}
-    \end{prooftree}
+    $$P(T):= \forall P, Q, x, e. \; (root(T) \equiv \{P\} \; \texttt{x := e} \; \{Q\} \; \Rightarrow \; \vdash \{P\} \; \texttt{guess } x \texttt{; assert } x=e \; \{Q\})$$
+    where T is a derivation tree with axiomatic semantic rules applied. \smallskip \\
+    Proof by induction over the shape of the derivation tree $T$. \\
+    Let T be arbitrary. Assume $\forall T' \sqsubset T. \; P(T') $ (I.H). Let $P,Q,x,e$ be arbitrary. \smallskip \\
+    Case distinction on the rule applied in T:
+    \begin{itemize}
+        \item Case ASS$_{\text{Ax}}$: T has the form
+              \begin{prooftree}
+                  \AxiomC{}
+                  \RightLabel{(ASS$_{\text{Ax}}$)}
+                  \UnaryInfC{$\{Q[x \mapsto e]\} \; \texttt{x := e}  \; \{Q\}$}
+              \end{prooftree}
+              We can build a proof outline as follows: \\
+              \{$Q[x \mapsto e]$\} \\
+              $\vDash$ (can be shown by picking $n := \A\llb e\rrb $)\\
+              \{$\exists n. \; n=e \land Q[x \mapsto n]$\} \\
+              $\vDash$ (works by def. of substitution and uses the fact that $x\notin FV(e)$)\\
+              \{$\exists n. \; (n=e \land Q)[x \mapsto n]$\} \\
+              \texttt{guess x}; \\
+              \{$x=e \land Q$\} \\
+              \texttt{assert x=e} \\
+              \{$Q$\}
+        \item Case CONS$_{\text{Ax}}$: T has the form
+              \begin{prooftree}
+                  \AxiomC{$\mathbf{T_1}$}
+                  \UnaryInfC{$\{P'\} \; \texttt{x := e}  \; \{Q'\}$}
+                  \RightLabel{(CONS$_{\text{Ax}}$)}
+                  \UnaryInfC{$\{P\} \; \texttt{x := e}  \; \{Q\}$}
+              \end{prooftree}
+              for some $P',T'$ such that $P \vDash P', Q \vDash Q'$ and a derivation tree $T_1$. \\
+              By I.H. $P(T')$ holds, therefore $\exists T_2$ with $root(T_2)\equiv\{P'\} \; \texttt{guess } x \texttt{; assert } x=e  \; \{Q'\}$. \\
+              With this we can build the following derivation tree:
+              \begin{prooftree}
+                  \AxiomC{$\mathbf{T_2}$}
+                  \UnaryInfC{$\{P'\} \;\texttt{guess } x \texttt{; assert } x=e  \; \{Q'\}$}
+                  \RightLabel{(CONS$_{\text{Ax}}$)}
+                  \UnaryInfC{$\{P\} \;\texttt{guess } x \texttt{; assert } x=e   \; \{Q\}$}
+              \end{prooftree}
 
-\end{itemize}
+    \end{itemize}
 
 \end{proof}
 
@@ -1259,47 +1259,47 @@ Case distinction on the rule applied in T:
 \subsubsection{Notations}
 \begin{tabular}{c | c | c | c | c}
     \begin{tabular}{l}
-        $ \{ P\}$ \\
+        $ \{ P\}$      \\
         $\quad \skipt$ \\
-        $\{ P\}$ 
+        $\{ P\}$
     \end{tabular}
- &
+     &
     \begin{tabular}{l}
         $ \{ P[x\mapsto e]\}$ \\
-        $\quad x := e$ \\
+        $\quad x := e$        \\
         $\{ P\} $
     \end{tabular}
 
-&
+     &
     \begin{tabular}{l}
-        $ \{ P\}$ \\
+        $ \{ P\}$   \\
         $\quad s_1$ \\
-        $\{ Q\} $ \\
+        $\{ Q\} $   \\
         $\quad s_2$ \\
         $\{ R\} $
     \end{tabular}
-&
+     &
     \begin{tabular}{l}
-        $ \{ P\}$ \\
-        $\quad \ift b \thent $ \\
-        $\quad \quad\{ b \land P\} $ \\
-        $\quad \quad \quad s_1 $ \\
-        $\quad \quad \{Q\} $ \\
-        $\quad \elset $ \\
+        $ \{ P\}$                          \\
+        $\quad \ift b \thent $             \\
+        $\quad \quad\{ b \land P\} $       \\
+        $\quad \quad \quad s_1 $           \\
+        $\quad \quad \{Q\} $               \\
+        $\quad \elset $                    \\
         $\quad \quad\{ \lnot b \land P\} $ \\
-        $\quad \quad \quad s_2 $ \\
-        $\quad \quad \{Q\} $ \\
-        $\quad \endt$ \\
+        $\quad \quad \quad s_2 $           \\
+        $\quad \quad \{Q\} $               \\
+        $\quad \endt$                      \\
         $\{ Q\} $
     \end{tabular}
 
-    &
+     &
     \begin{tabular}{l}
-        $ \{ P\}$ \\
-        $\quad \whilet b \dot $ \\
+        $ \{ P\}$                    \\
+        $\quad \whilet b \dot $      \\
         $\quad \quad\{ b \land P\} $ \\
-        $\quad \quad \quad s_1 $ \\
-        $\quad \quad \{P\} $ \\
+        $\quad \quad \quad s_1 $     \\
+        $\quad \quad \{P\} $         \\
         $\{\lnot b \land P\} $
     \end{tabular}
 \end{tabular}
@@ -1308,8 +1308,8 @@ Case distinction on the rule applied in T:
 Finding an invariant: \begin{itemize}
     % \item Include variables changed in loop
     \item Include relationships between input and loop variables/variables changed in loop
-    \item If the goal of a program is to f.e. compute the gcd or compute a sum, include
-    this in the invariant, i.e. $gcd(a,b)=gcd(x,y)$, $\sum_{i=0}^{k}(...)=...$
+    \item If the goal of a program is to e.g. compute the gcd or compute a sum, include
+          this in the invariant, i.e. $gcd(a,b)=gcd(x,y)$, $\sum_{i=0}^{k}(...)=...$
     \item Write constant values like $x=X$
     \item Add conditions like $x>0$ if it's important for the computation of a variable
     \item Optional: Implications for if-statements
@@ -1334,16 +1334,16 @@ while b # c do
 end
 z := b
 \end{verbatim}
-Goal: Prove Hoare Triple 
+Goal: Prove Hoare Triple
 $\{x=X \land y=Y\land X > 0 \land Y >0\} \; s \; \{\Downarrow z=gcd(X,Y)\}$ \\
-Suitable loop invariant: $gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$ 
+Suitable loop invariant: $gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$
 \begin{itemize}
     \item Computation goal of loop: $gcd(x,y) = gcd(a,b)$
     \item Conditions important for computation of $gcd$: $b>0 \land c > 0$
     \item Constant values: $x=X$
 \end{itemize}
 Suitable loop variant: $b+c$ (either b or c) increases
- \smallskip \\
+\smallskip \\
 \textbf{FS10, Ex. 7} \\
 IMP program $s$:
 \begin{verbatim}
@@ -1355,7 +1355,7 @@ end
 \end{verbatim}
 Goal: Prove Hoare Triple $\{x=X \land y=Y\} \; s \; \{\Downarrow x = \max(X,Y)\}$ \\
 Suitable loop invariant: $\max(x,y)=\max(X,Y) \land x=X \land y=Y$
-Suitable loop variant: $y-x$ 
+Suitable loop variant: $y-x$
 
 \subsubsection{Sheet 13, Ex. 2}
 IMP program $s$:
@@ -1373,19 +1373,19 @@ end
 \end{verbatim}
 Goal: Prove
 Hoare Triple $\{n=N \land n \geq 0\} \; s \; \{ z^2 \leq N \land N < (z+1)^2\}$ \smallskip \\
-Suitable loop invariant: 
-$$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land (z^2 \leq N) \land (n=N) \land (z \geq 0)$$ 
+Suitable loop invariant:
+$$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land (z^2 \leq N) \land (n=N) \land (z \geq 0)$$
 \begin{itemize}
     \item Computation goal of loop: $(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2\leq N$
     \item Conditions important for computation: $z \geq 0$
     \item Constant values: $n=N$
 \end{itemize}
-Suitable loop variant: $n-y^2$ 
+Suitable loop variant: $n-y^2$
 \smallskip \\
 \textbf{Proof outline}: \\
 \{ $n=N \land n \geq 0\}$ \\
 $\vDash$ \\
-\{ $(0^2 \leq n \Rightarrow 0 = 0) \land (0^2 > n \Rightarrow 0 = 0 + 1) \land 0^2 \leq n \land n=N \land 0 \geq 0$ \} 
+\{ $(0^2 \leq n \Rightarrow 0 = 0) \land (0^2 > n \Rightarrow 0 = 0 + 1) \land 0^2 \leq n \land n=N \land 0 \geq 0$ \}
 \\
 \fbox{\texttt{y := 0}} \\
 \{ $(y^2 \leq n \Rightarrow y = 0) \land (y^2 > n \Rightarrow y = 0 + 1) \land 0^2 \leq n \land n=N \land 0 \geq 0$ \}
@@ -1396,7 +1396,7 @@ $\vDash$ \\
 \fbox{\texttt{while \colorbox{magenta!10}{y * y < n} do}} \\
 \{\colorbox{magenta!10}{$y^2 < n$}$\land$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-y^2=V$}\} \\
 $\vDash$ (1) \\
-\{$(y+1-1)^2<n \land y+1 = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-(y+1)^2<V$}\} 
+\{$(y+1-1)^2<n \land y+1 = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-(y+1)^2<V$}\}
 \\
 \fbox{\texttt{\quad y := y+1}} \\
 \{$(y-1)^2<n \land y = z+1\land z^2 \leq n \land n=N \land z\geq 0\land$\colorbox{teal!10}{$n-y^2<V$} \}
@@ -1409,7 +1409,7 @@ $\vDash$ \\
 \fbox{\texttt{\quad \quad z := z+1}} \\
 \{\colorbox{NavyBlue!10}{$y^2 \leq n$}$\land (y-1)^2<n \land y = z\land (z-1)^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
 $\vDash$ (2) \\
-\{\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\} 
+\{\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-(y-1)^2<V$}\}
 \\
 \fbox{\texttt{\quad else}} \\
 \{\colorbox{NavyBlue!10}{$\lnot(y^2 \leq n)$}$\land (y-1)^2<n \land y = z+ 1 \land z^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}
@@ -1417,7 +1417,7 @@ $\vDash$ (2) \\
 \fbox{\texttt{\quad \quad skip}} \\
 \{\colorbox{NavyBlue!10}{$\lnot(y^2 \leq n)$}$\land (y-1)^2<n \land y = z+ 1 \land z^2 \leq n \land n=N \land z \geq 0\land$\colorbox{teal!10}{$n-y^2<V$}\}\\
 $\vDash$ (2) \\
-\{\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-y^2<V$}\} 
+\{\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-y^2<V$}\}
 \\
 \fbox{\texttt{\quad end}} \\
 \{$\Downarrow$\colorbox{blue!10}{$(y^2 \leq n \Rightarrow y = z) \land (y^2 > n \Rightarrow y = z + 1) \land z^2 \leq n \land n=N \land z \geq 0$}$\land$\colorbox{teal!10}{$n-y^2<V$}\}
@@ -1431,10 +1431,10 @@ $\vDash$ (3) \\
     \item $y^2<n$ and $y^2 \leq n \Rightarrow y = z$ implies $y=z$, $y \leq 0$ must hold for $n-y^2 > n-(y+1)^2$
     \item As either $y^2>n$ or $y^2\leq n$ are false, they immediately imply the right hand side
     \item $N < (z+1)^2$ can be shown by case distinction on y: \\
-    \textbf{Case} $y^<n$: As $y^2\geq n$, this case is not possible \\
-    \textbf{Case} $y^2=n$: $y^2 = n \land (y^2 \leq n \implies y=z)$ implies $y^2=z^2$ and then $N=n=y^2 = z^2 < (z+1)^2$ (last step requires $z \geq 0$)\\
-    \textbf{Case} $y^2 > n$: $y^2 > n \land (y^2 >n \Rightarrow y = z+1)$ implies $y = z+1$ and then 
-    $N=n < y^2 = (z+1)^2$
+          \textbf{Case} $y^<n$: As $y^2\geq n$, this case is not possible \\
+          \textbf{Case} $y^2=n$: $y^2 = n \land (y^2 \leq n \implies y=z)$ implies $y^2=z^2$ and then $N=n=y^2 = z^2 < (z+1)^2$ (last step requires $z \geq 0$)\\
+          \textbf{Case} $y^2 > n$: $y^2 > n \land (y^2 >n \Rightarrow y = z+1)$ implies $y = z+1$ and then
+          $N=n < y^2 = (z+1)^2$
 \end{enumerate}
 
 \subsubsection{Session sheet 13, Ex. 2}
@@ -1452,137 +1452,137 @@ while b # c do
 end
 z := b
 \end{verbatim}
-Goal: Prove Hoare Triple 
+Goal: Prove Hoare Triple
 $\{x=X \land y=Y\land X > 0 \land Y >0\} \; s \; \{\Downarrow z=gcd(X,Y)\}$ \\
 Suitable loop invariant: $gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$  \\
-Suitable loop variant: $b+c$ \smallskip 
+Suitable loop variant: $b+c$ \smallskip
 \\
 \textbf{Proof outline step by step}
 \begin{enumerate}
     \item "Preparation"
-    \begin{itemize}
-        \item Put pre- and postcondition at beggining/end 
-        \item Put \colorbox{blue!10}{loop invariant} before, at the beginning and at the end of the loop
-        \item Put \colorbox{magenta!10}{while condition} at start of loop and negated while condition after loop 
-        \item Put \colorbox{NavyBlue!10}{if condition} at start of if block and negated if condition at start
-        \item Put \colorbox{teal!10}{variant} at start and end of the loop, like $\dots = V$ and $\dots < V$. Put terminating symbol in all conditions just before and of loop.
-    \end{itemize}
-    
-    $P=$\{$x=X \land y=Y\land X > 0 \land Y >0$\}
-    \\
-    \fbox{\texttt{b := x}} \\
-    \{\}
-    \\
-    \fbox{\texttt{c := y}} \\
-    \{\colorbox{blue!10}{$gcd(x,y)=gcd(a,b) \land b >0 \land c > 0 \land x=X \land y=Y$}\}
-    \\
-    \fbox{\texttt{while \colorbox{magenta!10}{b \# c} do}} \\
-    \{\colorbox{magenta!10}{$b \neq c$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(a,b) \land b >0 \land c > 0 \land x=X \land y=Y$}
-    $\land$\colorbox{teal!10}{$b+c = V$}\}
-    \\
-    \fbox{\texttt{\quad if \colorbox{NavyBlue!10}{b < c}}} \\
-    \{\colorbox{NavyBlue!10}{$b<c$}\}
-    \\
-    \fbox{\texttt{\quad \quad c := c - b}} \\
-    \{\}
-    \\
-    \fbox{\texttt{\quad else}} \\
-    \{\colorbox{NavyBlue!10}{$\lnot(b<c$)}\}
-    \\
-    \fbox{\texttt{\quad \quad b := b-c}} \\
-    \{\}
-    \\
-    \fbox{\texttt{\quad end}} \\
-    \{$\Downarrow$\colorbox{teal!10}{$b+c < V$}\}
-    \\
-    \fbox{\texttt{end}} \\
-    \{$\Downarrow$ \colorbox{magenta!10}{$\lnot(b \neq c)$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(a,b) \land b >0 \land c > 0 \land x=X \land y=Y$}\}
-    \\
-    \fbox{\texttt{z := b}} \\
-    $Q=$\{$\Downarrow z=gcd(X,Y)$\}
+          \begin{itemize}
+              \item Put pre- and postcondition at beggining/end
+              \item Put \colorbox{blue!10}{loop invariant} before, at the beginning and at the end of the loop
+              \item Put \colorbox{magenta!10}{while condition} at start of loop and negated while condition after loop
+              \item Put \colorbox{NavyBlue!10}{if condition} at start of if block and negated if condition at start
+              \item Put \colorbox{teal!10}{variant} at start and end of the loop, like $\dots = V$ and $\dots < V$. Put terminating symbol in all conditions just before and of loop.
+          \end{itemize}
+
+          $P=$\{$x=X \land y=Y\land X > 0 \land Y >0$\}
+          \\
+          \fbox{\texttt{b := x}} \\
+          \{\}
+          \\
+          \fbox{\texttt{c := y}} \\
+          \{\colorbox{blue!10}{$gcd(x,y)=gcd(a,b) \land b >0 \land c > 0 \land x=X \land y=Y$}\}
+          \\
+          \fbox{\texttt{while \colorbox{magenta!10}{b \# c} do}} \\
+          \{\colorbox{magenta!10}{$b \neq c$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(a,b) \land b >0 \land c > 0 \land x=X \land y=Y$}
+          $\land$\colorbox{teal!10}{$b+c = V$}\}
+          \\
+          \fbox{\texttt{\quad if \colorbox{NavyBlue!10}{b < c}}} \\
+          \{\colorbox{NavyBlue!10}{$b<c$}\}
+          \\
+          \fbox{\texttt{\quad \quad c := c - b}} \\
+          \{\}
+          \\
+          \fbox{\texttt{\quad else}} \\
+          \{\colorbox{NavyBlue!10}{$\lnot(b<c$)}\}
+          \\
+          \fbox{\texttt{\quad \quad b := b-c}} \\
+          \{\}
+          \\
+          \fbox{\texttt{\quad end}} \\
+          \{$\Downarrow$\colorbox{teal!10}{$b+c < V$}\}
+          \\
+          \fbox{\texttt{end}} \\
+          \{$\Downarrow$ \colorbox{magenta!10}{$\lnot(b \neq c)$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(a,b) \land b >0 \land c > 0 \land x=X \land y=Y$}\}
+          \\
+          \fbox{\texttt{z := b}} \\
+          $Q=$\{$\Downarrow z=gcd(X,Y)$\}
 
     \item Build proof from botton up using axiomatic semantic rules
-    
-    $P=$\{$x=X \land y=Y\land X > 0 \land Y >0$\}
-    \\  \textcolor{gray}{Justify $\vDash$} \\
-    $\vDash^{(1)}$ \\ 
-    \textcolor{gray}{Using assignment rule:} \\
-    \{$gcd(x,y)=gcd(x,y) \land x >0 \land y > 0 \land x=X \land y=Y$\}
-    \\
-    \fbox{\texttt{b := x}} \\
-    \textcolor{gray}{Using assignment rule:} \\
-    \{$gcd(x,y)=gcd(b,y) \land b >0 \land y > 0 \land x=X \land y=Y$\}
-    \\
-    \fbox{\texttt{c := y}} \\
-    \textcolor{gray}{Justified using while rule:} \\
-    \{\colorbox{blue!10}{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$}\}
-    \\
-    \fbox{\texttt{while \colorbox{magenta!10}{b \# c} do}} \\
-    \textcolor{gray}{Justified using if rule:} \\
-    \{\colorbox{magenta!10}{$b \neq c$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$}
-    $\land$ \colorbox{teal!10}{$b+c = V$}\}
-    \\
-    \fbox{\texttt{\quad if \colorbox{NavyBlue!10}{b < c} then}} \\
-    \textcolor{gray}{Try to match condition with condition coming before if-statement, meaning here the condition at start of loop} \\
-    \{\colorbox{magenta!10}{$b \neq c$} $\land$ \colorbox{NavyBlue!10}{$b<c$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(b,c) \land b > 0 \land c > 0 \land x=X \land y=Y$}
-    $\land$ \colorbox{teal!10}{$b+c = V$}\} 
-    \\  \textcolor{gray}{Justify $\vDash$} \\
-    $\vDash^{(2)}$ \\
-    \textcolor{gray}{Using assignment rule:} \\
-    \{$gcd(x,y)=gcd(b,c-b) \land b > 0 \land c-b > 0 \land x=X \land y=Y$ $\land$ \colorbox{teal!10}{$b+(c-b) < V$}\} 
-    \\
-    \fbox{\texttt{\quad \quad c := c - b}} \\
-    \textcolor{gray}{Using if rule:} \\
-    \{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$ $\land$ \colorbox{teal!10}{$b+c < V$}\} 
-    \\
-    \fbox{\texttt{\quad else}} \\
-    \textcolor{gray}{Try to match condition with condition coming before if-statement, meaning here the condition at start of loop} \\
-    \{\colorbox{magenta!10}{$b \neq c$} $\land$ \colorbox{NavyBlue!10}{$\lnot(b<c)$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(b,c) \land b > 0 \land c > 0 \land x=X \land y=Y$}
-    $\land$ \colorbox{teal!10}{$b+c = V$}\} 
-    \\  \textcolor{gray}{Justify $\vDash$} \\
-    $\vDash^{(3)}$ \\
-    \textcolor{gray}{Using assignment rule:} \\
-    \{$gcd(x,y)=gcd(b-c,c) \land b-c > 0 \land c > 0 \land x=X \land y=Y$ $\land$ \colorbox{teal!10}{$(b-c)+c < V$}\} 
-    \\
-    \fbox{\texttt{\quad \quad b := b-c}} \\
-    \textcolor{gray}{Using if rule:} \\
-    \{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$ $\land$ \colorbox{teal!10}{$b+c < V$}\} 
-    \\
-    \fbox{\texttt{\quad end}} \\
-    \textcolor{gray}{Using while rule:} \\
-    \{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$ $\land$ \colorbox{teal!10}{$b+c < V$}\} 
-    \\
-    \fbox{\texttt{end}} \\
-    \{$\Downarrow$ \colorbox{magenta!10}{$\lnot(b \neq c)$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$}\} 
-    \\  \textcolor{gray}{Justify $\vDash$} \\
-    $\vDash^{(4)}$ \\
-    \textcolor{gray}{Using assignment rule:}\\
-    \{$\Downarrow b=gcd(X,Y)$\}
-    \\
-    \fbox{\texttt{z := b}} \\
-    $Q=$\{$\Downarrow z=gcd(X,Y)$\}
 
-    Justifications for $\vDash$
-    \begin{enumerate}[label=(\arabic*)]
-        \item $x=X \land X > 0 \Rightarrow x>0$, same for $y$. $gcd(x,y)=gcd(x,y)$ trivially true, and $P \vDash P \land true$
-        \item $b < c \land b > 0 \land c >0 \Rightarrow gcd(x,y)=gcd(b,c)=gcd(b, c-b)$. $b<c \Rightarrow c-b>0$. 
-        For the variant: $b>0 \Rightarrow c = b +(c-b) < b+c = V$
-        \item $b \neq c \land \lnot(b<c) \Rightarrow b>c.$  $b > c  \land b > 0 \land c >0 \Rightarrow gcd(x,y)=gcd(b,c)=gcd(b-c, c)$. $b>c \Rightarrow b-c>0$. 
-        For the variant: $c>0 \Rightarrow b = (b-c)+b < b+c = V$
-        \item $\lnot(b \neq c) \equiv b = c \Rightarrow gcd(x,y)=gcd(b,c)=b$. $x=X \land y=Y \Rightarrow gcd(X,Y)=gcd(x,y)=b$
-    \end{enumerate}
+          $P=$\{$x=X \land y=Y\land X > 0 \land Y >0$\}
+          \\  \textcolor{gray}{Justify $\vDash$} \\
+          $\vDash^{(1)}$ \\
+          \textcolor{gray}{Using assignment rule:} \\
+          \{$gcd(x,y)=gcd(x,y) \land x >0 \land y > 0 \land x=X \land y=Y$\}
+          \\
+          \fbox{\texttt{b := x}} \\
+          \textcolor{gray}{Using assignment rule:} \\
+          \{$gcd(x,y)=gcd(b,y) \land b >0 \land y > 0 \land x=X \land y=Y$\}
+          \\
+          \fbox{\texttt{c := y}} \\
+          \textcolor{gray}{Justified using while rule:} \\
+          \{\colorbox{blue!10}{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$}\}
+          \\
+          \fbox{\texttt{while \colorbox{magenta!10}{b \# c} do}} \\
+          \textcolor{gray}{Justified using if rule:} \\
+          \{\colorbox{magenta!10}{$b \neq c$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$}
+          $\land$ \colorbox{teal!10}{$b+c = V$}\}
+          \\
+          \fbox{\texttt{\quad if \colorbox{NavyBlue!10}{b < c} then}} \\
+          \textcolor{gray}{Try to match condition with condition coming before if-statement, meaning here the condition at start of loop} \\
+          \{\colorbox{magenta!10}{$b \neq c$} $\land$ \colorbox{NavyBlue!10}{$b<c$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(b,c) \land b > 0 \land c > 0 \land x=X \land y=Y$}
+          $\land$ \colorbox{teal!10}{$b+c = V$}\}
+          \\  \textcolor{gray}{Justify $\vDash$} \\
+          $\vDash^{(2)}$ \\
+          \textcolor{gray}{Using assignment rule:} \\
+          \{$gcd(x,y)=gcd(b,c-b) \land b > 0 \land c-b > 0 \land x=X \land y=Y$ $\land$ \colorbox{teal!10}{$b+(c-b) < V$}\}
+          \\
+          \fbox{\texttt{\quad \quad c := c - b}} \\
+          \textcolor{gray}{Using if rule:} \\
+          \{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$ $\land$ \colorbox{teal!10}{$b+c < V$}\}
+          \\
+          \fbox{\texttt{\quad else}} \\
+          \textcolor{gray}{Try to match condition with condition coming before if-statement, meaning here the condition at start of loop} \\
+          \{\colorbox{magenta!10}{$b \neq c$} $\land$ \colorbox{NavyBlue!10}{$\lnot(b<c)$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(b,c) \land b > 0 \land c > 0 \land x=X \land y=Y$}
+          $\land$ \colorbox{teal!10}{$b+c = V$}\}
+          \\  \textcolor{gray}{Justify $\vDash$} \\
+          $\vDash^{(3)}$ \\
+          \textcolor{gray}{Using assignment rule:} \\
+          \{$gcd(x,y)=gcd(b-c,c) \land b-c > 0 \land c > 0 \land x=X \land y=Y$ $\land$ \colorbox{teal!10}{$(b-c)+c < V$}\}
+          \\
+          \fbox{\texttt{\quad \quad b := b-c}} \\
+          \textcolor{gray}{Using if rule:} \\
+          \{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$ $\land$ \colorbox{teal!10}{$b+c < V$}\}
+          \\
+          \fbox{\texttt{\quad end}} \\
+          \textcolor{gray}{Using while rule:} \\
+          \{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$ $\land$ \colorbox{teal!10}{$b+c < V$}\}
+          \\
+          \fbox{\texttt{end}} \\
+          \{$\Downarrow$ \colorbox{magenta!10}{$\lnot(b \neq c)$} $\land$ \colorbox{blue!10}{$gcd(x,y)=gcd(b,c) \land b >0 \land c > 0 \land x=X \land y=Y$}\}
+          \\  \textcolor{gray}{Justify $\vDash$} \\
+          $\vDash^{(4)}$ \\
+          \textcolor{gray}{Using assignment rule:}\\
+          \{$\Downarrow b=gcd(X,Y)$\}
+          \\
+          \fbox{\texttt{z := b}} \\
+          $Q=$\{$\Downarrow z=gcd(X,Y)$\}
+
+          Justifications for $\vDash$
+          \begin{enumerate}[label=(\arabic*)]
+              \item $x=X \land X > 0 \Rightarrow x>0$, same for $y$. $gcd(x,y)=gcd(x,y)$ trivially true, and $P \vDash P \land true$
+              \item $b < c \land b > 0 \land c >0 \Rightarrow gcd(x,y)=gcd(b,c)=gcd(b, c-b)$. $b<c \Rightarrow c-b>0$.
+                    For the variant: $b>0 \Rightarrow c = b +(c-b) < b+c = V$
+              \item $b \neq c \land \lnot(b<c) \Rightarrow b>c.$  $b > c  \land b > 0 \land c >0 \Rightarrow gcd(x,y)=gcd(b,c)=gcd(b-c, c)$. $b>c \Rightarrow b-c>0$.
+                    For the variant: $c>0 \Rightarrow b = (b-c)+b < b+c = V$
+              \item $\lnot(b \neq c) \equiv b = c \Rightarrow gcd(x,y)=gcd(b,c)=b$. $x=X \land y=Y \Rightarrow gcd(X,Y)=gcd(x,y)=b$
+          \end{enumerate}
 \end{enumerate}
 
 \section{Modeling}
 
 \subsection{Overview}
-Process: 
+Process:
 \begin{enumerate}
     \item Modeling phase: Model the system under consideration using the description language of your choice;
-    Formalize the properties to be checked
+          Formalize the properties to be checked
     \item Running phase: Run the model checker to check the validity of the property in the system model
     \item Analysis Phase: if the property is satisfied, celebrate and move on; if the property is violated, analyze counterexample;
-    If out of memory, reduce model and try again
+          If out of memory, reduce model and try again
 \end{enumerate}
 \smallskip
 Main Purposes of Model checking:
@@ -1601,8 +1601,8 @@ Modeling concurrent systems:
 \subsection{Promela}
 \subsubsection{Syntax}
 \begin{itemize}
-    \item Constant declarations: 
-    \begin{verbatim}
+    \item Constant declarations:
+          \begin{verbatim}
 #define N 5
 mtype = { ack, req };
     \end{verbatim}
@@ -1615,10 +1615,10 @@ mtype = { ack, req };
     \item \texttt{assert(e)}: aborts execution if expression E evaluates to zero, otherwise equivalent to skip; always executable
     \item Sequential compositions: \texttt{s1;s2} is executable if \texttt{s1} is executable
     \item Expression statement: evaluates expression \texttt{E}, executable if E evaluates to value different from zero,
-    \texttt{E} must not change state (no side effects)
-    \item Selection: executable if at least one of its options is executable, chooses an option non-determinisitically and executes it, 
-    statement \texttt{else} is executable if no other option is executable
-\begin{verbatim}
+          \texttt{E} must not change state (no side effects)
+    \item Selection: executable if at least one of its options is executable, chooses an option non-determinisitically and executes it,
+          statement \texttt{else} is executable if no other option is executable
+          \begin{verbatim}
 if
 :: x > 0 -> x = x + 1
 :: x < 0 -> x = x - 1
@@ -1627,9 +1627,9 @@ if
 :: color = color + 1
 fi
 \end{verbatim}
-    \item Repetions: executable if at least one of its options is executable, chooses repeatedly an option non-determinisitically and executes it, 
-    terminates when a \texttt{break} or \texttt{goto} is executed
-\begin{verbatim}
+    \item Repetions: executable if at least one of its options is executable, chooses repeatedly an option non-determinisitically and executes it,
+          terminates when a \texttt{break} or \texttt{goto} is executed
+          \begin{verbatim}
 do
 :: n > 1 -> r = r*n; n = n-1
 :: else -> break
@@ -1640,7 +1640,7 @@ od
 \end{itemize}
 
 \subsubsection{Examples from session sheet 13}
-\textbf{1.2}: \texttt{x := 1 [] x := 2; x + 2} will result in a state $\sigma$ where either $\sigma(x)=1$ or $\sigma(x)=4$  
+\textbf{1.2}: \texttt{x := 1 [] x := 2; x + 2} will result in a state $\sigma$ where either $\sigma(x)=1$ or $\sigma(x)=4$
 \begin{verbatim}
 int x
 init{
@@ -1651,7 +1651,7 @@ init{
     assert (x == 1 || x == 4)
 }
 \end{verbatim}
-\textbf{1.4*}: \texttt{y = 1 (x := 1 par (x := 2; x + 2))} will result in a state $\sigma$ where either $\sigma(x)\in \{1,3,4\}$ 
+\textbf{1.4*}: \texttt{y = 1 (x := 1 par (x := 2; x + 2))} will result in a state $\sigma$ where either $\sigma(x)\in \{1,3,4\}$
 \begin{verbatim}
 int x,y
 proctype left(){
@@ -1691,19 +1691,19 @@ init {
         :: pos == 7 -> break; // end point
     end
 }
-\end{verbatim} 
+\end{verbatim}
 \textbf{8b} \texttt{assert}-statements can be used to test \textbf{safety} properties: can check if the "bad thing" happened up to that point. For a liveness property we would have to know what happens after. \smallskip \\
-\textbf{8c} For the four statements: Can you modify the promela code using assert statements to check this property? If yes, state how, if no, state why not. 
+\textbf{8c} For the four statements: Can you modify the promela code using assert statements to check this property? If yes, state how, if no, state why not.
 \begin{enumerate}
     \item "The train will never reach position 6": \\
-    Change \texttt{::pos == 6 -> pos = 4} to \texttt{::pos == 6 -> assert (false);}
+          Change \texttt{::pos == 6 -> pos = 4} to \texttt{::pos == 6 -> assert (false);}
     \item "The train is guaranteed to eventually position 7":\\
-    Liveness property, cannot be checked 
+          Liveness property, cannot be checked
     \item "It is possible for the train to reach position 7": \\
-    Change \texttt{::pos == 5 -> pos = 7} to \texttt{::pos == 5 -> assert (false); pos = 7;}
+          Change \texttt{::pos == 5 -> pos = 7} to \texttt{::pos == 5 -> assert (false); pos = 7;}
     \item "The train cannot reach position 7 without first visiting position 3": \\
-    Add \texttt{pos == 3 -> break;}. Change \texttt{::pos == 7 -> break;} to \texttt{::pos == 7 -> assert (false);}. Change \texttt{::pos >= 0 \&\& pos <= 5 -> break;} to \texttt{::pos >= 0 \&\& pos <= 2 -> pos = pos + 1;} and  \texttt{::pos >= 4 \&\& pos <= 5 -> pos = pos + 1;}. You can't continue after visiting 3. If the assertion does not get triggered then there is no way to reach 7 without first visiting 3.
-    
+          Add \texttt{pos == 3 -> break;}. Change \texttt{::pos == 7 -> break;} to \texttt{::pos == 7 -> assert (false);}. Change \texttt{::pos >= 0 \&\& pos <= 5 -> break;} to \texttt{::pos >= 0 \&\& pos <= 2 -> pos = pos + 1;} and  \texttt{::pos >= 4 \&\& pos <= 5 -> pos = pos + 1;}. You can't continue after visiting 3. If the assertion does not get triggered then there is no way to reach 7 without first visiting 3.
+
 \end{enumerate}
 
 \section{Linear temporal logic}
@@ -1733,35 +1733,35 @@ $\gamma \in \Gamma^\omega$ ($\Gamma^\omega$ set of infinite sequences) is a \tex
 \textbf{Safety property} \begin{itemize}
     \item Intuition: Something bad is never allowed to happen (and can't be fixed)
     \item If in a finite prefix a property is violated, all sequences with this prefix violate the property
-    \item Liveness properties are violated in finite time
+    \item Safety properties are violated in finite time
 \end{itemize} \smallskip
 
 \subsection{Operators}
 For a trace $t\in\P(AP)^\omega$
 \begin{center}
     \begin{tabular}{l l l}
-        $t \vDash p$ & iff $p \in t_{[0]}$ & now \\
-        $t \vDash\lnot \phi$ & iff not $\phi \in t_{[0]}$ & not now \\
-        $t \vDash \phi \land \psi$ & iff $t \vDash \phi$ and $t \vDash \psi$ & and \\
-        $t \vDash \phi \unt \psi$ & iff $\exists k \geq 0$ with  $t_{\geq k} \vDash \psi$ and $t_{\geq j} \vDash \phi$ $\forall 0 \leq j < k$ & until \\
-        $t \vDash \nex \phi$ & iff  $t_{[1]} \vDash \phi$ & next \\
-        $t \vDash \evt \phi$ & $\equiv true \unt \psi$ & eventually \\
-        $t \vDash \alw \phi$ & iff  $\equiv \lnot (\evt (\lnot  \phi))$ & always (from now) \\
+        $t \vDash p$               & iff $p \in t_{[0]}$                                                                                       & now               \\
+        $t \vDash\lnot \phi$       & iff not $\phi \in t_{[0]}$                                                                                & not now           \\
+        $t \vDash \phi \land \psi$ & iff $t \vDash \phi$ and $t \vDash \psi$                                                                   & and               \\
+        $t \vDash \phi \unt \psi$  & iff $\exists k \geq 0$ with  $t_{\geq k} \vDash \psi$ and $t_{\geq j} \vDash \phi$ $\forall 0 \leq j < k$ & until             \\
+        $t \vDash \nex \phi$       & iff  $t_{[1]} \vDash \phi$                                                                                & next              \\
+        $t \vDash \evt \phi$       & $\equiv true \unt \psi$                                                                                   & eventually        \\
+        $t \vDash \alw \phi$       & iff  $\equiv \lnot (\evt (\lnot  \phi))$                                                                  & always (from now) \\
     \end{tabular}
 \end{center}
 
 \subsubsection{Sheet 13, Ex.2}
 Transition system $T$  with atomic propositions $P=\{p,q,r\}$
 \begin{center}
-\includegraphics[scale=0.8]{sheet13_a2.png}
+    \includegraphics[scale=0.8]{sheet13_a2.png}
 \end{center}
 \textbf{2.1} Which of the following LTL formulas are satisfied in $T$?
 \begin{itemize}
     \item $\varphi_1 = \evt \alw r$ "=" eventually always $r$: $T \nvDash \varphi_1$, counter example $\gamma = s_1s_4s_5s_4s_5s_4\dots$
-    \item $\varphi_2 = \alw \evt r$ "=" always eventually $r$: $T \vDash \varphi_2$ since there is no loop in which r does not hold at some point 
+    \item $\varphi_2 = \alw \evt r$ "=" always eventually $r$: $T \vDash \varphi_2$ since there is no loop in which r does not hold at some point
     \item $\varphi_3 = \nex \lnot r \Rightarrow \nex \nex r$ "=" next not r implies second next r: $T \vDash \varphi_3$, $\lnot r$ holds in $s_4$ and $s_1$. $s_1$ cannot be reached as next state. From $s_4$ we transition to one of $s_2, s_3, s_5$, where $r$ holds
     \item $\varphi_4 = \alw p$ "=" always $p$: $T \nvDash \varphi_4$, counter example $\gamma = s_1s_4s_5s_4s_5s_4\dots$
-    \item $\varphi_5 = p \unt \alw (q \lor r)$ "=" $p$ until always $q$ or $r$: after starting at $s_1$ where $p$ holds, the state changes between $s_2,s_3,s_4,s_5$, where $q \lor p$ holds 
+    \item $\varphi_5 = p \unt \alw (q \lor r)$ "=" $p$ until always $q$ or $r$: after starting at $s_1$ where $p$ holds, the state changes between $s_2,s_3,s_4,s_5$, where $q \lor p$ holds
     \item $\varphi_6 = (\nex \nex q) \unt (q \lor r)$ "=" second next $q$ until $q$ or $r$: $T \nvDash \varphi_6$, counter example $\gamma = s_1s_4s_2s_4s_2s_4\dots$
     \item $\varphi_7 = \evt \alw \nex q$ "=" eventually always $q$ as next: $T \nvDash \varphi_7$, counter example $\gamma = s_1s_4s_2s_4s_2s_4\dots$
     \item $\varphi_8 = (\evt \alw p) \Rightarrow  (\evt \alw r)$ "=" if eventually always r holds, then eventually always t holds: $(\evt \alw p)$ holds only if the trace goes into a loop $s_5s_5s_5\dots$. For those traces $\evt \alw r$ holds. If $(\evt \alw p)$ does not hold, the implication holds trivially
