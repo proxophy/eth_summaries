@@ -2,7 +2,78 @@
 
 \begin{tcolorbox}[title=Sections, colback=blue!10, colframe=blue]
     \begin{enumerate}
-        \item Computing minimum spanning trees in linear time
-        \item Computing minimum cuts in $\tilde{O}(n^2)$ time
+        \item Warm up: add two numbers
+        \item Models and basic concepts
+        \item List and trees
+        \item Merging and sorting
+        \item Connected components
+        \item (Bipartite) perfect matching
+        \item Modern/Massively parallel computation (MPC)
     \end{enumerate}
 \end{tcolorbox}
+
+\subsection{Warm up: add two numbers}
+
+Basic algorithm: carry-ripple \\
+Problematic part: preparation of carry bits \\
+Idea: kill/propagate/generate bit, compute that in parallel $\Rightarrow$ use binary tree
+
+\subsection{Models and basic concepts}
+
+Two models: logic circuits and PRAM (parallel random access machines)
+
+\subsubsection{Circuits}
+Circuits: Boolean circuits with AND/OR/NOT gates, connected by wires 
+
+$NC(i)$: set of all decision problems that can be decided in boolean circuit with $poly(n)$ gates of at most two imputs and depth of at most $O(\log^i n)$ depth \\
+$AC(i)$: set of all decision problems that can be decided in boolean circuit with $poly(n)$ gates of potentially unbound fan-in and depth of at most $O(\log^i n)$ depth
+
+\begin{lemma}
+    For any $k$, we have $NC(k) \subseteq AC(k) \subseteq NC(k+1)$   
+\end{lemma}
+Def: $NC = \cup_i NC(i) = \cup_i AC(i)$
+
+\subsubsection{Parallel random access machines (PRAM)}
+
+$p$ number of RAM processors, each with its own local registers and access to a global (shared) memory \\
+Four variations: Exclusive/Concurrent Read Eclusive/Concurrent Write
+
+\begin{lemma}
+    For any $k$, we have $CRCW(k) \subseteq EREW(k+1)$
+\end{lemma}
+We also have $NC=\cup_k EREW(k)$: PRAM can simulate circuits and vice versa
+
+\subsubsection{Some basic problems}
+
+\textbf{Parallel Prefix}: Task: Given array $A$ of length $n$, compute $B$ with $B[j]= \sum_{i=1}^j A[i]$, Can be parallized with binary tree idea
+
+\textbf{List ranking}: Task: Given linked list by its content array $c[1..n]$ and successor pointer array $s[1..n]$, get all suffix sums $\Rightarrow$ Use algorithm based on idea of \textbf{pointer jumping} \\
+List ranking with pointer jumping: $\log n$ iterations, each with two steps:
+\begin{enumerate}
+    \item In parallel, for each $i\in \{1,\dots, n\}$, set $c(i) = c(i) + c(s(i))$
+    \item In parallel, for each $i\in \{1,\dots, n\}$, set $s(i)=s(s(i))$
+\end{enumerate}
+
+\begin{lemma}
+    At the end of the above process, for each $i\in \{1,\dots, n\}$, c(i) is equal to its suffix sum
+\end{lemma}
+
+\subsubsection{Work-efficient parallel algorithms}
+
+Computational process can be viewed as a sequence of rounds, each rounds consits of number of computations indepentend of each other, computable in parallel 
+
+Total number of rounds: \textbf{depth} of computation; Summation of number of computaions: total \textbf{work} 
+
+Primary goal: depth small as possible, second goal: small total work
+
+\begin{theorem}[Brent's principle]
+    If an algorithm does $x$ computations in total and has depth $t$, then using $p$ processors, the algorithm can be run in $x/p + t$ time
+\end{theorem}
+
+\textbf{Work-efficient} algorithm: total amount of work of parallel algorithm is proportional to amount of work in sequential case.
+
+\section{Lists and trees}
+\subsection{List ranking}
+Goal: Obtain algorithm with $O(\log n)$ depth and $O(n)$ total work
+
+

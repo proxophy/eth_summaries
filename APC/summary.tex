@@ -2,13 +2,15 @@
 
 \usepackage{graphicx} % Required for inserting images
 \usepackage[left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm]{geometry}
-\usepackage{amsmath, amsfonts, mathtools}
+\usepackage{amsmath, amsfonts, mathtools, amsthm}
 \usepackage{enumerate}
 \usepackage{tcolorbox, xcolor}
 
 \setlength{\parindent}{0cm}
 
-\newtheorem{theorem}{Theorem}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{corollary}
 
 \def\N{\mathbb{N}}
 \def\R{\mathbb{R}}
